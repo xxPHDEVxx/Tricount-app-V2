@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Property with INotifyPropertyChanged</Title>
+			<Author>Benoît Penelle</Author>
+			<Shortcut>propn</Shortcut>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal Editable="true">
+					<ID>type</ID>
+					<Default>type</Default>
+				</Literal>
+				<Literal Editable="true">
+					<ID>backing</ID>
+					<Default>_field</Default>
+				</Literal>
+				<Literal Editable="true">
+					<ID>field</ID>
+					<Default>Field</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="CSharp">
+				<![CDATA[private $type$ $backing$;
+
+public $type$ $field$
+{
+    get => $backing$;
+    set => SetProperty(ref $backing$, value, () => Validate());
+}]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>
