@@ -14,7 +14,17 @@
         <vm:MainViewModel x:Name="vm" />
     </Window.DataContext>
 
-    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="32"
-           Text="{Binding Title}" />
+    <StackPanel>
+        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold"/>
+        
+    <ListView ItemsSource="{Binding Members}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding FullName}"/>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+
+    </StackPanel>
 
 </f:WindowBase>

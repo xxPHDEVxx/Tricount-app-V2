@@ -28,8 +28,8 @@ public partial class App {
 
     private static void PrepareDatabase() {
         // Clear database and seed data
-        Context.Database.EnsureDeleted();
-        Context.Database.EnsureCreated();
+      Context.Database.EnsureDeleted();
+       Context.Database.EnsureCreated();
 
         // Cold start
         Console.Write("Cold starting database... ");
@@ -43,5 +43,6 @@ public partial class App {
 
     private static void TestQueries() {
         // Un endroit pour tester vos requêtes LINQ
+
     }
 }
