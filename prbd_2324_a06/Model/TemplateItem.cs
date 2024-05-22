@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 namespace prbd_2324_a06.Model;
 
 public class TemplateItem : EntityBase<PridContext> {
-    [Key]
-    public int Id { get; set; }
+
     [ForeignKey(nameof(User))]
     public int UserId { get; set; }
     public virtual User User { get; set; }

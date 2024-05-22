@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 namespace prbd_2324_a06.Model;
 
 public class Repartition : EntityBase<PridContext> {
-    [Key]
-    public int Id { get; set; }
 
     [ForeignKey(nameof(Operation))]
     public int OperationId { get; set; }

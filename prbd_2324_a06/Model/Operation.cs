@@ -8,6 +8,9 @@ public class Operation : EntityBase<PridContext> {
     [Key]
     public int Id {  get; set; }
     public string Title { get; set; }
+    [ForeignKey(nameof(Tricount))]
+    public int TricountId { get; set; }
+    public virtual Tricount Tricount { get; set; }
 
     [Required]
     public double Amount { get; set; }
@@ -19,9 +22,7 @@ public class Operation : EntityBase<PridContext> {
     public int InitiatorId { get; set; }
     public virtual User Initiator { get; set; }
 
-    [ForeignKey(nameof(Tricount))]
-    public int TricountId { get; set; }
-    public virtual Tricount Tricount { get; set; }
-    public virtual ICollection<Repartition> Repartitions { get; set; } = new HashSet<Repartition>();    
+
+    public virtual ICollection<User> Participants { get; protected set; } = new HashSet<User>();
 }
 

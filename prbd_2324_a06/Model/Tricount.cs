@@ -21,7 +21,10 @@ public class Tricount : EntityBase<PridContext> {
     public int CreatorId {  get; set; }
     public virtual User Creator { get; set; }
     public virtual ICollection<User> Subscribers { get; protected set; } = new HashSet<User>();
-    public virtual ICollection<Template> Templates { get; protected set; } = new HashSet<Template>(); 
+    public virtual ICollection<Template> Templates { get; protected set; } = new HashSet<Template>();
+
+    public virtual ICollection<User> Participants { get; protected set; } = new HashSet<User>();
+    
     public Tricount() { }
     public Tricount(string title,string description, DateTime createdAt, User creator) {
         Title = title; 
