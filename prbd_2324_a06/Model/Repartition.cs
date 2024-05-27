@@ -19,7 +19,6 @@ public class Repartition : EntityBase<PridContext> {
     public int UserId { get; set; }
     public virtual User User { get; set; }
     public int Weight { get; set; }
-    public Repartition() { }
 
 
 }
