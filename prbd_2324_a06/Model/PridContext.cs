@@ -38,78 +38,79 @@ public class PridContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
+        
+        // User-Repartition: Many-to-Many
+        modelBuilder.Entity<Repartition>()
+            .HasKey(r => new { r.OperationId, r.UserId });
 
-        //user participe à plusieurs tricounts
-        modelBuilder.Entity<User>()
-            .HasMany(user => user.Tricounts)
-            .WithOne(tricount => tricount.Creator)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<User>()
-        .HasMany(user => user.AllOperations)
-        .WithOne(op => op.Initiator)
-        .OnDelete(DeleteBehavior.Cascade);
-
-
-        // repartition many to many
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Repartitions)
-            .WithMany(u => u.Participants)
-            .UsingEntity<Repartition>(
-                left => left
-                .HasOne(r => r.Operation)
-                .WithMany()
-                .HasForeignKey(nameof(Repartition.OperationId))
-                .OnDelete(DeleteBehavior.ClientCascade),
-                right => right
-                .HasOne(r => r.User)
-                .WithMany()
-                .HasForeignKey(nameof(Repartition.UserId))
-                .OnDelete(DeleteBehavior.ClientCascade),
-                joinEntity => {
-                    joinEntity.HasKey(r => new {r.OperationId, r.UserId});
-                }
-                
-                );
-
-
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Templates)
-            .WithMany(u => u.Initiators)
-            .UsingEntity<TemplateItem>(
-                left => left
-                    .HasOne(ti => ti.Template)
-                    .WithMany()
-                    .HasForeignKey(nameof(TemplateItem.TemplateId))
-                    .OnDelete(DeleteBehavior.ClientCascade),
-                right => right
-                    .HasOne(ti => ti.User)
-                    .WithMany()
-                    .HasForeignKey(nameof(TemplateItem.UserId))
-                    .OnDelete(DeleteBehavior.ClientCascade),
-                joinEntity => {
-                    joinEntity.HasKey(ti => new { ti.UserId, ti.TemplateId });
-                });
-
-
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Subscriptions)
-            .WithMany(u => u.Subscribers)
-            .UsingEntity<Subscription>(
-            left => left.HasOne(s => s.Tricount).WithMany().HasForeignKey(nameof(Subscription.TricountId))
-            .OnDelete(DeleteBehavior.ClientCascade),
-            right => right.HasOne(s => s.User).WithMany().HasForeignKey(nameof(Subscription.UserId))
-            .OnDelete(DeleteBehavior.ClientCascade),
-            joinEntity => {
-                joinEntity.HasKey(s => new { s.UserId, s.TricountId });
-
-            });
-
-        modelBuilder.Entity<Tricount>()
-            .HasMany(t => t.Templates)
-            .WithOne(template  => template.Tricount)
+        modelBuilder.Entity<Repartition>()
+            .HasOne(r => r.Operation)
+            .WithMany(o => o.Repartitions)
+            .HasForeignKey(r => r.OperationId)
             .OnDelete(DeleteBehavior.ClientCascade);
 
+        modelBuilder.Entity<Repartition>()
+            .HasOne(r => r.User)
+            .WithMany(u => u.Repartitions)
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+
+        // User-Template: Many-to-Many
+        modelBuilder.Entity<TemplateItem>()
+            .HasKey(ti => new { ti.UserId, ti.TemplateId });
+
+        modelBuilder.Entity<TemplateItem>()
+            .HasOne(ti => ti.Template)
+            .WithMany(t => t.TemplateItems)
+            .HasForeignKey(ti => ti.TemplateId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+        modelBuilder.Entity<TemplateItem>()
+            .HasOne(ti => ti.User)
+            .WithMany()
+            .HasForeignKey(ti => ti.UserId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+
+        // User-Subscription: Many-to-Many
+        modelBuilder.Entity<Subscription>()
+            .HasKey(s => new { s.UserId, s.TricountId });
+
+        modelBuilder.Entity<Subscription>()
+            .HasOne(s => s.Tricount)
+            .WithMany(t => t.Subscriptions)
+            .HasForeignKey(s => s.TricountId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+        modelBuilder.Entity<Subscription>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.Subscriptions)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+        // Tricount-Template: One-to-Many
+        modelBuilder.Entity<Tricount>()
+            .HasMany(t => t.Templates)
+            .WithOne(template => template.Tricount)
+            .HasForeignKey(template => template.TricountId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
+        // Configuration dans les entités Tricount et Operation
+
+        // Tricount
+        modelBuilder.Entity<Tricount>()
+            .HasOne(t => t.Creator)
+            .WithMany()
+            .HasForeignKey(t => t.CreatorId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Operation
+        modelBuilder.Entity<Operation>()
+            .HasOne(op => op.Initiator)
+            .WithMany()
+            .HasForeignKey(op => op.InitiatorId)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
 

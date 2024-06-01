@@ -23,6 +23,6 @@ public class Operation : EntityBase<PridContext> {
     public virtual User Initiator { get; set; }
 
 
-    public virtual ICollection<User> Participants { get; protected set; } = new HashSet<User>();
+    public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 }
 

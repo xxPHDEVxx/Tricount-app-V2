@@ -26,10 +26,6 @@ public class User : EntityBase<PridContext>
         Role = role;
     }
 
-    public virtual ICollection<Tricount> Tricounts { get; protected set; } = new HashSet<Tricount>();
-    public virtual ICollection<Tricount> Subscriptions { get; protected set; } = new HashSet<Tricount>();
-    public virtual ICollection<Operation> Repartitions { get; protected set; } = new HashSet<Operation>();
-    public virtual ICollection<Template> Templates { get; protected set; }  = new HashSet<Template>();  
-    
-    public virtual ICollection<Operation> AllOperations { get; protected set; } = new HashSet<Operation>();
+    public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
+    public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 }

@@ -17,6 +17,7 @@ public class Template : EntityBase<PridContext> {
     public int TricountId { get; set; }
     public virtual Tricount Tricount { get; set; }
     
-    public virtual ICollection<User> Initiators { get; set; } = new HashSet<User>();
+    public virtual ICollection<TemplateItem> TemplateItems { get; set; } = new HashSet<TemplateItem>();
+
 }
 

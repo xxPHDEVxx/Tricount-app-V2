@@ -20,7 +20,9 @@ public class Tricount : EntityBase<PridContext> {
     [Required, ForeignKey(nameof(Creator))]
     public int CreatorId {  get; set; }
     public virtual User Creator { get; set; }
-    public virtual ICollection<User> Subscribers { get; protected set; } = new HashSet<User>();
+    
+    public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
+
     public virtual ICollection<Template> Templates { get; protected set; } = new HashSet<Template>();
 
     
