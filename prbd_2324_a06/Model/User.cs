@@ -1,4 +1,5 @@
 ﻿using PRBD_Framework;
+using System.ComponentModel.DataAnnotations;
 
 namespace prbd_2324_a06.Model;
 
@@ -9,6 +10,7 @@ public enum Role {
 
 public class User : EntityBase<PridContext>
 {
+    [Key]
     public int UserId { get; set; }
     public string Mail { get; set; }
     public string HashedPassword { get; set; }
