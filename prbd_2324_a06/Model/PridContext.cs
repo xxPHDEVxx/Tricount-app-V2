@@ -187,17 +187,17 @@ public class PridContext : DbContextBase
                 new Repartition {OperationId = 5, UserId = 3, Weight = 3 },
                 new Repartition { OperationId = 6, UserId = 1 , Weight = 1 },
                 new Repartition {OperationId = 6, UserId = 3, Weight = 3 },
-                new Repartition {OperationId = 7, UserId = 2, Weight = 2 },
-                new Repartition {OperationId = 7, UserId = 2, Weight = 2 },
-                new Repartition {OperationId = 7, UserId = 3, Weight = 3 },
-                new Repartition {OperationId = 8, UserId = 3, Weight = 3 },
-                new Repartition {OperationId = 8, UserId = 4, Weight = 4 },
-                new Repartition {OperationId = 9, UserId = 2, Weight = 2 },
-                new Repartition {OperationId = 9, UserId = 4, Weight = 4 },
+                new Repartition {OperationId = 7, UserId = 2, Weight = 1 },
+                new Repartition {OperationId = 7, UserId = 3, Weight = 2 },
+                new Repartition {OperationId = 7, UserId = 4, Weight = 2 },
+                new Repartition {OperationId = 8, UserId = 3, Weight = 2 },
+                new Repartition {OperationId = 8, UserId = 4, Weight = 1 },
+                new Repartition {OperationId = 9, UserId = 2, Weight = 1 },
+                new Repartition {OperationId = 9, UserId = 4, Weight = 5 },
                 new Repartition { OperationId = 10, UserId = 1 , Weight = 1 },
-                new Repartition {OperationId = 10, UserId = 3, Weight = 3 },
+                new Repartition {OperationId = 10, UserId = 3, Weight =1 },
                 new Repartition { OperationId = 11, UserId = 2 , Weight = 2 },
-                new Repartition {OperationId = 11, UserId = 4, Weight = 4 }
+                new Repartition {OperationId = 11, UserId = 4, Weight = 2 }
             );
 
 

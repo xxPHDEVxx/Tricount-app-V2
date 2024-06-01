@@ -25,7 +25,6 @@ public class User : EntityBase<PridContext>
     }
 
     public virtual ICollection<Tricount> Tricounts { get; protected set; } = new HashSet<Tricount>();
-    public virtual ICollection<Tricount> Operations {  get; protected set; } = new HashSet<Tricount>();
     public virtual ICollection<Tricount> Subscriptions { get; protected set; } = new HashSet<Tricount>();
     public virtual ICollection<Operation> Repartitions { get; protected set; } = new HashSet<Operation>();
     public virtual ICollection<Template> Templates { get; protected set; }  = new HashSet<Template>();  
