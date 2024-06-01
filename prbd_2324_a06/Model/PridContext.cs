@@ -38,20 +38,17 @@ public class PridContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
-        // l'entité Member ...
-        modelBuilder.Entity<User>()
-            // doit utiliser la propriété Role comme discriminateur ...
-            .HasDiscriminator(u => u.Role)
-            // en mappant la valeur Role.Member sur le type Member ...
-            .HasValue<User>(Role.Member)
-            // et en mappant la valeur Role.Administator sur le type Administrator ...
-            .HasValue<Administrator>(Role.Administrator);
 
         //user participe à plusieurs tricounts
         modelBuilder.Entity<User>()
             .HasMany(user => user.Tricounts)
             .WithOne(tricount => tricount.Creator)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<User>()
+        .HasMany(user => user.AllOperations)
+        .WithOne(op => op.Initiator)
+        .OnDelete(DeleteBehavior.Cascade);
 
 
         // repartition many to many
@@ -114,20 +111,21 @@ public class PridContext : DbContextBase
             .OnDelete(DeleteBehavior.ClientCascade);
 
 
+
+
         seedData(modelBuilder);
     }
     private static void seedData(ModelBuilder modelBuilder) {
-        var boris = new User(1, "boverhaegen@epfc.eu", "Password1,", "Boris");
-        var benoit = new User(2, "bepenelle@epfc.eu", "Password1,", "Benoit");
-        var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier");
-        var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc");
-        var admin = new Administrator(5, "admin@epfc.eu", "Password1,", "Administrator");
+        var boris = new User(1, "boverhaegen@epfc.eu", "Password1,", "Boris",0);
+        var benoit = new User(2, "bepenelle@epfc.eu", "Password1,", "Benoit", 0);
+        var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier", 0);
+        var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc", 0);
+        var admin = new User(5, "admin@epfc.eu", "Password1,", "Administrator", 1);
         
         modelBuilder.Entity<User>()
-            .HasData(boris, benoit, xavier, marc);
+            .HasData(boris, benoit, xavier, marc, admin);
 
-        modelBuilder.Entity<Administrator>()
-            .HasData(admin);
+
 
         modelBuilder.Entity<Tricount>()
              .HasData(
@@ -189,17 +187,17 @@ public class PridContext : DbContextBase
                 new Repartition {OperationId = 5, UserId = 3, Weight = 3 },
                 new Repartition { OperationId = 6, UserId = 1 , Weight = 1 },
                 new Repartition {OperationId = 6, UserId = 3, Weight = 3 },
-                new Repartition {OperationId = 7, UserId = 2, Weight = 2 },
-                new Repartition {OperationId = 7, UserId = 2, Weight = 2 },
-                new Repartition {OperationId = 7, UserId = 3, Weight = 3 },
-                new Repartition {OperationId = 8, UserId = 3, Weight = 3 },
-                new Repartition {OperationId = 8, UserId = 4, Weight = 4 },
-                new Repartition {OperationId = 9, UserId = 2, Weight = 2 },
-                new Repartition {OperationId = 9, UserId = 4, Weight = 4 },
+                new Repartition {OperationId = 7, UserId = 2, Weight = 1 },
+                new Repartition {OperationId = 7, UserId = 3, Weight = 2 },
+                new Repartition {OperationId = 7, UserId = 4, Weight = 2 },
+                new Repartition {OperationId = 8, UserId = 3, Weight = 2 },
+                new Repartition {OperationId = 8, UserId = 4, Weight = 1 },
+                new Repartition {OperationId = 9, UserId = 2, Weight = 1 },
+                new Repartition {OperationId = 9, UserId = 4, Weight = 5 },
                 new Repartition { OperationId = 10, UserId = 1 , Weight = 1 },
-                new Repartition {OperationId = 10, UserId = 3, Weight = 3 },
+                new Repartition {OperationId = 10, UserId = 3, Weight =1 },
                 new Repartition { OperationId = 11, UserId = 2 , Weight = 2 },
-                new Repartition {OperationId = 11, UserId = 4, Weight = 4 }
+                new Repartition {OperationId = 11, UserId = 4, Weight = 2 }
             );
 
 
@@ -227,6 +225,5 @@ public class PridContext : DbContextBase
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
     public DbSet<TemplateItem> TemplateItems => Set<TemplateItem>();
     public DbSet<Repartition> Repartitions => Set<Repartition>();
-    public DbSet<Administrator> Administrators => Set<Administrator>();
 
 }
