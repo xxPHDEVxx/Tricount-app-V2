@@ -16,7 +16,7 @@
         <Menu>
             <MenuItem Header="Logout" Click="Logout_Click"/>
             <MenuItem Header="Reload"  />
-            <MenuItem Header="Reset"  />
+            <MenuItem Header="Reset"  Click="Reset_Click"/>
         </Menu>
         <f:MyTabControl x:Name="tabControl" Margin="5 19 5 5" Grid.Row="1" HasCloseButton="True">
             <TabItem x:Name="tricountTabs" Header="My Tricounts" Tag="Tricount">

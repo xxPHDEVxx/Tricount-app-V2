@@ -14,4 +14,8 @@ public partial class MainView : WindowBase
         NotifyColleagues(App.Messages.MSG_LOGOUT);
     }
     
+    private void Reset_Click(object sender, System.Windows.RoutedEventArgs e) {
+        NotifyColleagues(App.Messages.MSG_RESET);
+    }
+    
 }

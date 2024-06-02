@@ -1,4 +1,5 @@
-﻿using prbd_2324_a06.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
 using System.Windows;
@@ -13,7 +14,8 @@ public partial class App
         MSG_SIGN_UP,
         MSG_DISPLAY_SIGN_UP,
         MSG_LOGIN,
-        MSG_LOGOUT
+        MSG_LOGOUT,
+        MSG_RESET
     }
     public App() {
         var ci = new CultureInfo("fr-BE") {
@@ -48,7 +50,16 @@ public partial class App
             Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
         });
+        
+        // Reset
+        Register(this, Messages.MSG_RESET, Reset);
     }
+    
+    private static void Reset() {
+        Context.Database.EnsureDeleted();
+        Context.Database.EnsureCreated();
+    }
+
 
 
     private static void PrepareDatabase() {
