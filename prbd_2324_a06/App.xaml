@@ -1,15 +1,17 @@
 ﻿<f:ApplicationBase x:Class="prbd_2324_a06.App"
-             x:TypeArguments="m:User,m:PridContext"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:m="clr-namespace:prbd_2324_a06.Model"
-             xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework">
+                   x:TypeArguments="m:User,m:PridContext"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:m="clr-namespace:prbd_2324_a06.Model"
+                   xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   StartupUri="View/LoginView.xaml">
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/PRBD_Framework;component/Styles/PRBD_Styles.xaml"/>
-                <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/PRBD_Framework;component/Styles/PRBD_Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+
 </f:ApplicationBase>

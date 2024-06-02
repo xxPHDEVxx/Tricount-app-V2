@@ -7,14 +7,14 @@ namespace prbd_2324_a06.ViewModel;
 public class MainViewModel : PRBD_Framework.ViewModelBase<User, PridContext>
 {
     public string Title => "prbd_2324_a06";
-    private ObservableCollection<User> _members;
-    public ObservableCollection<User> Members {
-        get => _members;
-        set => SetProperty(ref _members, value, () =>
+    private ObservableCollection<User> _users;
+    public ObservableCollection<User> Users {
+        get => _users;
+        set => SetProperty(ref _users, value, () =>
         Console.WriteLine("cette ligne est appelé a l'assignatin du members"));
     }
 
     public MainViewModel() : base() {
-        Members = new ObservableCollection<User>(Context.Users);
+        Users = new ObservableCollection<User>(Context.Users);
     }
 }

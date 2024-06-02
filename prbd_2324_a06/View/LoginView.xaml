@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:prbd_2324_a06"
              xmlns:prbdFramework="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+             xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="350" d:DesignWidth="300">
     <Grid Margin="10">
@@ -25,7 +26,7 @@
         </Grid.RowDefinitions>
         <Label x:Name="label" Content="Email" VerticalAlignment="Top" Padding="5" />
         <TextBox x:Name="txtPseudo" TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Center"
-                 Text="{Binding Pseudo, UpdateSourceTrigger=PropertyChanged}" />
+                 Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}" />
         <Label Content="Password" Grid.Row="1" VerticalAlignment="Top" Padding="5" />
         <PasswordBox x:Name="txtPassword"
                      prbdFramework:PasswordHelper.Attach="True"
@@ -59,7 +60,7 @@
         </DockPanel>
         <DockPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
             <Button x:Name="btnLoginAs2" Content="Login as" />
-            
+
         </DockPanel>
         <DockPanel Grid.Row="7" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
             <Button x:Name="btnLoginAs3" Content="Login as" />
