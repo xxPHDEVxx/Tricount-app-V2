@@ -31,4 +31,12 @@
     <ProjectReference Include="..\PRBD_Framework\PRBD_Framework.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="View\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

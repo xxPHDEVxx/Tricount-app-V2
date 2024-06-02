@@ -5,6 +5,7 @@
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
               xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+              xmlns:local="clr-namespace:prbd_2324_a06"
               mc:Ignorable="d"
               d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}"
               WindowStartupLocation="CenterScreen"
@@ -13,18 +14,6 @@
     <Window.DataContext>
         <vm:MainViewModel x:Name="vm" />
     </Window.DataContext>
-
-    <StackPanel>
-        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold"/>
-        
-    <ListView ItemsSource="{Binding Members}">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Text="{Binding FullName}"/>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-
-    </StackPanel>
+    <local:LoginView/>
 
 </f:WindowBase>
