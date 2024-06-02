@@ -5,13 +5,11 @@
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
               xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
-              xmlns:vw="clr-namespace:prbd_2324_a06"
+              xmlns:vw="clr-namespace:prbd_2324_a06.View"
               mc:Ignorable="d"
               d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}"
-              Title="Tricount App" Height="450" Width="600" WindowStartupLocation="CenterScreen">
-
+              Title="Tricount" Height="600" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-    <vw:LoginView/>
 </f:WindowBase>

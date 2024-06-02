@@ -4,13 +4,13 @@ using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
 {
-    public class LoginViewModel : ViewModelBase<User, PridContext>
+    public class LoginViewModel : ViewModelCommon
     {
         public ICommand LoginCommand { get; set; }
 
         private string _mail;
 
-        private Enum message;
+        private Enum _message;
 
         public string Mail {
             get => _mail;
@@ -24,38 +24,33 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _password, value, () => Validate());
         }
 
-        public LoginViewModel() {
+        public LoginViewModel() : base() {
             LoginCommand = new RelayCommand(LoginAction,
                 () => _mail != null && _password != null && !HasErrors);
         }
 
         private void LoginAction() {
             if (Validate()) {
-                var user = Context.Users.Find(Mail);
-                NotifyColleagues(message, user);
+                var user = Context.Users.FirstOrDefault(u => u.Mail == Mail);
+                NotifyColleagues(ApplicationBaseMessages.MSG_LOGIN, user);
             }
-        }
-
-        protected override void OnRefreshData() {
         }
 
         public override bool Validate() {
             ClearErrors();
-
-            var user = Context.Users.Find(Mail);
+            
+            var user = Context.Users.FirstOrDefault(u => u.Mail == Mail);
 
             if (string.IsNullOrEmpty(Mail))
                 AddError(nameof(Mail), "required");
             else if (!IsValidEmail(Mail))
                 AddError(nameof(Mail), "invalid email format");
-            else if (IsEmailAlreadyExist(Mail))
-                AddError(nameof(Mail), "email already exists");
             else {
                 if (string.IsNullOrEmpty(Password))
                     AddError(nameof(Password), "required");
                 else if (Password.Length < 3)
                     AddError(nameof(Password), "length must be >= 3");
-                else if (user.HashedPassword != Password)
+                else if (user != null && user.HashedPassword != Password)
                     AddError(nameof(Password), "wrong password");
             }
 
@@ -70,10 +65,8 @@ namespace prbd_2324_a06.ViewModel
                 return false;
             }
         }
-
-        private bool IsEmailAlreadyExist(string email) {
-            var user = Context.Users.FirstOrDefault(u => u.Mail == email);
-            return user != null;
+        
+        protected override void OnRefreshData() {
         }
     }
 }

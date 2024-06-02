@@ -4,7 +4,7 @@ using System.Configuration;
 
 namespace prbd_2324_a06.ViewModel;
 
-public class MainViewModel : PRBD_Framework.ViewModelBase<User, PridContext>
+public class MainViewModel : ViewModelCommon
 {
     public string Title => "prbd_2324_a06";
     private ObservableCollection<User> _users;

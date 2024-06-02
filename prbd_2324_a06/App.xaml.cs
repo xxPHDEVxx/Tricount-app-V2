@@ -1,11 +1,13 @@
 ﻿using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
+using PRBD_Framework;
 using System.Windows;
 using System.Globalization;
 
 namespace prbd_2324_a06;
 
-public partial class App {
+public partial class App
+{
     public App() {
         var ci = new CultureInfo("fr-BE") {
             DateTimeFormat = {
@@ -23,13 +25,18 @@ public partial class App {
         PrepareDatabase();
         TestQueries();
 
-        NavigateTo<MainViewModel, User, PridContext>();
+
+        Register<User>(this, ApplicationBaseMessages.MSG_LOGIN, member => {
+            Login(member);
+            NavigateTo<MainViewModel, User, PridContext>();
+        });
     }
+
 
     private static void PrepareDatabase() {
         // Clear database and seed data
-      Context.Database.EnsureDeleted();
-       Context.Database.EnsureCreated();
+        Context.Database.EnsureDeleted();
+        Context.Database.EnsureCreated();
 
         // Cold start
         Console.Write("Cold starting database... ");
@@ -43,6 +50,5 @@ public partial class App {
 
     private static void TestQueries() {
         // Un endroit pour tester vos requêtes LINQ
-
     }
 }
