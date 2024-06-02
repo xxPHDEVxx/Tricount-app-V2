@@ -9,13 +9,9 @@ public partial class MainView : WindowBase
         InitializeComponent();
         
     }
-    // pour les fenêtre du main
-    /*private void OpenTab(string header, string tag, Func<UserControlBase> createView) {
-        var tab = tabControl.FindByTag(tag);
-        if (tab == null)
-            tabControl.Add(createView(), header, tag);
-        else
-            tabControl.SetFocus(tab);
-    }*/
+    
+    private void Logout_Click(object sender, System.Windows.RoutedEventArgs e) {
+        NotifyColleagues(App.Messages.MSG_LOGOUT);
+    }
     
 }

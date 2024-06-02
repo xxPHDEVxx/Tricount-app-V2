@@ -37,6 +37,12 @@ public partial class App
             Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
         });
+        // Logout
+        Register(this, Messages.MSG_LOGOUT, () => {
+            Logout();
+            NavigateTo<LoginViewModel, User, PridContext>();
+        });
+        
         // Sign up
         Register<User>(this, App.Messages.MSG_SIGN_UP, user => {
             Login(user);
