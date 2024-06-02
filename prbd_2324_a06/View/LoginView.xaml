@@ -31,7 +31,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label x:Name="label" Content="Email" VerticalAlignment="Top" Padding="5" />
+        <Label x:Name="label" Content="Mail" VerticalAlignment="Top" Padding="5" />
         <TextBox x:Name="txtPseudo" TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Center"
                  Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}" />
         <Label Content="Password" Grid.Row="1" VerticalAlignment="Top" Padding="5" />
