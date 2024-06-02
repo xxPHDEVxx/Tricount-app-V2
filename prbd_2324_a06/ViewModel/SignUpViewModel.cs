@@ -44,7 +44,7 @@ namespace prbd_2324_a06.ViewModel
                 var user = new User(Mail, Password, Name, 0);
                 Context.Users.Add(user);
                 Context.SaveChanges();
-                NotifyColleagues(ApplicationBaseMessages.MSG_SIGN_UP, user);
+                NotifyColleagues(App.Messages.MSG_SIGN_UP, user);
             }
         }
 

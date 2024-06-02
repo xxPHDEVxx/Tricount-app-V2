@@ -11,7 +11,9 @@ namespace prbd_2324_a06.ViewModel
     {
         public ICommand LoginCommand { get; set; }
         public ICommand LoginAsCommand { get; set; }
+        public ICommand GoToSignUpCommand { get; set; }
 
+        // attributs et propriétés
         private string _mail;
 
         public string Mail {
@@ -39,6 +41,11 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _defaultUserName, value);
         }
 
+        /**
+         * Constructeur
+         * -> initialisation données pour affichage sur view
+         * -> Mise en place des commandes pour navigation ( Login, Sign up, ...)
+         */
         public LoginViewModel() : base() {
             DefaultUser = new User[4];
             DefaultUserName = new string[4];
@@ -55,24 +62,32 @@ namespace prbd_2324_a06.ViewModel
             LoginCommand = new RelayCommand(LoginAction,
                 () => _mail != null && _password != null && !HasErrors);
             LoginAsCommand = new RelayCommand<User>(LoginAsUser);
+            GoToSignUpCommand = new RelayCommand(() =>
+            {
+                NotifyColleagues(App.Messages.MSG_DISPLAY_SIGN_UP,new User());
+            });
+            
         }
 
+        // Connexion
         private void LoginAction() {
             if (Validate()) {
                 var user = Context.Users.FirstOrDefault(u => u.Mail == Mail);
-                NotifyColleagues(ApplicationBaseMessages.MSG_LOGIN, user);
+                NotifyColleagues(App.Messages.MSG_LOGIN, user);
             }
         }
 
+        // Connexion par défaut
         private void LoginAsUser(User user) {
             if (user != null) {
                 // Logique de connexion en utilisant les informations de l'utilisateur
                 var email = user.Mail;
                 var password = user.HashedPassword;
-                NotifyColleagues(ApplicationBaseMessages.MSG_LOGIN, user);
+                NotifyColleagues(App.Messages.MSG_LOGIN, user);
             }
         }
 
+        // Validations
         public override bool Validate() {
             ClearErrors();
 

@@ -8,6 +8,13 @@ namespace prbd_2324_a06;
 
 public partial class App
 {
+    
+    public enum Messages {
+        MSG_SIGN_UP,
+        MSG_DISPLAY_SIGN_UP,
+        MSG_LOGIN,
+        MSG_LOGOUT
+    }
     public App() {
         var ci = new CultureInfo("fr-BE") {
             DateTimeFormat = {
@@ -25,14 +32,14 @@ public partial class App
         PrepareDatabase();
         TestQueries();
 
-
-        Register<User>(this, ApplicationBaseMessages.MSG_LOGIN, member => {
-            Login(member);
+        // Login
+        Register<User>(this, App.Messages.MSG_LOGIN, user => {
+            Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
         });
-        
-        Register<User>(this, ApplicationBaseMessages.MSG_SIGN_UP, member => {
-            Login(member);
+        // Sign up
+        Register<User>(this, App.Messages.MSG_SIGN_UP, user => {
+            Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
         });
     }

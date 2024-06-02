@@ -4,9 +4,9 @@ using System.Windows.Controls;
 
 namespace prbd_2324_a06.View
 {
-    public partial class SignUp : WindowBase
+    public partial class SignUpView : WindowBase
     {
-        public SignUp() {
+        public SignUpView() {
             InitializeComponent();
         }
         

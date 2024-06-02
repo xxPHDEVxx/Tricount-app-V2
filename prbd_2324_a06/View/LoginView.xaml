@@ -51,9 +51,9 @@
             <TextBlock Height="auto" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"
                        Width="220">
                 <Run Text="If you don't have a login and a password, click" />
-                <Hyperlink>
+                <Hyperlink Command="{Binding GoToSignUpCommand}">
                     <Run Text="here" />
-                </Hyperlink>
+                </Hyperlink >
                 <Run Text="to sign-up." />
             </TextBlock>
         </DockPanel>
