@@ -56,6 +56,7 @@ public partial class App
     }
     
     private static void Reset() {
+        // manque le clear des entités 
         Context.Database.EnsureDeleted();
         Context.Database.EnsureCreated();
     }

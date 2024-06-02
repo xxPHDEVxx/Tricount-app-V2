@@ -41,8 +41,6 @@ public class User : EntityBase<PridContext>
     {
         return Context.Users.Max(u => u.UserId);
     }
-
-
     public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 }
