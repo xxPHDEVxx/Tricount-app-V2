@@ -30,6 +30,11 @@ public partial class App
             Login(member);
             NavigateTo<MainViewModel, User, PridContext>();
         });
+        
+        Register<User>(this, ApplicationBaseMessages.MSG_SIGN_UP, member => {
+            Login(member);
+            NavigateTo<MainViewModel, User, PridContext>();
+        });
     }
 
 

@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using prbd_2324_a06.Model;
+using PRBD_Framework;
+using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
 {
@@ -30,6 +32,22 @@ namespace prbd_2324_a06.ViewModel
             get => _checkPaswword;
             set => SetProperty(ref _checkPaswword, value, () => Validate());
         }
+
+        public SignUpViewModel() : base() {
+            SignUpCommand = new RelayCommand(SignUpAction,
+                () => _mail != null && _password != null
+                                    && _checkPaswword != null && !HasErrors);
+        }
+        
+        private void SignUpAction() {
+            if (Validate()) {
+                var user = new User(Mail, Password, Name, 0);
+                Context.Users.Add(user);
+                Context.SaveChanges();
+                NotifyColleagues(ApplicationBaseMessages.MSG_SIGN_UP, user);
+            }
+        }
+
 
         public override bool Validate() {
             ClearErrors();
