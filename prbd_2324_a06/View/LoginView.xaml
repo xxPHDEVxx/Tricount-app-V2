@@ -31,7 +31,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label x:Name="label" Content="Email" VerticalAlignment="Top" Padding="5" />
+        <Label x:Name="label" Content="Mail" VerticalAlignment="Top" Padding="5" />
         <TextBox x:Name="txtPseudo" TextWrapping="Wrap" Grid.Column="1" VerticalAlignment="Center"
                  Text="{Binding Mail, UpdateSourceTrigger=PropertyChanged}" />
         <Label Content="Password" Grid.Row="1" VerticalAlignment="Top" Padding="5" />
@@ -41,8 +41,8 @@
                      Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" />
         <DockPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10">
             <Button x:Name="btnCancel" Content="Cancel"
-                    HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" IsCancel="True" Margin="0,0,10,0" 
-                    Click="btnCancel_Click"/>
+                    HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" IsCancel="True" Margin="0,0,10,0"
+                    Click="btnCancel_Click" />
             <Button x:Name="btnLogin" Content="Login"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" IsDefault="True" Margin="10,0,0,0"
                     Command="{Binding LoginCommand}" />
@@ -51,9 +51,9 @@
             <TextBlock Height="auto" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"
                        Width="220">
                 <Run Text="If you don't have a login and a password, click" />
-                <Hyperlink>
+                <Hyperlink Command="{Binding GoToSignUpCommand}">
                     <Run Text="here" />
-                </Hyperlink>
+                </Hyperlink >
                 <Run Text="to sign-up." />
             </TextBlock>
         </DockPanel>
@@ -64,17 +64,26 @@
             </TextBlock>
         </DockPanel>
         <DockPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs1" Content="Login as" />
+            <Button x:Name="btnLoginAs1" Content="{Binding DefaultUserName[0], StringFormat=' {0})'}"
+                    Padding="5,0,5,0" 
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[0]}" />
         </DockPanel>
         <DockPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs2" Content="Login as" />
+            <Button x:Name="btnLoginAs2" Content="{Binding DefaultUserName[1], StringFormat=' {0})'}"
+                    Padding="5,0,5,0" 
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}" />
 
         </DockPanel>
         <DockPanel Grid.Row="7" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs3" Content="Login as" />
+            <Button x:Name="btnLoginAs3" Content="{Binding DefaultUserName[2], StringFormat=' {0})'}"
+                    Padding="5,0,5,0" 
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[2]}"/>
+
         </DockPanel>
         <DockPanel Grid.Row="8" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs4" Content="Login as" />
+            <Button x:Name="btnLoginAs4" Content="{Binding DefaultUserName[3], StringFormat=' Login as {0})'}"
+                    Padding="5,0,5,0" 
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[3]}" />
         </DockPanel>
     </Grid>
 </f:WindowBase>

@@ -121,7 +121,7 @@ public class PridContext : DbContextBase
         var benoit = new User(2, "bepenelle@epfc.eu", "Password1,", "Benoit", 0);
         var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier", 0);
         var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc", 0);
-        var admin = new User(5, "admin@epfc.eu", "Password1,", "Administrator", 1);
+        var admin = new User(5, "admin@epfc.eu", "Password1,", "Admin", 1);
         
         modelBuilder.Entity<User>()
             .HasData(boris, benoit, xavier, marc, admin);

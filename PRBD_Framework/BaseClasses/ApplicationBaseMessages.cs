@@ -2,5 +2,4 @@
 
 public enum ApplicationBaseMessages {
     MSG_REFRESH_DATA,
-    MSG_LOGIN
 }

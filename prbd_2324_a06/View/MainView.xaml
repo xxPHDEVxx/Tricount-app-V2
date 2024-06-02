@@ -14,7 +14,7 @@
     </Window.DataContext>
     <Grid>
         <Menu>
-            <MenuItem Header="Logout" />
+            <MenuItem Header="Logout" Click="Logout_Click"/>
             <MenuItem Header="Reload"  />
             <MenuItem Header="Reset"  />
         </Menu>

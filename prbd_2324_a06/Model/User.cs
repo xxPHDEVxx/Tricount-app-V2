@@ -18,13 +18,30 @@ public class User : EntityBase<PridContext>
     public int Role { get; protected set; } 
 
     public User() { }
-    public User(int userId, string mail, string hashed_password, string full_name, int role) {
-        UserId = userId;
+    
+    // constructeur avec autoincrémentation pour sign up
+    public User(string mail, string hashed_password, string full_name, int role) {
+        UserId = GetHighestUserId() + 1;
         Mail = mail;
         HashedPassword = hashed_password;
         FullName = full_name;
         Role = role;
     }
+    
+    public User(int userdId,string mail, string hashed_password, string full_name, int role) {
+        UserId = userdId;
+        Mail = mail;
+        HashedPassword = hashed_password;
+        FullName = full_name;
+        Role = role;
+    }
+    
+    // Return the highest UserId
+    public int GetHighestUserId()
+    {
+        return Context.Users.Max(u => u.UserId);
+    }
+
 
     public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
