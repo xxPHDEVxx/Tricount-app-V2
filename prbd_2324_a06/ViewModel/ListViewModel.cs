@@ -12,6 +12,7 @@ namespace prbd_2324_a06.ViewModel;
             get => _tricounts;
             set => SetProperty(ref _tricounts, value);
         }
+        public ICommand ClearFilter { get; set; }
 
         public ICommand NewTricount {  get; set; }
 
@@ -25,14 +26,14 @@ namespace prbd_2324_a06.ViewModel;
             public ListViewModel() : base() {
 
                 OnRefreshData();
+                ClearFilter = new RelayCommand(() => Filter = "");
 
+    }
 
-            }
-
-            protected override void OnRefreshData() {
+    protected override void OnRefreshData() {
             var UserId = CurrentUser.UserId;
         
-            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? Tricount.GetAll(UserId) : Tricount.GetFiltered(Filter);
+            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? Tricount.GetAll(UserId) : Tricount.GetFiltered(Filter, UserId);
 
             Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t => new TricountCardViewModel(t)));
             }

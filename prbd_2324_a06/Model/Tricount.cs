@@ -42,9 +42,10 @@ public class Tricount : EntityBase<PridContext> {
                         select t;
         return tricounts;
     }
-    public static IQueryable<Tricount> GetFiltered(string Filter) {
-        var filtered = from t in Context.Tricounts
-                       where t.Title.Contains(Filter) || t.Description.Contains(Filter)
+    public static IQueryable<Tricount> GetFiltered(string Filter, int User) {
+        var tricounts = GetAll(User);
+        var filtered = from t in tricounts
+                       where t.Title.Contains(Filter)
                        orderby t.Title
                        select t;
         return filtered;
