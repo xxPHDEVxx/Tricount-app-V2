@@ -36,19 +36,7 @@ public class Tricount : EntityBase<PridContext> {
 
     }
 
-    public static IQueryable<Tricount> GetAll(int User) {
-        var tricounts = from t in Context.Tricounts
-                        where t.CreatorId == User
-                        select t;
-        return tricounts;
-    }
-    public static IQueryable<Tricount> GetFiltered(string Filter, int User) {
-        var tricounts = GetAll(User);
-        var filtered = from t in tricounts
-                       where t.Title.Contains(Filter)
-                       orderby t.Title
-                       select t;
-        return filtered;
-    }
+
+
 }
 

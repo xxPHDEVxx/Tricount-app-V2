@@ -12,7 +12,7 @@ public class TricountCardViewModel : ViewModelCommon
         init => SetProperty(ref _tricount, value);
     }
     public string Title => Tricount.Title;
-    public string Description => Tricount.Description;
+    public string Description => Tricount.Description?? "No Description";
 
 
     public  TricountCardViewModel(Tricount tricount) {
