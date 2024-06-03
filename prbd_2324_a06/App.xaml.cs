@@ -1,20 +1,23 @@
-﻿using prbd_2324_a06.Model;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
 using System.Windows;
 using System.Globalization;
+using System.Xml;
 
 namespace prbd_2324_a06;
 
 public partial class App
 {
-    
-    public enum Messages {
+    public enum Messages
+    {
         MSG_SIGN_UP,
         MSG_DISPLAY_SIGN_UP,
         MSG_LOGIN,
         MSG_LOGOUT
     }
+
     public App() {
         var ci = new CultureInfo("fr-BE") {
             DateTimeFormat = {
@@ -39,8 +42,11 @@ public partial class App
         });
         // Sign up
         Register<User>(this, App.Messages.MSG_SIGN_UP, user => {
+            WindowCollection windowCollection = this.Windows;
             Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
+            // fermeture view sign up
+            windowCollection[0]?.Close();
         });
     }
 
