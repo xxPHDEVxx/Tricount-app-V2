@@ -1,16 +1,20 @@
-﻿using prbd_2324_a06.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using prbd_2324_a06.Model;
 using PRBD_Framework;
+using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace prbd_2324_a06.ViewModel
 {
     public class LoginViewModel : ViewModelCommon
     {
         public ICommand LoginCommand { get; set; }
+        public ICommand LoginAsCommand { get; set; }
+        public ICommand GoToSignUpCommand { get; set; }
 
+        // attributs et propriétés
         private string _mail;
-
-        private Enum _message;
 
         public string Mail {
             get => _mail;
@@ -24,21 +28,69 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _password, value, () => Validate());
         }
 
-        public LoginViewModel() : base() {
-            LoginCommand = new RelayCommand(LoginAction,
-                () => _mail != null && _password != null && !HasErrors);
+        private User[] _defaultUser;
+        private string[] _defaultUserName;
+
+        public User[] DefaultUser {
+            get => _defaultUser;
+            set => SetProperty(ref _defaultUser, value);
         }
 
+        public string[] DefaultUserName {
+            get => _defaultUserName;
+            set => SetProperty(ref _defaultUserName, value);
+        }
+
+        /**
+         * Constructeur
+         * -> initialisation données pour affichage sur view
+         * -> Mise en place des commandes pour navigation ( Login, Sign up, ...)
+         */
+        public LoginViewModel() : base() {
+            DefaultUser = new User[4];
+            DefaultUserName = new string[4];
+            int user = 1;
+            for (int i = 0; i < 4; i++) {
+                if (user == 4) {
+                    user++;
+                }
+                DefaultUser[i] = Context.Users.FirstOrDefault(u => u.UserId == user);
+                DefaultUserName[i] = DefaultUser[i].FullName;
+                user++;
+            }
+
+            LoginCommand = new RelayCommand(LoginAction,
+                () => _mail != null && _password != null && !HasErrors);
+            LoginAsCommand = new RelayCommand<User>(LoginAsUser);
+            GoToSignUpCommand = new RelayCommand(() =>
+            {
+                NotifyColleagues(App.Messages.MSG_DISPLAY_SIGN_UP,new User());
+            });
+            
+        }
+
+        // Connexion
         private void LoginAction() {
             if (Validate()) {
                 var user = Context.Users.FirstOrDefault(u => u.Mail == Mail);
-                NotifyColleagues(ApplicationBaseMessages.MSG_LOGIN, user);
+                NotifyColleagues(App.Messages.MSG_LOGIN, user);
             }
         }
 
+        // Connexion par défaut
+        private void LoginAsUser(User user) {
+            if (user != null) {
+                // Logique de connexion en utilisant les informations de l'utilisateur
+                var email = user.Mail;
+                var password = user.HashedPassword;
+                NotifyColleagues(App.Messages.MSG_LOGIN, user);
+            }
+        }
+
+        // Validations
         public override bool Validate() {
             ClearErrors();
-            
+
             var user = Context.Users.FirstOrDefault(u => u.Mail == Mail);
 
             if (string.IsNullOrEmpty(Mail))
@@ -65,7 +117,7 @@ namespace prbd_2324_a06.ViewModel
                 return false;
             }
         }
-        
+
         protected override void OnRefreshData() {
         }
     }
