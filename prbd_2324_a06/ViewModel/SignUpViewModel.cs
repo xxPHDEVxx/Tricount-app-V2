@@ -22,7 +22,7 @@ namespace prbd_2324_a06.ViewModel
         private string _password;
         private string _checkPaswword;
 
-        // Propertys
+        // Properties
         public string Mail {
             get => _mail;
             set => SetProperty(ref _mail, value, () => Validate());

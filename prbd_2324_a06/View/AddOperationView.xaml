@@ -3,6 +3,7 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:sys="clr-namespace:System;assembly=mscorlib"
                    xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
                    mc:Ignorable="d"
@@ -40,14 +41,14 @@
         <!-- Initiator -->
         <TextBlock Text="Initiator:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
         <ComboBox x:Name="InitiatorComboBox" Grid.Row="2" Grid.Column="1" Margin="10">
-            <ComboBoxItem>Boris</ComboBoxItem>
+            <ComboBoxItem Content="{Binding CurrentUser}"></ComboBoxItem>
             <!-- Add other initiators here -->
         </ComboBox>
 
         <!-- Date -->
         <TextBlock Text="Date:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
-        <DatePicker x:Name="DateDatePicker" Grid.Row="3" Grid.Column="1"
-                    SelectedDate="{Binding DateTime, StringFormat={}{0:dd/MM/yyyy HH:mm:ss}}" Margin="10" />
+        <DatePicker x:Name="DateDatePicker" Grid.Row="3" Grid.Column="1" DisplayDateStart="{x:Static sys:DateTime.Now}"
+                    SelectedDate="{x:Static sys:DateTime.Now}" Margin="10" />
 
         <!-- Template -->
         <TextBlock Text="Template:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="10" />

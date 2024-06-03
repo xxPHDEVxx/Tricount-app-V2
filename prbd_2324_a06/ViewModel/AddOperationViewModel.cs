@@ -1,16 +1,26 @@
 ﻿using Microsoft.Extensions.Options;
+using prbd_2324_a06.Model;
 
 namespace prbd_2324_a06.ViewModel
 {
     public class AddOperationViewModel : ViewModelCommon
     {
         public AddOperationViewModel() : base() {
+            // Une fois liée au reste du code à décommenté
+           // _currentUser = App.CurrentUser.FullName;
+           _currentUser = "Benoît";
         }
+        
         // Attributes
         private string _title;
         private string _amount;
+        private string _currentUser;
 
-        // Property
+        // Properties
+        public string CurrentUser {
+            get => _currentUser;
+            set => SetProperty(ref _currentUser, value);
+        }
         public string Amount {
             get => _amount;
             set => SetProperty(ref _amount, value, () => Validate());
