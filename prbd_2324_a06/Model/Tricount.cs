@@ -40,7 +40,7 @@ public class Tricount : EntityBase<PridContext> {
         var tricounts = from t in Context.Tricounts
                         where t.CreatorId == User
                         select t;
-        return Context.Tricounts;
+        return tricounts;
     }
     public static IQueryable<Tricount> GetFiltered(string Filter) {
         var filtered = from t in Context.Tricounts
