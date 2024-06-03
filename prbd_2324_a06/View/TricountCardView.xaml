@@ -1,17 +1,18 @@
-﻿<UserControl x:Class="prbd_2324_a06.View.TricountCardView"
+﻿<f:UserControlBase x:Class="prbd_2324_a06.View.TricountCardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:prbd_2324_a06.View"
-                          xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+             xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
              xmlns:vw="clr-namespace:prbd_2324_a06.View"
+             xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:TricountCardViewModel, IsDesignTimeCreatable=False}"
-
-             d:DesignHeight="450" Width="349">
+             d:DesignHeight="200" Width="130">
     <Grid Margin="0,0,0,0">
-        <TextBlock>Card</TextBlock>
+        <TextBlock FontSize="14"  FontWeight="Bold" TextAlignment="Center" Text="{Binding Title}" Margin="0,0,0,0" />
+        <TextBlock FontSize="14"  TextAlignment="Center" Text="{Binding Description}" Margin="0,20,0,0" />
 
     </Grid>
-</UserControl>
+</f:UserControlBase>

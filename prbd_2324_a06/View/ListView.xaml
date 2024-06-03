@@ -8,11 +8,16 @@
              xmlns:vw="clr-namespace:prbd_2324_a06.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <vm:ListViewModel />
+    </UserControl.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid Margin="10">
@@ -23,14 +28,18 @@
             <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" FontSize="14" Grid.ColumnSpan="2" Margin="0,0,-566,0" />
             <Button Content="Clear" Grid.Column="1" Command="{Binding ClearFilter}" Margin="618,0,-613,0" />
         </Grid>
-        <ListView x:Name="listView" Margin="10,5,46,5" Grid.Row="2">
+        <ListView x:Name="listView" Margin="10,5,46,5" Grid.Row="2" ItemsSource="{Binding Tricounts}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <vw:TricountCardView/>
+                    <vw:TricountCardView />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button x:Name="btnNew" Content="New Tricount" Command="{Binding NewTricount}" HorizontalAlignment="Left" Margin="10,10" Grid.Row="3" Padding="5,1"/>
-
+        <Button x:Name="btnNew" Content="New Tricount" Command="{Binding NewTricount}" HorizontalAlignment="Left" Margin="10,10" Grid.Row="3" Padding="5,1" />
     </Grid>
 </UserControl>

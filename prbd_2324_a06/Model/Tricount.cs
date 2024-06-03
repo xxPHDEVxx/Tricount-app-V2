@@ -1,4 +1,5 @@
-﻿using PRBD_Framework;
+﻿using Microsoft.Extensions.Primitives;
+using PRBD_Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -33,6 +34,20 @@ public class Tricount : EntityBase<PridContext> {
         CreatedAt = createdAt;
         Creator = creator;
 
+    }
+
+    public static IQueryable<Tricount> GetAll(int User) {
+        var tricounts = from t in Context.Tricounts
+                        where t.CreatorId == User
+                        select t;
+        return Context.Tricounts;
+    }
+    public static IQueryable<Tricount> GetFiltered(string Filter) {
+        var filtered = from t in Context.Tricounts
+                       where t.Title.Contains(Filter) || t.Description.Contains(Filter)
+                       orderby t.Title
+                       select t;
+        return filtered;
     }
 }
 
