@@ -33,9 +33,9 @@ namespace prbd_2324_a06.ViewModel;
     protected override void OnRefreshData() {
             var UserId = CurrentUser.UserId;
         
-            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts() : CurrentUser.GetFiltered(Filter);
+            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()) : CurrentUser.GetFiltered(Filter);
 
             Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t => new TricountCardViewModel(t)));
-            }
+         }
     }
 

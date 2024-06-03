@@ -54,11 +54,17 @@ public class User : EntityBase<PridContext>
         return tricounts;
     }
     public IQueryable<Tricount> GetFiltered(string Filter) {
-        var filtered = from t in GetTricounts()
+        var filtered = from t in GetTricounts().Union(GetParticipatedTricounts())
                        where t.Title.Contains(Filter)
                        orderby t.Title
                        select t;
         return filtered;
     }
-
+    public IQueryable<Tricount> GetParticipatedTricounts() {
+        var participatedTricounts = from s in Context.Subscriptions
+                                    join t in Context.Tricounts on s.TricountId equals t.Id
+                                    where s.UserId == UserId
+                                    select t;
+        return participatedTricounts;
+    }
 }
