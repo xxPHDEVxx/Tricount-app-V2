@@ -265,7 +265,6 @@ public class PridContext : DbContextBase
             );
     }
     
-    
     public DbSet<User> Users => Set<User>();
     public DbSet<Tricount> Tricounts => Set<Tricount>();
     public DbSet<Template> Templates => Set<Template>();

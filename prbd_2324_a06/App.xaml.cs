@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
@@ -8,14 +9,15 @@ namespace prbd_2324_a06;
 
 public partial class App
 {
-    
-    public enum Messages {
+    public enum Messages
+    {
         MSG_SIGN_UP,
         MSG_DISPLAY_SIGN_UP,
         MSG_LOGIN,
         MSG_LOGOUT,
         MSG_RESET
     }
+
     public App() {
         var ci = new CultureInfo("fr-BE") {
             DateTimeFormat = {
@@ -42,18 +44,33 @@ public partial class App
         Register<User>(this, App.Messages.MSG_SIGN_UP, user => {
             WindowCollection windowCollection = this.Windows;
             Login(user);
+
             NavigateTo<MainViewModel, User, PridContext>();
             // fermeture view sign up
             windowCollection[0]?.Close();
         });
-    }
 
+        // Logout
+        Register(this, Messages.MSG_LOGOUT, () => {
+            Logout();
+            NavigateTo<LoginViewModel, User, PridContext>();
+        });
+
+        // Reset
+        Register(this, Messages.MSG_RESET, Reset);
+    }
+    public void Reset() {
+        // Detached Entities from tracking
+        Context.ChangeTracker.Clear();
+        Context.SaveChanges();
+        // Clear database and seed data
+        PrepareDatabase();
+    }
 
     private static void PrepareDatabase() {
         // Clear database and seed data
         Context.Database.EnsureDeleted();
         Context.Database.EnsureCreated();
-
         // Cold start
         Console.Write("Cold starting database... ");
         Context.Users.Find(1);
