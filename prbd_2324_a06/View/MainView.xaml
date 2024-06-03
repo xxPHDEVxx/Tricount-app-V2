@@ -8,8 +8,20 @@
               xmlns:vw="clr-namespace:prbd_2324_a06.View"
               mc:Ignorable="d"
               d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}"
-              Title="Tricount" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+              Title="Tricount" Height="700" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
+    <Grid>
+        <Menu>
+            <MenuItem Header="Logout" Click="Logout_Click"/>
+            <MenuItem Header="Reload"  />
+            <MenuItem Header="Reset"  Click="Reset_Click"/>
+        </Menu>
+        <f:MyTabControl x:Name="tabControl" Margin="5 19 5 5" Grid.Row="1" HasCloseButton="True">
+            <TabItem x:Name="tricountTabs" Header="My Tricounts" Tag="Tricount">
+                <vw:ListView/>
+            </TabItem>
+        </f:MyTabControl>
+    </Grid>
 </f:WindowBase>
