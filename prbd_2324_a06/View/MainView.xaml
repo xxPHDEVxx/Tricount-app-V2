@@ -8,7 +8,7 @@
               xmlns:vw="clr-namespace:prbd_2324_a06.View"
               mc:Ignorable="d"
               d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}"
-              Title="Tricount" Height="700" Width="800" WindowStartupLocation="CenterScreen">
+              Title="{Binding Title}" Height="700" Width="800" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>

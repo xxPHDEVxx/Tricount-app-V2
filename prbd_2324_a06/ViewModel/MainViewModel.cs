@@ -18,8 +18,8 @@ public class MainViewModel : ViewModelCommon
     }
 
     public static string Title {
-        get => $"My Social Network ()";
-    }
+        get => $"MyTricount ({CurrentUser?.Mail})";
+            }
 
     protected override void OnRefreshData() {
         // pour plus tard
