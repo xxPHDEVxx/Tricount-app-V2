@@ -1,4 +1,3 @@
-﻿using Microsoft.EntityFrameworkCore;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
@@ -39,28 +38,15 @@ public partial class App
             Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
         });
-        // Logout
-        Register(this, Messages.MSG_LOGOUT, () => {
-            Logout();
-            NavigateTo<LoginViewModel, User, PridContext>();
-        });
-        
         // Sign up
         Register<User>(this, App.Messages.MSG_SIGN_UP, user => {
+            WindowCollection windowCollection = this.Windows;
             Login(user);
             NavigateTo<MainViewModel, User, PridContext>();
+            // fermeture view sign up
+            windowCollection[0]?.Close();
         });
-        
-        // Reset
-        Register(this, Messages.MSG_RESET, Reset);
     }
-    
-    private static void Reset() {
-        // manque le clear des entités 
-        Context.Database.EnsureDeleted();
-        Context.Database.EnsureCreated();
-    }
-
 
 
     private static void PrepareDatabase() {
