@@ -6,9 +6,13 @@ namespace prbd_2324_a06.ViewModel
 {
     public class ListViewModel : ViewModelCommon {
         public ICommand NewTricount {  get; set; }
-        
+
         //observable de card tricount
-        //filter
+        private string _filter;
+        public string Filter {
+            get => _filter;
+            set => SetProperty(ref _filter, value, OnRefreshData);
+        }
 
         public ListViewModel() { }
     }
