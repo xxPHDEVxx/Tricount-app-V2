@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using prbd_2324_a06.Model;
 using PRBD_Framework;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using System.Windows.Interop;
