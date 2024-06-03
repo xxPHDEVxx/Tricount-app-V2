@@ -37,8 +37,7 @@ namespace prbd_2324_a06.View
                     Width = 60,
                     Value = 1,
                     MinValue = 0,
-                    Margin = new Thickness(5),
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    Margin = new Thickness(5)
                 };
                 numericUpDown.ValueChanged += (sender, e) => 
                 {
