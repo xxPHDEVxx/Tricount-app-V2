@@ -10,9 +10,9 @@ using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
 {
-    public partial class AddOperationView : WindowBase
+    public partial class EditOperationView : WindowBase
     {
-        public AddOperationView() {
+        public EditOperationView() {
             InitializeComponent();
             InitializeCheckBox();
             InitializeCombobox();

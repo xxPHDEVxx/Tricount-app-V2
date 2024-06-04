@@ -67,6 +67,9 @@ namespace prbd_2324_a06.ViewModel
         private void AddAction() {
             if (Validate()) {
                 var operation = new Operation(Title, Tricount.Id, double.Parse(Amount), DateTime.Today, CurrentUser.UserId );
+                Console.WriteLine(operation.GetHighestOperationId());
+                Context.Operations.Add(operation);
+                Context.SaveChanges();
                 NotifyColleagues(App.Messages.MSG_ADD_OPERATION, operation);
             }
         }
@@ -83,10 +86,6 @@ namespace prbd_2324_a06.ViewModel
                 }
                 else if (double.Parse(Amount) < 0.01) {
                     AddError(nameof(Amount), "minimum 1 cent");
-                }
-
-                if (IsChecked == false) {
-                    AddError(nameof(IsChecked), "Checked");
                 }
             }
             

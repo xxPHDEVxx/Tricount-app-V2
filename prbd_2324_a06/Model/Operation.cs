@@ -38,7 +38,7 @@ public class Operation : EntityBase<PridContext> {
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
     public int GetHighestOperationId()
     {
-        return Context.Operations.Max(o => o.Id);
+        return Context.Operations.Max(o => o.Id) + 1;
     }
 }
 
