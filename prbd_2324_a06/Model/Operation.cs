@@ -24,5 +24,9 @@ public class Operation : EntityBase<PridContext> {
 
 
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
+
+
+
+
 }
 

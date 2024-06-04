@@ -9,16 +9,49 @@
              xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:TricountCardViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="220" Width="150">
-    <Grid Margin="0,0,0,0" >
-        <Border Background="Aqua" CornerRadius="10" Padding="10">
+             d:DesignHeight="1400" Width="200">
+        <Border Background="Aqua" CornerRadius="10" Padding="5">
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <TextBlock FontSize="14" FontWeight="Bold" TextAlignment="Center" Text="{Binding Title}"  />
+        </Grid>
+        <Grid Grid.Row="2">
+            <TextBlock FontSize="14" TextAlignment="Center" FontStyle="Italic" Text="{Binding Description}" TextWrapping="Wrap"/>
+        </Grid>
+        <Grid Grid.Row="3">
+            <TextBlock FontSize="12" TextAlignment="Center" Text="{Binding CreatedBy}"  TextWrapping="Wrap"/>
+        </Grid>
+        <Grid Grid.Row="4" Margin="0, 10, 0,0">
+            <TextBlock FontSize="12" TextAlignment="Center" Text="{Binding LastOperation}"  TextWrapping="Wrap"/>
+        </Grid>
+        <Grid Grid.Row="5" Margin="0, 10, 0,0">
+            <TextBlock FontSize="12" TextAlignment="Center"  Text="{Binding WithFriends}"  TextWrapping="Wrap" Margin="0,0,0,0"/>
+            <TextBlock FontSize="12" TextAlignment="Center"  Text="{Binding NumberOfOperations}"  TextWrapping="Wrap" Margin="0, 10, 0, 0"/>
+        </Grid>
+        <Grid Grid.Row="6" Margin="0, 40, 0,0">
             <StackPanel>
-                <TextBlock FontSize="14" FontWeight="Bold" TextAlignment="Center" Text="{Binding Title}" Margin="0,0,0,0" />
-                <TextBlock FontSize="14" TextAlignment="Center" FontStyle="Italic" Text="{Binding Description}" Margin="0,10,0,0" TextWrapping="Wrap"/>
-                <TextBlock FontSize="12" TextAlignment="Center" FontStyle="Italic" Text="{Binding CreatedBy}" Margin="0,14,0,0" TextWrapping="Wrap"/>
-                <TextBlock FontSize="12" TextAlignment="Center" FontStyle="Italic" Text="{Binding WithFriends}" Margin="0,20,0,0" TextWrapping="Wrap"/>
-                <TextBlock FontSize="12" TextAlignment="Center" FontStyle="Italic" Text="{Binding NumberOfOperations}" Margin="0,23,0,0" TextWrapping="Wrap"/>
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Total}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBlock FontSize="12" TextAlignment="Left" Text="{Binding TotalExpenses}" TextWrapping="Wrap" Margin="0,0,0,0"/>
+                <TextBlock FontSize="12" TextAlignment="Left" Text="{Binding MyExpenses}" TextWrapping="Wrap" Margin="0,1,0,0"/>
+                <TextBlock FontSize="12" TextAlignment="Left" Text="{Binding MyBalance}" TextWrapping="Wrap" Margin="0,1,0,0"/>
             </StackPanel>
+        </Grid>
+        </Grid>
         </Border>    
-    </Grid>
 </f:UserControlBase>
