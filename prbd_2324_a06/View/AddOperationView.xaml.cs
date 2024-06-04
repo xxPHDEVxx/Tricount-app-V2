@@ -88,6 +88,14 @@ namespace prbd_2324_a06.View
                 InitiatorComboBox.Items.Add(comboBoxItem);
             }
 
+            // Trier les éléments de la ComboBox par ordre alphabétique
+            List<ComboBoxItem> sortedItems = InitiatorComboBox.Items.Cast<ComboBoxItem>()
+                .OrderBy(item => item.Content.ToString()).ToList();
+            InitiatorComboBox.Items.Clear();
+            foreach (var item in sortedItems) {
+                InitiatorComboBox.Items.Add(item);
+            }
+            
             // Rechercher l'élément correspondant dans la ComboBox
             ComboBoxItem defaultItem = InitiatorComboBox.Items
                 .OfType<ComboBoxItem>()
@@ -95,14 +103,6 @@ namespace prbd_2324_a06.View
             // Si l'élément par défaut existe, le sélectionner
             if (defaultItem != null) {
                 InitiatorComboBox.SelectedItem = defaultItem;
-            }
-
-            // Trier les éléments de la ComboBox par ordre alphabétique
-            List<ComboBoxItem> sortedItems = InitiatorComboBox.Items.Cast<ComboBoxItem>()
-                .OrderBy(item => item.Content.ToString()).ToList();
-            InitiatorComboBox.Items.Clear();
-            foreach (var item in sortedItems) {
-                InitiatorComboBox.Items.Add(item);
             }
         }
 

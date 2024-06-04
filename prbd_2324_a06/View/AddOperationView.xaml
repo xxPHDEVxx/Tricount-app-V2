@@ -41,8 +41,6 @@
         <!-- Initiator -->
         <TextBlock Text="Initiator:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
         <ComboBox x:Name="InitiatorComboBox" Grid.Row="2" Grid.Column="1" Margin="10">
-            <ComboBoxItem Content="{Binding CurrentUser.FullName}"></ComboBoxItem>
-            <!-- Add other initiators here -->
         </ComboBox>
 
         <!-- Date -->
