@@ -10,7 +10,7 @@
               Title="Edit Operation"
               Width="320" Height="510">
     <Window.DataContext>
-        <vm:AddOperationViewModel x:Name="vm" />
+        <vm:EditOperationViewModel x:Name="vm" />
     </Window.DataContext>
     <Grid Margin="10">
         <Grid.RowDefinitions>
