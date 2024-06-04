@@ -97,6 +97,14 @@ namespace prbd_2324_a06.View
             if (defaultItem != null) {
                 InitiatorComboBox.SelectedItem = defaultItem;
             }
+
+            // Trier les éléments de la ComboBox par ordre alphabétique
+            List<ComboBoxItem> sortedItems = InitiatorComboBox.Items.Cast<ComboBoxItem>()
+                .OrderBy(item => item.Content.ToString()).ToList();
+            InitiatorComboBox.Items.Clear();
+            foreach (var item in sortedItems) {
+                InitiatorComboBox.Items.Add(item);
+            }
         }
 
         // Return Users of the Operation's Tricount.
@@ -109,6 +117,11 @@ namespace prbd_2324_a06.View
             }
 
             return participants;
+        }
+        
+        // Bouton Cancel
+        private void btnCancel_Click(object sender, RoutedEventArgs e) {
+            Close();
         }
     }
 }
