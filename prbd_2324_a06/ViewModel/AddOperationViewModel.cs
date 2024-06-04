@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using prbd_2324_a06.Model;
+using PRBD_Framework;
+using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
 {
@@ -8,16 +10,21 @@ namespace prbd_2324_a06.ViewModel
         // ajouter en parametre Tricount pour lier au reste du code
         public AddOperationViewModel() : base() {
             //Tricount = tricount;
-            Tricount = Context.Tricounts.Find(1);// pour les tests
+            Tricount = Context.Tricounts.Find(2);// pour les tests
             // Une fois liée au reste du code à décommenté
            // _currentUser = App.CurrentUser.FullName;
-           _currentUser = "Benoît";
+           _currentUser = Context.Users.Find(2);
+           AddCommand = new RelayCommand(AddAction,
+               () => _title != null && _amount != null && _currentUser != null && !HasErrors);
         }
+        
+        // Commandes
+        public ICommand AddCommand { get; set; }
         
         // Attributes
         private string _title;
         private string _amount;
-        private string _currentUser;
+        private User _currentUser;
         private Tricount _tricount;
 
         // Properties
@@ -34,7 +41,7 @@ namespace prbd_2324_a06.ViewModel
             get => _tricount;
             set => SetProperty(ref _tricount, value);
         }
-        public string CurrentUser {
+        public new User CurrentUser {
             get => _currentUser;
             set => SetProperty(ref _currentUser, value);
         }
@@ -45,6 +52,16 @@ namespace prbd_2324_a06.ViewModel
         public string Title {
             get => _title;
             set => SetProperty(ref _title, value, () => Validate());
+        }
+        
+        // Méthodes Commandes
+        
+        // Add
+        private void AddAction() {
+            if (Validate()) {
+                var operation = new Operation(Title, Tricount.Id, double.Parse(Amount), DateTime.Today, CurrentUser.UserId );
+                NotifyColleagues(App.Messages.MSG_ADD_OPERATION, operation);
+            }
         }
 
         // Méthode de validation

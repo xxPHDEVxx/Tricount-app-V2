@@ -5,6 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace prbd_2324_a06.Model;
 
 public class Operation : EntityBase<PridContext> {
+    public Operation(string title, int tricountId, double amount, DateTime operationDate,int initiatorId) {
+        Id = GetHighestOperationId();
+        Title = title;
+        TricountId = tricountId;
+        Amount = amount;
+        OperationDate = operationDate;
+        InitiatorId = initiatorId;
+    }
+    
+    public Operation() {
+    }
+    
     [Key]
     public int Id {  get; set; }
     public string Title { get; set; }
@@ -24,5 +36,9 @@ public class Operation : EntityBase<PridContext> {
 
 
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
+    public int GetHighestOperationId()
+    {
+        return Context.Operations.Max(o => o.Id);
+    }
 }
 
