@@ -67,4 +67,9 @@ public class User : EntityBase<PridContext>
                                     select t;
         return participatedTricounts;
     }
+
+    public static string GetUserNameById(int userId) { 
+        var u =  Context.Users.SingleOrDefault (u => u.UserId == userId);
+        return u.FullName;
+    }
 }

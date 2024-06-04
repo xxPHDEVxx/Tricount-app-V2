@@ -36,7 +36,14 @@ public class Tricount : EntityBase<PridContext> {
 
     }
 
-
-
+    public string GetCreatorName() {
+        return User.GetUserNameById(CreatorId);
+    }
+    public int NumberOfParticipants() {
+        var q = (from s in Subscriptions
+                 where s.UserId != CreatorId
+                 select s).Count();
+        return q;
+    }
 }
 

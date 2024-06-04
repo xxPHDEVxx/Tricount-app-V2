@@ -13,6 +13,9 @@ public class TricountCardViewModel : ViewModelCommon
     }
     public string Title => Tricount.Title;
     public string Description => Tricount.Description?? "No Description";
+    public string CreatedBy => $"Created By {Tricount.GetCreatorName()} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
+    public string WithFriends => Tricount.NumberOfParticipants() == 0 ? "With no friend" : $"With {Tricount.NumberOfParticipants()} friends";
+    public string NumberOfOperations => "operations";
 
 
     public  TricountCardViewModel(Tricount tricount) {
