@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using prbd_2324_a06.Model;
 using PRBD_Framework;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -54,6 +55,7 @@ namespace prbd_2324_a06.ViewModel
                 if (user == 4) {
                     user++;
                 }
+
                 DefaultUser[i] = Context.Users.FirstOrDefault(u => u.UserId == user);
                 DefaultUserName[i] = DefaultUser[i].FullName;
                 user++;
@@ -62,11 +64,9 @@ namespace prbd_2324_a06.ViewModel
             LoginCommand = new RelayCommand(LoginAction,
                 () => _mail != null && _password != null && !HasErrors);
             LoginAsCommand = new RelayCommand<User>(LoginAsUser);
-            GoToSignUpCommand = new RelayCommand(() =>
-            {
-                NotifyColleagues(App.Messages.MSG_DISPLAY_SIGN_UP,new User());
+            GoToSignUpCommand = new RelayCommand(() => {
+                NotifyColleagues(App.Messages.MSG_DISPLAY_SIGN_UP, new User());
             });
-            
         }
 
         // Connexion
@@ -97,16 +97,34 @@ namespace prbd_2324_a06.ViewModel
                 AddError(nameof(Mail), "required");
             else if (!IsValidEmail(Mail))
                 AddError(nameof(Mail), "invalid email format");
+            else if (user == null)
+                AddError(nameof(Mail), "does not exist");
             else {
                 if (string.IsNullOrEmpty(Password))
                     AddError(nameof(Password), "required");
-                else if (Password.Length < 3)
-                    AddError(nameof(Password), "length must be >= 3");
-                else if (user != null && user.HashedPassword != Password)
+                else if (Password.Length < 8)
+                    AddError(nameof(Password), "length must be >= 8");
+                else if (IsValidPassword(Password) != "")
+                    AddError(nameof(Password), IsValidPassword(Password));
+                else if (user.HashedPassword != Password)
                     AddError(nameof(Password), "wrong password");
             }
 
             return !HasErrors;
+        }
+
+        private string IsValidPassword(string password) {
+            // Vérifie si le mot de passe contient au moins un chiffre, une lettre majuscule et un caractère non alphanumérique
+            var hasNumber = new System.Text.RegularExpressions.Regex(@"[0-9]+");
+            var hasUpperChar = new System.Text.RegularExpressions.Regex(@"[A-Z]+");
+            var hasSymbols = new System.Text.RegularExpressions.Regex(@"[!@#$%^&*(),.?""{}|<>-]");
+            if (!(hasNumber.IsMatch(password)))
+                return "Must contain at least a number";
+            else if (!(hasUpperChar.IsMatch(password)))
+                return "Must contain at least an upper case";
+            else if (!(hasSymbols.IsMatch(password)))
+                return "Must contain at least a symbol";
+            else return "";
         }
 
         private bool IsValidEmail(string email) {

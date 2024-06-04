@@ -1,5 +1,6 @@
 ﻿using PRBD_Framework;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace prbd_2324_a06.Model;
 
@@ -42,8 +43,6 @@ public class User : EntityBase<PridContext>
     {
         return Context.Users.Max(u => u.UserId);
     }
-
-
     public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 
