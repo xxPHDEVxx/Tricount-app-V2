@@ -5,7 +5,10 @@ namespace prbd_2324_a06.ViewModel
 {
     public class AddOperationViewModel : ViewModelCommon
     {
+        // ajouter en parametre Tricount pour lier au reste du code
         public AddOperationViewModel() : base() {
+            //Tricount = tricount;
+            Tricount = Context.Tricounts.Find(1);// pour les tests
             // Une fois liée au reste du code à décommenté
            // _currentUser = App.CurrentUser.FullName;
            _currentUser = "Benoît";
@@ -15,8 +18,22 @@ namespace prbd_2324_a06.ViewModel
         private string _title;
         private string _amount;
         private string _currentUser;
+        private Tricount _tricount;
 
         // Properties
+
+        public DateTime StartDate {
+            get => Tricount.CreatedAt;
+            set {
+                DateTime tricountCreatedAt = Tricount.CreatedAt;
+                SetProperty(ref tricountCreatedAt, value);
+            }
+        }
+
+        public Tricount Tricount {
+            get => _tricount;
+            set => SetProperty(ref _tricount, value);
+        }
         public string CurrentUser {
             get => _currentUser;
             set => SetProperty(ref _currentUser, value);

@@ -47,7 +47,7 @@
 
         <!-- Date -->
         <TextBlock Text="Date:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
-        <DatePicker x:Name="DateDatePicker" Grid.Row="3" Grid.Column="1" DisplayDateStart="{x:Static sys:DateTime.Now}"
+        <DatePicker x:Name="DateDatePicker" Grid.Row="3" Grid.Column="1" DisplayDateStart="{Binding StartDate}"
                     SelectedDate="{x:Static sys:DateTime.Now}" Margin="10" />
 
         <!-- Template -->
