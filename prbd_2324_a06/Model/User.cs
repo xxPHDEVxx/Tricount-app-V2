@@ -72,4 +72,23 @@ public class User : EntityBase<PridContext>
         var u =  Context.Users.SingleOrDefault (u => u.UserId == userId);
         return u.FullName;
     }
+
+    public double GetMyExpenses(Tricount tricount) {
+        double myExpenses = 0;
+        double weight = 0;
+        foreach (var operation in Context.Operations) {
+            if (operation.TricountId == tricount.Id) {
+                double operationWeight = 0;
+                double userWeight = 0;
+                foreach (var repartition in operation.Repartitions) {
+                    operationWeight += repartition.Weight;
+                    if (repartition.UserId == UserId) {
+                        userWeight = repartition.Weight;
+                    }
+                }
+                myExpenses += operation.Amount * (userWeight / operationWeight);
+            }
+        }
+        return myExpenses;
+    }
 }
