@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using prbd_2324_a06.Model;
 using PRBD_Framework;
+using System.Windows;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
@@ -10,7 +11,7 @@ namespace prbd_2324_a06.ViewModel
         // ajouter en parametre Tricount pour lier au reste du code
         public AddOperationViewModel() : base() {
             //Tricount = tricount;
-            Tricount = Context.Tricounts.Find(2);// pour les tests
+            Tricount = Context.Tricounts.Find(4);// pour les tests
             // Une fois liée au reste du code à décommenté
            // _currentUser = App.CurrentUser.FullName;
            _currentUser = Context.Users.Find(2);
@@ -26,9 +27,15 @@ namespace prbd_2324_a06.ViewModel
         private string _amount;
         private User _currentUser;
         private Tricount _tricount;
+        private bool _ischecked;
 
         // Properties
 
+        public bool IsChecked {
+            get => _ischecked;
+            set => SetProperty(ref _ischecked, value, () => Validate());
+        }
+        
         public DateTime StartDate {
             get => Tricount.CreatedAt;
             set {
@@ -77,7 +84,12 @@ namespace prbd_2324_a06.ViewModel
                 else if (double.Parse(Amount) < 0.01) {
                     AddError(nameof(Amount), "minimum 1 cent");
                 }
+
+                if (IsChecked == false) {
+                    AddError(nameof(IsChecked), "Checked");
+                }
             }
+            
             return !HasErrors;
         }
         
@@ -92,5 +104,26 @@ namespace prbd_2324_a06.ViewModel
     
             return "";
         }
+        
+        // Return Users of the Operation's Tricount.
+        protected internal List<User> GetUsersTricount() {
+            Tricount tricount = Tricount;
+            List<User> participants = new List<User>();
+            foreach (var user in tricount.GetParticipants()) {
+                participants.Add(user);
+            }
+            return participants;
+        }
+
+        // Return Templates of the Operation's Tricount.
+        protected internal List<Template> GetTemplatesTricount() {
+            Tricount tricount = Tricount;
+            List<Template> templates = new List<Template>();
+            foreach (var template in tricount.GetTemplates()) {
+                templates.Add(template);
+            }
+            return templates;
+        }
+        
     }
 }

@@ -49,4 +49,14 @@ public class Tricount : EntityBase<PridContext>
 
         return participants;
     }
+
+    public IQueryable<Template> GetTemplates() {
+        var id = Templates
+            .Where(t => t.TricountId == Id)
+            .Select(t => t.Id);
+
+        var templates = Context.Templates
+            .Where(t => id.Contains(t.Id));
+        return templates;
+    }
 }

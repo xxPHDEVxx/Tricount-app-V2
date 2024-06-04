@@ -53,7 +53,6 @@
         <TextBlock Text="Template:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="10">
             <ComboBox x:Name="TemplateComboBox" Width="150">
-                <ComboBoxItem>-- Choose a template --</ComboBoxItem>
                 <!-- Add templates here -->
             </ComboBox>
             <Button x:Name="ApplyTemplateButton" Content="Apply" Margin="5,0,0,0" />

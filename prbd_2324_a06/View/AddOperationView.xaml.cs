@@ -1,9 +1,12 @@
-﻿using NumericUpDownLib;
+﻿using CalcBinding;
+using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
 {
@@ -13,12 +16,13 @@ namespace prbd_2324_a06.View
             InitializeComponent();
             InitializeCheckBox();
             InitializeCombobox();
+            initializeTemplates();
         }
 
         // Initialise checkBox's template with the tricount's participants
         private void InitializeCheckBox() {
             // fetching users from the database
-            List<User> users = GetUsersFromDatabase();
+            List<User> users = vm.GetUsersTricount();
 
             foreach (var user in users) {
                 // Create a new Grid for each user
@@ -29,7 +33,7 @@ namespace prbd_2324_a06.View
 
                 // Create CheckBox
                 CheckBox checkBox = new CheckBox
-                    { Content = user.FullName, Margin = new Thickness(5), IsChecked = true };
+                    {Content = user.FullName, Margin = new Thickness(5), IsChecked= true};
                 Grid.SetColumn(checkBox, 0);
                 userGrid.Children.Add(checkBox);
 
@@ -46,11 +50,10 @@ namespace prbd_2324_a06.View
 
                 // Create TextBlock
                 TextBlock textBlock = new TextBlock
-                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) };
+                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5)};
                 Grid.SetColumn(textBlock, 2);
                 userGrid.Children.Add(textBlock);
-
-
+                
                 // Add the userGrid to the ParticipantsPanel
                 ParticipantsPanel.Children.Add(userGrid);
 
@@ -81,7 +84,7 @@ namespace prbd_2324_a06.View
         // Initialize comboBoxItem with the participants of the Operation's Tricount.
         private void InitializeCombobox() {
             // fetching users from the database
-            List<User> users = GetUsersFromDatabase();
+            List<User> users = vm.GetUsersTricount();
             foreach (var user in users) {
                 // Create ComboBox
                 ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = user.FullName };
@@ -105,17 +108,27 @@ namespace prbd_2324_a06.View
                 InitiatorComboBox.SelectedItem = defaultItem;
             }
         }
-
-        // Return Users of the Operation's Tricount.
-        private List<User> GetUsersFromDatabase() {
-            Tricount tricount = vm.Tricount;
-            List<User> participants = new List<User>();
-            foreach (var user in tricount.GetParticipants()) {
-                participants.Add(user);
-                Console.WriteLine(user.FullName);
+        
+        // Initialize comboBoxItem with the templates of the Operation's Tricount.
+        private void initializeTemplates() {
+            List<Template> templates = vm.GetTemplatesTricount();
+            foreach (var template in templates) {
+                // Create ComboBox
+                ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = template.Title };
+                TemplateComboBox.Items.Add(comboBoxItem);
             }
+            // Trier les éléments de la ComboBox par ordre alphabétique
+            List<ComboBoxItem> sortedItems = TemplateComboBox.Items.Cast<ComboBoxItem>()
+                .OrderBy(item => item.Content.ToString()).ToList();
+            TemplateComboBox.Items.Clear();
+            foreach (var item in sortedItems) {
+                TemplateComboBox.Items.Add(item);
+            }
+            // ajout Item par défaut
+            ComboBoxItem defaultItem = new ComboBoxItem() { Content = "-- Choose a template --" };
+            TemplateComboBox.Items.Add(defaultItem);
+            TemplateComboBox.SelectedItem = defaultItem;
 
-            return participants;
         }
         
         // Bouton Cancel
