@@ -84,7 +84,8 @@ public class User : EntityBase<PridContext>
                 }
             }
         }
-        myExpenses = Math.Round((tricount.GetTotal()/operationWeight) * userWeight, 2);
+        var total = (tricount.GetTotal() / operationWeight) * userWeight;
+        myExpenses = Math.Round(total, 2);
         return myExpenses;
     }
     public double GetMyBalance(Tricount tricount) {
