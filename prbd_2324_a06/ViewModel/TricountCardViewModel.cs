@@ -19,7 +19,7 @@ public class TricountCardViewModel : ViewModelCommon
     public string NumberOfOperations => "nb operations";
     public string TotalExpenses => $"Total expense : {Tricount.GetTotal()}";
     public string MyExpenses => $"My Expenses : {CurrentUser.GetMyExpenses(Tricount)}";
-    public string MyBalance => $"My Balance : {Tricount.GetBalance(CurrentUser)}";
+    public string MyBalance => $"My Balance : {CurrentUser.GetMyBalance(Tricount)}";
 
     public double Total => Tricount.GetTotal();
     public  TricountCardViewModel(Tricount tricount) {

@@ -20,5 +20,11 @@ public class Repartition : EntityBase<PridContext> {
     public virtual User User { get; set; }
     public int Weight { get; set; }
 
-
+    public int GetWeightForUserAndOperation(int userId, int operationId) {
+        var q = from r in Context.Repartitions
+                where r.OperationId == operationId && r.UserId == userId
+                select r.Weight;
+        int weight = q.FirstOrDefault();
+        return weight;
+    }
 }

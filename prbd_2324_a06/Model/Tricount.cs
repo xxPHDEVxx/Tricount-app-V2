@@ -58,30 +58,7 @@ public class Tricount : EntityBase<PridContext>
 
     }
 
-    public double GetBalance(User user) {
-        var operations = GetOperations().ToList();
 
-        double userExpenses = 0, weight = 0, userPaid = 0;
-        foreach (var operation in operations) {
-            if (operation.Initiator.Equals(user))
-                userPaid += operation.Amount;
-
-            var repartitions = operation.Repartitions.ToList();
-            double userWeight = 0;
-            for (int i = 0; i < repartitions.Count; i++) {
-                weight += repartitions[i].Weight;
-                if (repartitions[i].User.Equals(user))
-                    userWeight = repartitions[i].Weight;
-            }
-
-            if (userWeight != 0)
-                userExpenses += operation.Amount * (userWeight / weight);
-
-            weight = 0;
-        }
-
-        return userPaid - userExpenses;
-    }
 
     public double GetTotal() {
         var total = Context.Operations
