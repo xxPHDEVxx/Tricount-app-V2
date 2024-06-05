@@ -1,4 +1,5 @@
 ﻿using CalcBinding;
+using Microsoft.IdentityModel.Tokens;
 using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
@@ -33,7 +34,7 @@ namespace prbd_2324_a06.View
 
                 // Create CheckBox
                 CheckBox checkBox = new CheckBox
-                    {Content = user.FullName, Margin = new Thickness(5), IsChecked= true, Width = 80};
+                    { Content = user.FullName, Margin = new Thickness(5), IsChecked = true, Width = 80 };
                 Grid.SetColumn(checkBox, 0);
                 userGrid.Children.Add(checkBox);
 
@@ -51,10 +52,10 @@ namespace prbd_2324_a06.View
 
                 // Create TextBlock
                 TextBlock textBlock = new TextBlock
-                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5)};
+                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) };
                 Grid.SetColumn(textBlock, 2);
                 userGrid.Children.Add(textBlock);
-                
+
                 // Add the userGrid to the ParticipantsPanel
                 ParticipantsPanel.Children.Add(userGrid);
 
@@ -103,7 +104,7 @@ namespace prbd_2324_a06.View
             // Rechercher l'élément correspondant dans la ComboBox
             ComboBoxItem defaultItem = InitiatorComboBox.Items
                 .OfType<ComboBoxItem>()
-                .FirstOrDefault(item => item.Content.ToString() == vm.CurrentUser.FullName);
+                .FirstOrDefault(item => item.Content.ToString() == vm.Operation.Initiator.FullName);
             // Si l'élément par défaut existe, le sélectionner
             if (defaultItem != null) {
                 InitiatorComboBox.SelectedItem = defaultItem;
@@ -118,6 +119,7 @@ namespace prbd_2324_a06.View
                 ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = template.Title };
                 TemplateComboBox.Items.Add(comboBoxItem);
             }
+
             // Trier les éléments de la ComboBox par ordre alphabétique
             List<ComboBoxItem> sortedItems = TemplateComboBox.Items.Cast<ComboBoxItem>()
                 .OrderBy(item => item.Content.ToString()).ToList();
@@ -125,11 +127,11 @@ namespace prbd_2324_a06.View
             foreach (var item in sortedItems) {
                 TemplateComboBox.Items.Add(item);
             }
+
             // ajout Item par défaut
             ComboBoxItem defaultItem = new ComboBoxItem() { Content = "-- Choose a template --" };
             TemplateComboBox.Items.Add(defaultItem);
             TemplateComboBox.SelectedItem = defaultItem;
-
         }
         
         // Bouton Cancel

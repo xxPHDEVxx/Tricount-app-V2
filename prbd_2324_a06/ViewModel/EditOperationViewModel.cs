@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using prbd_2324_a06.Model;
+﻿using prbd_2324_a06.Model;
 using PRBD_Framework;
-using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
@@ -12,39 +9,57 @@ namespace prbd_2324_a06.ViewModel
         // ajouter en parametre Tricount pour lier au reste du code
         public EditOperationViewModel() : base() {
             //Tricount = tricount;
-            Tricount = Context.Tricounts.Find(4);// pour les tests
-            Operation = Context.Operations.Find(2);;// pour les tests
+            Tricount = Context.Tricounts.Find(4); // pour les tests
+            Operation = Context.Operations.Find(2);// pour les tests
             // Une fois liée au reste du code à décommenté
-           // _currentUser = App.CurrentUser.FullName;
-           _currentUser = Context.Users.Find(2);
-           AddCommand = new RelayCommand(AddAction,
-               () => _title != null && _amount != null && _currentUser != null && !HasErrors);
+            // CurrentUser = App.CurrentUser.FullName;
+            _currentUser = Context.Users.Find(2);
+            EditCommand = new RelayCommand(EditAction,
+                () => !HasErrors);
+            ApplyTemplate = new RelayCommand(ApplyAction);
+            SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors);
+            Amount = Operation.Amount.ToString();
+            OperationDate = Operation.OperationDate;
+            IsChecked = false;
+            NoTemplates = GetTemplatesTricount().Any();
         }
-        
+
         // Commandes
-        public ICommand AddCommand { get; set; }
-        
+        public ICommand EditCommand { get; set; }
+        public ICommand ApplyTemplate { get; set; }
+        public ICommand SaveTemplate { get; set; }
+
         // Attributes
-        private string _title;
-        private string _amount;
         private User _currentUser;
         private Tricount _tricount;
         private Operation _operation;
         private bool _ischecked;
+        private object _selectedTemplate;
+        private string _amount;
+        private bool _noTemplates;
+        private DateTime _operationDate;
 
         // Properties
 
+        public bool NoTemplates {
+            get => _noTemplates;
+            set => SetProperty(ref _noTemplates, value);
+        }
         public Operation Operation {
             get => _operation;
             set => SetProperty(ref _operation, value);
-
         }
 
         public bool IsChecked {
             get => _ischecked;
             set => SetProperty(ref _ischecked, value, () => Validate());
         }
-        
+
+        public object SelectedTemplate {
+            get => _selectedTemplate;
+            set => SetProperty(ref _selectedTemplate, value);
+        }
+
         public DateTime StartDate {
             get => Tricount.CreatedAt;
             set {
@@ -53,66 +68,75 @@ namespace prbd_2324_a06.ViewModel
             }
         }
 
+        public DateTime OperationDate {
+            get => _operationDate;
+            set => SetProperty(ref _operationDate, value);
+        }
+
         public Tricount Tricount {
             get => _tricount;
             set => SetProperty(ref _tricount, value);
         }
+
         public new User CurrentUser {
             get => _currentUser;
             set => SetProperty(ref _currentUser, value);
         }
+
         public string Amount {
             get => _amount;
             set => SetProperty(ref _amount, value, () => Validate());
         }
+
         public string Title {
-            get => _title;
-            set => SetProperty(ref _title, value, () => Validate());
+            get => Operation?.Title;
+            set => SetProperty(Operation.Title, value, Operation, (o, t) => {
+                o.Title = t;
+                Validate();
+            });
+        }
+
+        // Méthodes Commandes
+
+        // Edit
+        private void EditAction() {
+            if (Validate()) {
+                Operation.Title = Title;
+                Operation.Amount = double.Parse(Amount);
+                Operation.OperationDate = OperationDate;
+                // ajouter weight, initiator, templates quand binding seront ok
+                Context.SaveChanges();
+                NotifyColleagues(App.Messages.MSG_EDIT_OPERATION);
+            }
         }
         
-        // Méthodes Commandes
-        
-        // Add
-        private void AddAction() {
+        private void SaveTemplateAction() {
             if (Validate()) {
-                var operation = new Operation(Title, Tricount.Id, double.Parse(Amount), DateTime.Today, CurrentUser.UserId );
-                Console.WriteLine(operation.GetHighestOperationId());
-                Context.Operations.Add(operation);
-                Context.SaveChanges();
-                NotifyColleagues(App.Messages.MSG_ADD_OPERATION, operation);
+                
             }
         }
 
-        // Méthode de validation
+        private void ApplyAction() {
+            if (SelectedTemplate != null) {
+                
+            }
+        }
+
+        // Méthodes de validation
         public override bool Validate() {
             ClearErrors();
-            
-            if (string.IsNullOrEmpty(Title))
-                AddError(nameof(Title), "required");
-            else {
-                if (IsValidAmount(Amount) != "" ) {
-                    AddError(nameof(Amount), "Must contain only numbers");
-                }
-                else if (double.Parse(Amount) < 0.01) {
-                    AddError(nameof(Amount), "minimum 1 cent");
-                }
-            }
-            
+            Operation.Validate();
+            IsValidAmount();
+            AddErrors(Operation.Errors);
             return !HasErrors;
         }
-        
-        private string IsValidAmount(string amount) {
-            // Regex to match a string that contains only digits
-            var onlyNumbers = new System.Text.RegularExpressions.Regex(@"^\d+(\.\d+)?$");
 
-    
-            // Check if the password matches the regex
-            if (!onlyNumbers.IsMatch(amount))
-                return "Must contain only numbers";
-    
-            return "";
+        public void isSelectedTemplate() {
+            if (true) {
+                
+            }
         }
-        
+
         // Return Users of the Operation's Tricount.
         protected internal List<User> GetUsersTricount() {
             Tricount tricount = Tricount;
@@ -120,6 +144,7 @@ namespace prbd_2324_a06.ViewModel
             foreach (var user in tricount.GetParticipants()) {
                 participants.Add(user);
             }
+
             return participants;
         }
 
@@ -130,8 +155,18 @@ namespace prbd_2324_a06.ViewModel
             foreach (var template in tricount.GetTemplates()) {
                 templates.Add(template);
             }
+
             return templates;
         }
-        
+
+        // Validation méthode for string amount -> we need a string because of textbox
+        public void IsValidAmount() {
+            ClearErrors();
+            if (!double.TryParse(Amount, out double value))
+                AddError(nameof(Amount), "Not an Integer");
+            if (double.Parse(Amount) < 0.01) {
+                AddError(nameof(Amount), "minimum 1 cent");
+            }
+        }
     }
 }
