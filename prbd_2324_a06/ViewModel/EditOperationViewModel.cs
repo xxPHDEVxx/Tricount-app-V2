@@ -8,26 +8,29 @@ namespace prbd_2324_a06.ViewModel
     {
         // ajouter en parametre Tricount pour lier au reste du code
         public EditOperationViewModel() : base() {
+            // initialisation des propriétés
             //Tricount = tricount;
             Tricount = Context.Tricounts.Find(4); // pour les tests
             Operation = Context.Operations.Find(2);// pour les tests
+            Amount = Operation.Amount.ToString();
+            OperationDate = Operation.OperationDate;
+            NoTemplates = GetTemplatesTricount().Any();
             // Une fois liée au reste du code à décommenté
             // CurrentUser = App.CurrentUser.FullName;
             _currentUser = Context.Users.Find(2);
-            EditCommand = new RelayCommand(EditAction,
-                () => !HasErrors);
+            
+            // initialisation des commandes 
+            SaveCommand = new RelayCommand(SaveAction, () => !HasErrors);
             ApplyTemplate = new RelayCommand(ApplyAction);
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors);
-            Amount = Operation.Amount.ToString();
-            OperationDate = Operation.OperationDate;
-            IsChecked = false;
-            NoTemplates = GetTemplatesTricount().Any();
+            DeleteCommand = new RelayCommand(DeleteAction);
         }
 
         // Commandes
-        public ICommand EditCommand { get; set; }
+        public ICommand SaveCommand { get; set; }
         public ICommand ApplyTemplate { get; set; }
         public ICommand SaveTemplate { get; set; }
+        public ICommand DeleteCommand { get; set; }
 
         // Attributes
         private User _currentUser;
@@ -99,15 +102,23 @@ namespace prbd_2324_a06.ViewModel
         // Méthodes Commandes
 
         // Edit
-        private void EditAction() {
+        public override void SaveAction() {
             if (Validate()) {
                 Operation.Title = Title;
                 Operation.Amount = double.Parse(Amount);
                 Operation.OperationDate = OperationDate;
                 // ajouter weight, initiator, templates quand binding seront ok
                 Context.SaveChanges();
+                RaisePropertyChanged();
                 NotifyColleagues(App.Messages.MSG_EDIT_OPERATION);
             }
+        }
+        
+        // Delete 
+        private void DeleteAction() {
+            Operation.Delete();
+            NotifyColleagues(App.Messages.MSG_DELETE_OPERATION);
+            NotifyColleagues(App.Messages.MSG_CLOSE_WINDOW);
         }
         
         private void SaveTemplateAction() {

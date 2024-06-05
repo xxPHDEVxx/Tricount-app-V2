@@ -37,6 +37,12 @@ public class Operation : EntityBase<PridContext>
     public int GetHighestOperationId() {
         return Context.Operations.Max(o => o.Id) + 1;
     }
+    
+    public void Delete() {
+        Repartitions.Clear();
+        Context.Operations.Remove(this);
+        Context.SaveChanges();
+    }
 
     public override bool Validate() {
         ClearErrors();

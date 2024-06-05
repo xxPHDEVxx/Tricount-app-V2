@@ -18,6 +18,8 @@ namespace prbd_2324_a06.View
             InitializeCheckBox();
             InitializeCombobox();
             initializeTemplates();
+            Register(App.Messages.MSG_CLOSE_WINDOW,
+                Close);
         }
 
         // Initialise checkBox's template with the tricount's participants
