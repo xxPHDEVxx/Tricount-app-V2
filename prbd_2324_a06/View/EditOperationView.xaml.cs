@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Documents;
 using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
@@ -51,7 +52,7 @@ namespace prbd_2324_a06.View
 
                 // Create NumericUpDown
                 NumericUpDown numericUpDown = new NumericUpDown {
-                    Width = 60,
+                    Width = 40,
                     Value = 1,
                     MinValue = 0,
                     Margin = new Thickness(2),
@@ -62,9 +63,11 @@ namespace prbd_2324_a06.View
                 userGrid.Children.Add(numericUpDown);
 
                 // Create TextBlock
-                TextBlock textBlock = new TextBlock {
+                TextBlock textBlock = new TextBlock 
+                {
                     Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(2)
+                    Margin = new Thickness(2), Width = 50, FontWeight = FontWeights.Bold,
+                    TextAlignment = TextAlignment.Left
                 };
                 vm.TextBlocks.Add(textBlock);
                 Grid.SetColumn(textBlock, 2);

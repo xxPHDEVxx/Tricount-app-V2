@@ -115,7 +115,10 @@ namespace prbd_2324_a06.ViewModel
 
         public string Amount {
             get => _amount;
-            set => SetProperty(ref _amount, value, () => Validate());
+            set => SetProperty(ref _amount, value, () => {
+                Validate();
+                CalculAmount();
+            });
         }
 
         public string Title {
@@ -160,7 +163,6 @@ namespace prbd_2324_a06.ViewModel
 
         // Méthodes de validation
         public override bool Validate() {
-            CalculAmount();
             ClearErrors();
             Operation.Validate();
             IsValidAmount();
@@ -237,7 +239,7 @@ namespace prbd_2324_a06.ViewModel
                 i = 0;
                 var part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
                 foreach (var item in TextBlocks) {
-                    item.Text = (part * weights[i]).ToString();
+                    item.Text = (part * weights[i]).ToString() + " €";
                     i++;
                 }
             }
