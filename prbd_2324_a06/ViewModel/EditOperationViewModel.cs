@@ -1,6 +1,7 @@
-﻿using prbd_2324_a06.Model;
+﻿using NumericUpDownLib;
+using prbd_2324_a06.Model;
 using PRBD_Framework;
-using System.Runtime.InteropServices.JavaScript;
+using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -14,18 +15,23 @@ namespace prbd_2324_a06.ViewModel
             //Tricount = tricount;
             Tricount = Context.Tricounts.Find(4); // pour les tests
             Operation = Context.Operations.Find(2); // pour les tests
-            Amount = Operation.Amount.ToString();
-            OperationDate = Operation.OperationDate;
+            if (Operation != null) {
+                Amount = Operation.Amount.ToString(CultureInfo.CurrentCulture);
+                OperationDate = Operation.OperationDate;
+            }
+
             NoTemplates = GetTemplatesTricount().Any();
             // Une fois liée au reste du code à décommenté
             // CurrentUser = App.CurrentUser.FullName;
             CurrentUser = Context.Users.Find(2);
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
+            Numerics = new ObservableCollectionFast<NumericUpDown>();
+            TextBlocks = new ObservableCollectionFast<TextBlock>();
 
             // initialisation des commandes 
             SaveCommand = new RelayCommand(SaveAction, () => !HasErrors && Error == "");
             ApplyTemplate = new RelayCommand(ApplyAction);
-            SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors);
+            SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
             DeleteCommand = new RelayCommand(DeleteAction);
         }
 
@@ -37,6 +43,8 @@ namespace prbd_2324_a06.ViewModel
 
         // Attributes
         private ObservableCollectionFast<CheckBox> _checkBoxItems;
+        private ObservableCollectionFast<NumericUpDown> _numerics;
+        private ObservableCollectionFast<TextBlock> _textBlocks;
         private User _currentUser;
         private Tricount _tricount;
         private Operation _operation;
@@ -50,6 +58,16 @@ namespace prbd_2324_a06.ViewModel
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
             get => _checkBoxItems;
             set => SetProperty(ref _checkBoxItems, value);
+        }
+
+        public ObservableCollectionFast<NumericUpDown> Numerics {
+            get => _numerics;
+            set => SetProperty(ref _numerics, value);
+        }
+
+        public ObservableCollectionFast<TextBlock> TextBlocks {
+            get => _textBlocks;
+            set => SetProperty(ref _textBlocks, value);
         }
 
         public string Error {
@@ -142,6 +160,7 @@ namespace prbd_2324_a06.ViewModel
 
         // Méthodes de validation
         public override bool Validate() {
+            CalculAmount();
             ClearErrors();
             Operation.Validate();
             IsValidAmount();
@@ -198,6 +217,29 @@ namespace prbd_2324_a06.ViewModel
                 AddError(nameof(Amount), "Not an Integer");
             if (double.Parse(Amount) < 0.01) {
                 AddError(nameof(Amount), "minimum 1 cent");
+            }
+        }
+
+        public void CalculAmount() {
+            var totalWeight = 0;
+            if (Numerics != null && TextBlocks != null) {
+                int[] weights = new int[Numerics.Count];
+
+                // Calcul du total des poids
+                var i = 0;
+                foreach (var item in Numerics) {
+                    totalWeight += item.Value;
+                    weights[i] = item.Value;
+                    i++;
+                }
+
+                // insertion montants dans textblock
+                i = 0;
+                var part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
+                foreach (var item in TextBlocks) {
+                    item.Text = (part * weights[i]).ToString();
+                    i++;
+                }
             }
         }
     }

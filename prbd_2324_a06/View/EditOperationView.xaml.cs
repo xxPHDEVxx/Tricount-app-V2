@@ -32,7 +32,7 @@ namespace prbd_2324_a06.View
         private void InitializeCheckBox() {
             // fetching users from the database
             List<User> users = vm.GetUsersTricount();
-
+            
             foreach (var user in users) {
                 // Create a new Grid for each user
                 Grid userGrid = new Grid();
@@ -41,8 +41,7 @@ namespace prbd_2324_a06.View
                 userGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                 // Create CheckBox
-                CheckBox checkBox = new CheckBox
-                {
+                CheckBox checkBox = new CheckBox {
                     Content = user.FullName, Margin = new Thickness(2), Width = 80, IsChecked = true,
                     VerticalAlignment = VerticalAlignment.Center
                 };
@@ -56,15 +55,18 @@ namespace prbd_2324_a06.View
                     Value = 1,
                     MinValue = 0,
                     Margin = new Thickness(2),
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    HorizontalAlignment = HorizontalAlignment.Center,
                 };
-                numericUpDown.ValueChanged += (sender, e) => UpdateCheckBoxState(checkBox, numericUpDown);
+                vm.Numerics.Add(numericUpDown);
                 Grid.SetColumn(numericUpDown, 1);
                 userGrid.Children.Add(numericUpDown);
 
                 // Create TextBlock
-                TextBlock textBlock = new TextBlock
-                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(2) };
+                TextBlock textBlock = new TextBlock {
+                    Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(2)
+                };
+                vm.TextBlocks.Add(textBlock);
                 Grid.SetColumn(textBlock, 2);
                 userGrid.Children.Add(textBlock);
 
@@ -72,10 +74,26 @@ namespace prbd_2324_a06.View
                 ParticipantsPanel.Children.Add(userGrid);
 
                 // Gestionnaire d'événements pour la CheckBox
-                checkBox.Checked += (sender, e) => UpdateNumericUpDownState(checkBox, numericUpDown);
-                checkBox.Unchecked += (sender, e) => UpdateNumericUpDownState(checkBox, numericUpDown);
-                checkBox.Checked += (sender, e) => vm.Validate();
-                checkBox.Unchecked += (sender, e) => vm.Validate();
+                checkBox.Checked += (sender, e) =>
+                {
+                    UpdateNumericUpDownState(checkBox, numericUpDown);
+                    vm.Validate();
+                    vm.CalculAmount();
+                };
+                checkBox.Unchecked += (sender, e) =>
+                {
+                    UpdateNumericUpDownState(checkBox, numericUpDown);
+                    vm.Validate();
+                    vm.CalculAmount();
+                };
+                
+                // Gestionnaire d'évènements pour le Numeric
+                numericUpDown.ValueChanged += (sender, e) =>
+                {
+                    UpdateCheckBoxState(checkBox, numericUpDown);
+                    vm.Validate();
+                    vm.CalculAmount();
+                };
             }
         }
 
