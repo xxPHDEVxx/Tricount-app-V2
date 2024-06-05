@@ -24,5 +24,6 @@ public class TricountCardViewModel : ViewModelCommon
     public double Total => Tricount.GetTotal();
     public  TricountCardViewModel(Tricount tricount) {
         Tricount = tricount;
+        Console.WriteLine(tricount.GetParticipants());
     }
 }

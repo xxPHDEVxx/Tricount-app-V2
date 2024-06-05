@@ -40,5 +40,12 @@ public class Operation : EntityBase<PridContext> {
     {
         return Context.Operations.Max(o => o.Id) + 1;
     }
-}
+
+    public IQueryable<Repartition> GetRepartitionByOperation() {
+        var q = from r in Context.Repartitions
+                where r.OperationId == Id
+                select r;
+        return q;
+    }
+    }
 

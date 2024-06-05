@@ -74,18 +74,17 @@ public class User : EntityBase<PridContext>
 
     public double GetMyExpenses(Tricount tricount) {
         double myExpenses = 0;
-        double weight = 0;
-        foreach (var operation in tricount.GetOperations()) {
             double operationWeight = 0;
             double userWeight = 0;
-            foreach (var repartition in operation.Repartitions) {
+        foreach (var operation in tricount.GetOperations()) {
+            foreach (var repartition in operation.GetRepartitionByOperation()) {
                 operationWeight += repartition.Weight;
                 if (repartition.UserId == UserId) {
                     userWeight = repartition.GetWeightForUserAndOperation(UserId, operation.Id);
                 }
             }
-            myExpenses += Math.Round(operation.Amount, 2) * (userWeight / operationWeight);
         }
+            myExpenses = Math.Round(tricount.GetTotal() * (userWeight / operationWeight), 2);
         return myExpenses;
     }
     public double GetMyBalance(Tricount tricount) {
@@ -98,6 +97,6 @@ public class User : EntityBase<PridContext>
                 }
         }
 
-        return myPaid - myExpenses;
+        return Math.Round(myPaid - myExpenses,2);
     }
 }
