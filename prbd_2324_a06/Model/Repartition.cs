@@ -1,4 +1,5 @@
-﻿using PRBD_Framework;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using PRBD_Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,10 +22,11 @@ public class Repartition : EntityBase<PridContext> {
     public int Weight { get; set; }
 
     public int GetWeightForUserAndOperation(int userId, int operationId) {
-        var q = from r in Context.Repartitions
-                where r.OperationId == operationId && r.UserId == userId
-                select r.Weight;
-        int weight = q.FirstOrDefault();
-        return weight;
+
+        var q = Context.Repartitions
+            .Where(r => r.OperationId ==  OperationId)
+            .Where(r => r.UserId == UserId)
+            .Sum(r => r.Weight);
+        return q;
     }
 }
