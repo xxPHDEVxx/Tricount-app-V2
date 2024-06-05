@@ -7,6 +7,8 @@ using PRBD_Framework;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
@@ -15,9 +17,13 @@ namespace prbd_2324_a06.View
     {
         public EditOperationView() {
             InitializeComponent();
+
+            // initialisation dynamique des éléments graphiques
             InitializeCheckBox();
             InitializeCombobox();
             initializeTemplates();
+
+            // fermeture de la fenêtre
             Register(App.Messages.MSG_CLOSE_WINDOW,
                 Close);
         }
@@ -36,7 +42,11 @@ namespace prbd_2324_a06.View
 
                 // Create CheckBox
                 CheckBox checkBox = new CheckBox
-                    { Content = user.FullName, Margin = new Thickness(5), IsChecked = true, Width = 80 };
+                {
+                    Content = user.FullName, Margin = new Thickness(2), Width = 80, IsChecked = true,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                vm.CheckBoxItems.Add(checkBox);
                 Grid.SetColumn(checkBox, 0);
                 userGrid.Children.Add(checkBox);
 
@@ -45,7 +55,7 @@ namespace prbd_2324_a06.View
                     Width = 60,
                     Value = 1,
                     MinValue = 0,
-                    Margin = new Thickness(5),
+                    Margin = new Thickness(2),
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
                 numericUpDown.ValueChanged += (sender, e) => UpdateCheckBoxState(checkBox, numericUpDown);
@@ -54,7 +64,7 @@ namespace prbd_2324_a06.View
 
                 // Create TextBlock
                 TextBlock textBlock = new TextBlock
-                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) };
+                    { Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(2) };
                 Grid.SetColumn(textBlock, 2);
                 userGrid.Children.Add(textBlock);
 
@@ -64,6 +74,8 @@ namespace prbd_2324_a06.View
                 // Gestionnaire d'événements pour la CheckBox
                 checkBox.Checked += (sender, e) => UpdateNumericUpDownState(checkBox, numericUpDown);
                 checkBox.Unchecked += (sender, e) => UpdateNumericUpDownState(checkBox, numericUpDown);
+                checkBox.Checked += (sender, e) => vm.Validate();
+                checkBox.Unchecked += (sender, e) => vm.Validate();
             }
         }
 
@@ -102,7 +114,7 @@ namespace prbd_2324_a06.View
             foreach (var item in sortedItems) {
                 InitiatorComboBox.Items.Add(item);
             }
-            
+
             // Rechercher l'élément correspondant dans la ComboBox
             ComboBoxItem defaultItem = InitiatorComboBox.Items
                 .OfType<ComboBoxItem>()
@@ -112,7 +124,7 @@ namespace prbd_2324_a06.View
                 InitiatorComboBox.SelectedItem = defaultItem;
             }
         }
-        
+
         // Initialize comboBoxItem with the templates of the Operation's Tricount.
         private void initializeTemplates() {
             List<Template> templates = vm.GetTemplatesTricount();
@@ -135,7 +147,7 @@ namespace prbd_2324_a06.View
             TemplateComboBox.Items.Add(defaultItem);
             TemplateComboBox.SelectedItem = defaultItem;
         }
-        
+
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
             Close();
