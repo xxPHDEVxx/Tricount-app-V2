@@ -16,6 +16,9 @@ namespace prbd_2324_a06.ViewModel
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
+            Initiator = new ComboBoxItem();
+            Initiator.Content = CurrentUser.FullName;
+            NoTemplates = GetTemplatesTricount().Any();
             // initialisation des commandes 
             AddCommand = new RelayCommand(AddAction,
                 () => !HasErrors && Error == "");
@@ -44,7 +47,7 @@ namespace prbd_2324_a06.ViewModel
         private User _currentUser;
         private Tricount _tricount;
         private string _error;
-
+        private bool _noTemplates;
 
         // Properties
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
@@ -60,6 +63,11 @@ namespace prbd_2324_a06.ViewModel
         public ObservableCollectionFast<TextBlock> TextBlocks {
             get => _textBlocks;
             private init => SetProperty(ref _textBlocks, value);
+        }
+
+        public bool NoTemplates {
+            get => _noTemplates;
+            set => SetProperty(ref _noTemplates, value);
         }
 
         public ComboBoxItem SelectedTemplate {
@@ -256,7 +264,7 @@ namespace prbd_2324_a06.ViewModel
                     i = 0;
                     int part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
                     foreach (var item in TextBlocks) {
-                        item.Text = (part * weights[i]).ToString() + " €";
+                        item.Text = $"{part * weights[i]:F2} €";
                         i++;
                     }
                 }

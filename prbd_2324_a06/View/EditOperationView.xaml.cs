@@ -101,6 +101,7 @@ namespace prbd_2324_a06.View
                     _vm.CalculAmount();
                 };
             }
+            _vm.CalculAmount();
         }
 
         // Gestion checkBox -> numeric
@@ -142,7 +143,7 @@ namespace prbd_2324_a06.View
             // Rechercher l'élément correspondant dans la ComboBox
             ComboBoxItem defaultItem = InitiatorComboBox.Items
                 .OfType<ComboBoxItem>()
-                .FirstOrDefault(item => item.Content.ToString() == _vm.Operation.Initiator.FullName);
+                .FirstOrDefault(item => item.Content.ToString() == _vm.CurrentUser.FullName);
             // Si l'élément par défaut existe, le sélectionner
             if (defaultItem != null) {
                 InitiatorComboBox.SelectedItem = defaultItem;
