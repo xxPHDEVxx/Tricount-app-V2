@@ -63,8 +63,7 @@
         </StackPanel>
 
         <!-- Participants -->
-        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical"
-                    Tag="{Binding CheckBoxItems}">
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

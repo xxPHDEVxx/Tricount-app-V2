@@ -33,7 +33,7 @@ namespace prbd_2324_a06.View
         private void InitializeCheckBox() {
             // fetching from the database
             List<User> users = vm.GetUsersTricount();
-            List<Repartition> repartitions = vm.getRepartitions();
+            List<Repartition> repartitions = vm.GetRepartitions();
 
             foreach (var user in users) {
                 // Create a new Grid for each user

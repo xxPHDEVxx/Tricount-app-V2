@@ -3,7 +3,6 @@ using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Globalization;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
@@ -62,22 +61,22 @@ namespace prbd_2324_a06.ViewModel
         // Properties
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
             get => _checkBoxItems;
-            set => SetProperty(ref _checkBoxItems, value);
+            private init => SetProperty(ref _checkBoxItems, value);
         }
 
         public ObservableCollectionFast<NumericUpDown> Numerics {
             get => _numerics;
-            set => SetProperty(ref _numerics, value);
+            private init => SetProperty(ref _numerics, value);
         }
 
         public ObservableCollectionFast<TextBlock> TextBlocks {
             get => _textBlocks;
-            set => SetProperty(ref _textBlocks, value);
+            private init => SetProperty(ref _textBlocks, value);
         }
 
         public string Error {
             get => _error;
-            set => SetProperty(ref _error, value);
+            private set => SetProperty(ref _error, value);
         }
 
         public bool NoTemplates {
@@ -85,9 +84,9 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _noTemplates, value);
         }
 
-        public Operation Operation {
+        protected internal Operation Operation {
             get => _operation;
-            set => SetProperty(ref _operation, value);
+            init => SetProperty(ref _operation, value);
         }
 
         public ComboBoxItem SelectedTemplate {
@@ -156,7 +155,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         // Save les poids de l'opération
-        public void SaveWeights() {
+        private void SaveWeights() {
             if (Numerics != null) {
                 foreach (var item in Numerics) {
                     User user = User.GetUserByName(item.Name);
@@ -172,9 +171,9 @@ namespace prbd_2324_a06.ViewModel
         }
 
         // Modifie poid associé à un user dans une répétition
-        public void UpdateWeight(int userId, int newWeight) {
+        private void UpdateWeight(int userId, int newWeight) {
             // Rechercher la répartition correspondante pour l'utilisateur spécifié
-            var repartition =
+            Repartition repartition =
                 Operation.Repartitions.FirstOrDefault(r => r.UserId == userId && r.OperationId == Operation.Id);
 
             if (repartition != null) {
@@ -222,29 +221,21 @@ namespace prbd_2324_a06.ViewModel
             Operation.Validate();
             IsValidAmount();
             AddErrors(Operation.Errors);
-            if (!ValidateCheckBoxes()) {
-                Error = "You must check at least one participant !";
-            } else {
-                Error = "";
-            }
+            Error = !ValidateCheckBoxes() ? "You must check at least one participant !" : "";
 
             return !HasErrors;
         }
 
         // Check if at least one checkbox is checked
-        public bool ValidateCheckBoxes() {
-            if (CheckBoxItems != null) {
-                return CheckBoxItems.Any(item => item.IsChecked != null && (bool)item.IsChecked);
-            }
-
-            return true;
+        private bool ValidateCheckBoxes() {
+            return CheckBoxItems == null || CheckBoxItems.Any(item => item.IsChecked != null && (bool)item.IsChecked);
         }
 
         // Return Users of the Operation's Tricount.
         protected internal List<User> GetUsersTricount() {
             Tricount tricount = Tricount;
             List<User> participants = new List<User>();
-            foreach (var user in tricount.GetParticipants()) {
+            foreach (User user in tricount.GetParticipants()) {
                 participants.Add(user);
             }
 
@@ -255,47 +246,53 @@ namespace prbd_2324_a06.ViewModel
         protected internal List<Template> GetTemplatesTricount() {
             Tricount tricount = Tricount;
             List<Template> templates = new List<Template>();
-            foreach (var template in tricount.GetTemplates()) {
+            foreach (Template template in tricount.GetTemplates()) {
                 templates.Add(template);
             }
 
             return templates;
         }
 
-        protected internal List<Repartition> getRepartitions() {
+        protected internal List<Repartition> GetRepartitions() {
             return Operation.Repartitions.ToList();
         }
 
         // Validation méthode for string amount -> we need a string because of textbox
-        public void IsValidAmount() {
-            ClearErrors();
-            if (!double.TryParse(Amount, out double value))
-                AddError(nameof(Amount), "Not an Integer");
-            if (double.Parse(Amount) < 0.01) {
-                AddError(nameof(Amount), "minimum 1 cent");
-            }
+        private void IsValidAmount() {
+            if (Amount != null) {
+                if (!double.TryParse(Amount, out double value))
+                    AddError(nameof(Amount), "Not an Integer");
+                if (double.Parse(Amount) < 0.01) {
+                    AddError(nameof(Amount), "minimum 1 cent");
+                }
+            } else
+                AddError(nameof(Amount), "Can't be empty !");
         }
 
         public void CalculAmount() {
-            var totalWeight = 0;
-            if (Numerics != null && TextBlocks != null) {
-                int[] weights = new int[Numerics.Count];
+            if (Amount != null) {
+                var totalWeight = 0;
+                if (Numerics != null && TextBlocks != null) {
+                    int[] weights = new int[Numerics.Count];
 
-                // Calcul du total des poids
-                var i = 0;
-                foreach (var item in Numerics) {
-                    totalWeight += item.Value;
-                    weights[i] = item.Value;
-                    i++;
-                }
+                    // Calcul du total des poids
+                    var i = 0;
+                    foreach (var item in Numerics) {
+                        totalWeight += item.Value;
+                        weights[i] = item.Value;
+                        i++;
+                    }
 
-                // insertion montants dans textblock
-                i = 0;
-                var part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
-                foreach (var item in TextBlocks) {
-                    item.Text = (part * weights[i]).ToString() + " €";
-                    i++;
+                    // insertion montants dans textblock
+                    i = 0;
+                    var part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
+                    foreach (var item in TextBlocks) {
+                        item.Text = (part * weights[i]).ToString() + " €";
+                        i++;
+                    }
                 }
+            } else {
+                AddError(nameof(Amount), "Can't be empty !");
             }
         }
     }
