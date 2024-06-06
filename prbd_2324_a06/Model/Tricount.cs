@@ -87,4 +87,32 @@ public class Tricount : EntityBase<PridContext>
             .Where(t => id.Contains(t.Id));
         return templates;
     }
+    public override bool Validate() {
+        ClearErrors();
+
+        if (string.IsNullOrWhiteSpace(Title))
+            AddError(nameof(Title), "required");
+        else if (Title.Length < 3)
+            AddError(nameof(Title), "length must be >= 3");
+        else
+            // On ne vérifie l'unicité du pseudo que si l'entité est en mode détaché ou ajouté, car
+            // dans ces cas-là, il s'agit d'un nouveau membre.
+            if ((IsDetached || IsAdded) && Context.Tricounts.Any(t => t.Title == Title))
+            AddError(nameof(Title), "Title already exists");
+
+        // Validation de la description si elle contient quelque chose
+        if (!string.IsNullOrWhiteSpace(Description) && Description.Length < 3) {
+            AddError(nameof(Description), "length must be >= 3, ");
+        }
+
+        return !HasErrors;
+    }
+    public void NewSubscriber(int userId) {
+        var s = new Subscription(userId, Id);
+        Context.Subscriptions.Add(s);
+        Subscriptions.Add(s);
+        Context.SaveChanges();
+
+
+    }
 }

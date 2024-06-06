@@ -9,6 +9,10 @@ public partial class MainView : WindowBase
         InitializeComponent();
             Register<Tricount>(App.Messages.MSG_NEW_TRICOUNT,
             tricount => DoDisplayTricount(tricount, true));
+
+
+        Register<Tricount>(App.Messages.MSG_CLOSE_TAB,
+            tricount => DoCloseTab(tricount));
     }
 
     private void Logout_Click(object sender, System.Windows.RoutedEventArgs e) {
@@ -30,5 +34,9 @@ public partial class MainView : WindowBase
             tabControl.Add(createView(), header, tag);
         else
             tabControl.SetFocus(tab);
+    }
+
+    private void DoCloseTab(Tricount tricount) {
+        tabControl.CloseByTag(string.IsNullOrEmpty(tricount.Title) ? "<New Tricount>" : tricount.Title);
     }
 }

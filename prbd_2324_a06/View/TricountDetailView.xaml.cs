@@ -4,6 +4,8 @@ using prbd_2324_a06.ViewModel;
 using NumericUpDownLib;
 using System.Windows.Controls;
 using System.Windows;
+using System.Collections.ObjectModel;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace prbd_2324_a06.View
@@ -24,8 +26,9 @@ namespace prbd_2324_a06.View
 
         private void InitializeComboBox() {
             // fetching users from the database
-            List<User> users = new List<User>();
-
+            ObservableCollection<User> users = _vm.Participants;
+            if (!users.IsNullOrEmpty()) {
+                
             foreach (var user in users) {
                 // Create a new Grid for each user
                 Grid userGrid = new Grid();
@@ -50,6 +53,8 @@ namespace prbd_2324_a06.View
                 PanelParticipants.Children.Add(userGrid);
 
             }
+            }
+
         }
 
 
