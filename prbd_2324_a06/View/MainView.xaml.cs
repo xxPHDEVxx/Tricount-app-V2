@@ -9,6 +9,8 @@ public partial class MainView : WindowBase
         InitializeComponent();
             Register<Tricount>(App.Messages.MSG_NEW_TRICOUNT,
             tricount => DoDisplayTricount(tricount, true));
+            Register<Tricount>(App.Messages.MSG_DISPLAY_TRICOUNT,
+                tricount => DoDisplayViewTricount(tricount));
     }
 
     private void Logout_Click(object sender, System.Windows.RoutedEventArgs e) {
@@ -22,6 +24,11 @@ public partial class MainView : WindowBase
     private void DoDisplayTricount(Tricount tricount, bool isNew) {
         if (tricount != null)
             OpenTab(isNew ? "<New Tricount>" : tricount.Title, tricount.Title, () => new TricountDetailView(tricount, isNew));
+    }
+    
+    private void DoDisplayViewTricount(Tricount tricount) {
+        if (tricount != null)
+            OpenTab( tricount.Title, tricount.Title, () => new ViewTricountView(tricount));
     }
 
     private void OpenTab(string header, string tag, Func<UserControlBase> createView) {

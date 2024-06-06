@@ -20,7 +20,8 @@ public partial class App
         MSG_EDIT_OPERATION,
         MSG_DELETE_OPERATION,
         MSG_CLOSE_WINDOW,
-        MSG_NEW_TRICOUNT
+        MSG_NEW_TRICOUNT,
+        MSG_DISPLAY_TRICOUNT
     }
 
     public App() {
