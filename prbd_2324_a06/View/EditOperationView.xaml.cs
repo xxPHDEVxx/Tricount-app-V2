@@ -31,9 +31,10 @@ namespace prbd_2324_a06.View
 
         // Initialise checkBox's template with the tricount's participants
         private void InitializeCheckBox() {
-            // fetching users from the database
+            // fetching from the database
             List<User> users = vm.GetUsersTricount();
-            
+            List<Repartition> repartitions = vm.getRepartitions();
+
             foreach (var user in users) {
                 // Create a new Grid for each user
                 Grid userGrid = new Grid();
@@ -53,18 +54,20 @@ namespace prbd_2324_a06.View
                 // Create NumericUpDown
                 NumericUpDown numericUpDown = new NumericUpDown {
                     Width = 40,
-                    Value = 1,
+                    Value = repartitions.Find(r => r.UserId == user.UserId) != null
+                        ? repartitions.Find(r => r.UserId == user.UserId).Weight
+                        : 0,
                     MinValue = 0,
                     Margin = new Thickness(2),
                     HorizontalAlignment = HorizontalAlignment.Center,
+                    Name = user.FullName,
                 };
                 vm.Numerics.Add(numericUpDown);
                 Grid.SetColumn(numericUpDown, 1);
                 userGrid.Children.Add(numericUpDown);
 
                 // Create TextBlock
-                TextBlock textBlock = new TextBlock 
-                {
+                TextBlock textBlock = new TextBlock {
                     Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(2), Width = 50, FontWeight = FontWeights.Bold,
                     TextAlignment = TextAlignment.Left
@@ -77,22 +80,19 @@ namespace prbd_2324_a06.View
                 ParticipantsPanel.Children.Add(userGrid);
 
                 // Gestionnaire d'événements pour la CheckBox
-                checkBox.Checked += (sender, e) =>
-                {
+                checkBox.Checked += (sender, e) => {
                     UpdateNumericUpDownState(checkBox, numericUpDown);
                     vm.Validate();
                     vm.CalculAmount();
                 };
-                checkBox.Unchecked += (sender, e) =>
-                {
+                checkBox.Unchecked += (sender, e) => {
                     UpdateNumericUpDownState(checkBox, numericUpDown);
                     vm.Validate();
                     vm.CalculAmount();
                 };
-                
+
                 // Gestionnaire d'évènements pour le Numeric
-                numericUpDown.ValueChanged += (sender, e) =>
-                {
+                numericUpDown.ValueChanged += (sender, e) => {
                     UpdateCheckBoxState(checkBox, numericUpDown);
                     vm.Validate();
                     vm.CalculAmount();

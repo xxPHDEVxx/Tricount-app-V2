@@ -43,6 +43,11 @@ public class User : EntityBase<PridContext>
     {
         return Context.Users.Max(u => u.UserId);
     }
+    // Return User found by name
+    public static User GetUserByName(string name) {
+        return Context.Users.FirstOrDefault(u => u.FullName == name);
+    }
+    
     public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 

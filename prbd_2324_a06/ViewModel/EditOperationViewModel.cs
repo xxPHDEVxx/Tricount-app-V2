@@ -3,6 +3,7 @@ using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Globalization;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
@@ -27,10 +28,13 @@ namespace prbd_2324_a06.ViewModel
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
-
             // initialisation des commandes 
             SaveCommand = new RelayCommand(SaveAction, () => !HasErrors && Error == "");
-            ApplyTemplate = new RelayCommand(ApplyAction);
+            ApplyTemplate = new RelayCommand(ApplyAction,
+                // vérification pour éviter Null Exception
+                () => SelectedTemplate == null
+                    ? SelectedTemplate != null
+                    : SelectedTemplate.Content.ToString() != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
             DeleteCommand = new RelayCommand(DeleteAction);
         }
@@ -46,9 +50,10 @@ namespace prbd_2324_a06.ViewModel
         private ObservableCollectionFast<NumericUpDown> _numerics;
         private ObservableCollectionFast<TextBlock> _textBlocks;
         private User _currentUser;
+        private ComboBoxItem _initiator;
         private Tricount _tricount;
         private Operation _operation;
-        private object _selectedTemplate;
+        private ComboBoxItem _selectedTemplate;
         private string _amount;
         private bool _noTemplates;
         private DateTime _operationDate;
@@ -85,7 +90,7 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _operation, value);
         }
 
-        public object SelectedTemplate {
+        public ComboBoxItem SelectedTemplate {
             get => _selectedTemplate;
             set => SetProperty(ref _selectedTemplate, value);
         }
@@ -113,6 +118,11 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _currentUser, value);
         }
 
+        public ComboBoxItem Initiator {
+            get => _initiator;
+            set => SetProperty(ref _initiator, value);
+        }
+
         public string Amount {
             get => _amount;
             set => SetProperty(ref _amount, value, () => {
@@ -137,12 +147,43 @@ namespace prbd_2324_a06.ViewModel
                 Operation.Title = Title;
                 Operation.Amount = double.Parse(Amount);
                 Operation.OperationDate = OperationDate;
-                // ajouter weight, initiator, templates quand binding seront ok
+                Operation.InitiatorId = User.GetUserByName(Initiator.Content.ToString()).UserId;
+                SaveWeights();
                 Context.SaveChanges();
                 RaisePropertyChanged();
                 NotifyColleagues(App.Messages.MSG_EDIT_OPERATION);
             }
         }
+
+        // Save les poids de l'opération
+        public void SaveWeights() {
+            if (Numerics != null) {
+                foreach (var item in Numerics) {
+                    User user = User.GetUserByName(item.Name);
+                    // Si paire operation-user existante parmi les répartitions -> modifications des poids
+                    if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id))
+                        UpdateWeight(user.UserId, item.Value);
+                    else {
+                        // Nouvelle répartition si paire operation-user inexistante parmi les répartitions
+                        Operation.Repartitions.Add(new Repartition(Operation.Id, user.UserId, item.Value));
+                    }
+                }
+            }
+        }
+
+        // Modifie poid associé à un user dans une répétition
+        public void UpdateWeight(int userId, int newWeight) {
+            // Rechercher la répartition correspondante pour l'utilisateur spécifié
+            var repartition =
+                Operation.Repartitions.FirstOrDefault(r => r.UserId == userId && r.OperationId == Operation.Id);
+
+            if (repartition != null) {
+                // Mettre à jour le poids de l'utilisateur
+                repartition.Weight = newWeight;
+                Context.SaveChanges();
+            }
+        }
+
 
         // Delete 
         private void DeleteAction() {
@@ -152,12 +193,26 @@ namespace prbd_2324_a06.ViewModel
         }
 
         private void SaveTemplateAction() {
-            if (Validate()) {
-            }
         }
 
+        // Applique la template selectionnée 
         private void ApplyAction() {
-            if (SelectedTemplate != null) {
+            // vérifications 
+            if (SelectedTemplate != null && Numerics != null) {
+                string title = SelectedTemplate.Content.ToString();
+                if (Tricount.GetTemplateByTitle(title) != null) {
+                    // récupération template sélectionné
+                    var t = Tricount.GetTemplateByTitle(title);
+                    // association user-weight dans un dictionnaire
+                    Dictionary<string, int> UserWeight = t.GetUsersAndWeightsByTricountId();
+                    // attribution des valeurs sinon 0 si user inexistant dans la template
+                    foreach (var item in Numerics) {
+                        if (UserWeight.ContainsKey(item.Name))
+                            item.Value = UserWeight[item.Name];
+                        else
+                            item.Value = 0;
+                    }
+                }
             }
         }
 
@@ -185,11 +240,6 @@ namespace prbd_2324_a06.ViewModel
             return true;
         }
 
-        public void isSelectedTemplate() {
-            if (true) {
-            }
-        }
-
         // Return Users of the Operation's Tricount.
         protected internal List<User> GetUsersTricount() {
             Tricount tricount = Tricount;
@@ -210,6 +260,10 @@ namespace prbd_2324_a06.ViewModel
             }
 
             return templates;
+        }
+
+        protected internal List<Repartition> getRepartitions() {
+            return Operation.Repartitions.ToList();
         }
 
         // Validation méthode for string amount -> we need a string because of textbox
