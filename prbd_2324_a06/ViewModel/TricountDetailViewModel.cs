@@ -30,7 +30,7 @@ public class TricountDetailViewModel : ViewModelCommon
     }
 
     private DateTime _date;
-    private DateTime Date {
+    public DateTime Date {
         get => _date;
         set => SetProperty(ref _date, value);
     }
@@ -49,7 +49,42 @@ public class TricountDetailViewModel : ViewModelCommon
         _tricount = tricount;
         _isNew = isNew;
         //SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
-        //Cancel = new RelayCommand(CancelAction, CanCancelAction);
+        //CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
     }
+
+    //public override void SaveAction() {
+    //    if (IsNew) {
+    //        // Un petit raccourci ;-)
+    //        Tricount.Title = Member.Pseudo;
+    //        Context.Add(Tricount);
+    //        IsNew = false;
+    //    }
+    //    Context.SaveChanges();
+    //    RaisePropertyChanged();
+    //    NotifyColleagues(App.Messages.MSG_MEMBER_CHANGED, Member);
+    //}
+
+    //private bool CanSaveAction() {
+    //    if (IsNew)
+    //        return Member.Validate() && !HasErrors;
+    //    return Member != null && Member.IsModified && !HasErrors;
+    //}
+
+    //public override void CancelAction() {
+    //    ClearErrors();
+    //    if (IsNew) {
+    //        IsNew = false;
+    //        NotifyColleagues(App.Messages.MSG_CLOSE_TAB, Member);
+    //    } else {
+    //        Member.Reload();
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+    //private bool CanCancelAction() {
+    //    return Member != null && (IsNew || Member.IsModified);
+    //}
+
+
 
 }
