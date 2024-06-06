@@ -202,7 +202,7 @@ namespace prbd_2324_a06.ViewModel
 
         // Validation méthode for string amount -> we need a string because of textbox
         private void IsValidAmount() {
-            if (Amount != null) {
+            if (Amount is { Length: > 0 }) {
                 if (!double.TryParse(Amount, out double value))
                     AddError(nameof(Amount), "Not an Integer");
                 if (double.Parse(Amount) < 0.01) {
@@ -241,8 +241,8 @@ namespace prbd_2324_a06.ViewModel
         }
 
         public void CalculAmount() {
-            if (Amount != null) {
-                var totalWeight = 0;
+            if (Amount is { Length: > 0 }) {
+                int totalWeight = 0;
                 if (Numerics != null && TextBlocks != null) {
                     int[] weights = new int[Numerics.Count];
 
@@ -256,7 +256,7 @@ namespace prbd_2324_a06.ViewModel
 
                     // insertion montants dans textblock
                     i = 0;
-                    var part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
+                    int part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
                     foreach (var item in TextBlocks) {
                         item.Text = (part * weights[i]).ToString() + " €";
                         i++;
