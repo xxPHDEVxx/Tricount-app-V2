@@ -26,7 +26,7 @@ namespace prbd_2324_a06.View
 
         private void InitializeComboBox() {
             // fetching users from the database
-            ObservableCollection<User> users = _vm.Participants;
+            List<string> users = _vm.Participants;
             if (!users.IsNullOrEmpty()) {
                 
             foreach (var user in users) {

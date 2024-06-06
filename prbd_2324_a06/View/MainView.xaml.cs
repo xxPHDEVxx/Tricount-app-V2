@@ -13,6 +13,7 @@ public partial class MainView : WindowBase
 
         Register<Tricount>(App.Messages.MSG_CLOSE_TAB,
             tricount => DoCloseTab(tricount));
+
     }
 
     private void Logout_Click(object sender, System.Windows.RoutedEventArgs e) {

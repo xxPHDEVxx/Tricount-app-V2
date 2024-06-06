@@ -17,11 +17,6 @@ public class Subscription : EntityBase<PridContext> {
     [ForeignKey(nameof(Tricount))]
     public int TricountId { get; set; }
     public virtual Tricount Tricount { get; set; }
-
-    public Subscription(int userId, int tricountId) {
-       UserId = userId;
-        TricountId = tricountId;
-    }
     
 }
 

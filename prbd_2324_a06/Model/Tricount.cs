@@ -108,11 +108,9 @@ public class Tricount : EntityBase<PridContext>
         return !HasErrors;
     }
     public void NewSubscriber(int userId) {
-        var s = new Subscription(userId, Id);
+        var s = new Subscription { UserId = userId, TricountId = Id };
         Context.Subscriptions.Add(s);
         Subscriptions.Add(s);
         Context.SaveChanges();
-
-
     }
 }

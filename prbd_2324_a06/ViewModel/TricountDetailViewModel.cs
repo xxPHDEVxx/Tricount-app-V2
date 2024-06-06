@@ -2,6 +2,7 @@
 using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel;
@@ -17,15 +18,15 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand CancelCommand { get; set; }
     // Attributes et propriétés
     public ObservableCollectionFast<User> Users { get; } = new();
-    private User _selectedUser;
+    private ComboBoxItem _selectedUser;
 
-    public User SelectedUser {
+    public ComboBoxItem SelectedUser {
         get => _selectedUser;
         set => SetProperty(ref _selectedUser, value);
     }
 
-    private ObservableCollection<User> _participants;
-    public ObservableCollection<User> Participants {
+    private List<string> _participants;
+    public List<string> Participants {
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
@@ -62,23 +63,23 @@ public class TricountDetailViewModel : ViewModelCommon
         _isNew = isNew;
         Users.RefreshFromModel(App.Context.Users.OrderBy(m => m.FullName));
 
-        //SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
+        SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
-        AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
+        AddCommand = new RelayCommand(AddParticipantAction);
     }
 
     public override void SaveAction() {
-        if (IsNew) {
-            var tricount = new Tricount(Title, Description, Date, CurrentUser);
-            Context.Tricounts.Add(Tricount);
-            IsNew = false;
-            foreach (var user in Participants) {
-                Tricount.NewSubscriber(user.UserId);
-            }
-        }
-        Context.SaveChanges();
-        RaisePropertyChanged();
-        NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
+        //if (IsNew) {
+        //    var tricount = new Tricount(Title, Description, Date, CurrentUser);
+        //    Context.Tricounts.Add(Tricount);
+        //    IsNew = false;
+        //    foreach (var user in Participants) {
+        //        Tricount.NewSubscriber(user);
+        //    }
+        //}
+        //Context.SaveChanges();
+        //RaisePropertyChanged();
+        //NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
     }
 
     private bool CanSaveAction() {
@@ -87,21 +88,21 @@ public class TricountDetailViewModel : ViewModelCommon
         return Tricount != null && Tricount.IsModified && !HasErrors;
     }
     private void AddParticipantAction() {
-        Console.WriteLine(SelectedUser);
-        if (SelectedUser != null && !Participants.Contains(SelectedUser)) {
-            Participants.Add(SelectedUser);
-            NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
-        }
+        Console.WriteLine(SelectedUser.Content.ToString());
+        //if (SelectedUser != null && !Participants.Contains(SelectedUser)) {
+        //    Participants.Add(SelectedUser);
+        //    NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
+        //}
     }
 
-    private bool CanAddParticipantAction() {
-        if (Participants == null) {
-            return false;
+    //private bool CanAddParticipantAction() {
+    //    if (Participants == null) {
+    //        return false;
            
-        } else {
-        return SelectedUser != null && !Participants.Contains(SelectedUser);
-        }
-    }
+    //    } else {
+    //    return SelectedUser != null && !Participants.Contains(SelectedUser);
+    //    }
+    //}
     public override void CancelAction() {
         ClearErrors();
         if (IsNew) {
