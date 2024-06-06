@@ -9,9 +9,6 @@
               mc:Ignorable="d"
               Title="Edit Operation"
               Width="320" Height="480">
-    <Window.DataContext>
-        <vm:EditOperationViewModel x:Name="vm" />
-    </Window.DataContext>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

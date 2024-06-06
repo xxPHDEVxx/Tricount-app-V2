@@ -10,11 +10,10 @@ namespace prbd_2324_a06.ViewModel
     public class EditOperationViewModel : ViewModelCommon
     {
         // ajouter en parametre Tricount pour lier au reste du code
-        public EditOperationViewModel() : base() {
+        public EditOperationViewModel(Operation operation) : base() {
             // initialisation des propriétés
-            //Tricount = tricount;
-            Tricount = Context.Tricounts.Find(4); // pour les tests
-            Operation = Context.Operations.Find(2); // pour les tests
+            Tricount = Context.Tricounts.Find(operation.TricountId);
+            Operation = operation;
             if (Operation != null) {
                 Amount = Operation.Amount.ToString(CultureInfo.CurrentCulture);
                 OperationDate = Operation.OperationDate;

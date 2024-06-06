@@ -17,6 +17,12 @@ public class Operation : EntityBase<PridContext>
         InitiatorId = initiatorId;
     }
 
+    // constrcuteur -> new operation
+    public Operation(int tricountId) {
+        Id = GetHighestOperationId();
+        TricountId = tricountId;
+    }
+
     public Operation() {
     }
 

@@ -4,8 +4,11 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                    xmlns:vw="clr-namespace:prbd_2324_a06.View"
                    xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+                   xmlns:visualBasic="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic.Core"
+                   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance Type=vm:ViewTricountViewModel, IsDesignTimeCreatable=False}"
                    FontSize="14" d:DesignHeight="600" d:DesignWidth="900"
@@ -32,9 +35,15 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="10">
-                    <ListView x:Name="listView" ItemsSource="{Binding Operations}"  BorderBrush="Transparent"
-                              SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
-            
+                    <ListView x:Name="listView" ItemsSource="{Binding Operations}" BorderBrush="Transparent"
+                              SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              HorizontalAlignment="Center">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding OpenEditOperation}"
+                                                       CommandParameter="{Binding ElementName=listView, Path=SelectedItem}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -46,7 +55,8 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <Button Content="+" Width="40" FontSize="61" Padding="-20,-25,-20,-15"  HorizontalAlignment="Center"/>
+                    <Button Content="+" Width="40" FontSize="61" Padding="-20,-25,-20,-15" HorizontalAlignment="Center" 
+                            Command="{Binding OpenNewOperation}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Margin="10">

@@ -9,12 +9,10 @@ namespace prbd_2324_a06.ViewModel
     public class AddOperationViewModel : ViewModelCommon
     {
         // ajouter en parametre Tricount pour lier au reste du code
-        public AddOperationViewModel() : base() {
+        public AddOperationViewModel(Operation operation) : base() {
             //Tricount = tricount;
-            Tricount = Context.Tricounts.Find(4); // pour les tests
-            // Une fois liée au reste du code à décommenté
-            // _currentUser = App.CurrentUser.FullName;
-            _currentUser = Context.Users.Find(2);
+            Tricount = Context.Tricounts.Find(operation.TricountId);
+            CurrentUser = App.CurrentUser;
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();

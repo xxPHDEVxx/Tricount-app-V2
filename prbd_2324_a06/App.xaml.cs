@@ -22,7 +22,9 @@ public partial class App
         MSG_CLOSE_WINDOW,
         MSG_NEW_TRICOUNT,
         MSG_DISPLAY_TRICOUNT,
-        MSG_DISPLAY_OPERATION
+        MSG_DISPLAY_OPERATIONS,
+        MSG_OPEN_NEW_OPERATION,
+        MSG_OPEN_OPERATION
     }
 
     public App() {

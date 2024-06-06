@@ -13,13 +13,18 @@ namespace prbd_2324_a06.ViewModel
             OnRefreshData();
             ClearFilter = new RelayCommand(() => Filter = "");
             DisplayOperation = new RelayCommand<TricountCardViewModel>(vm => {
-                NotifyColleagues(App.Messages.MSG_DISPLAY_OPERATION, vm.Tricount);
+                NotifyColleagues(App.Messages.MSG_DISPLAY_OPERATIONS, vm.Tricount);
+            });
+            OpenEditOperation = new RelayCommand<OperationCardViewModel>(vm => {
+                NotifyColleagues(App.Messages.MSG_OPEN_OPERATION, vm.Operation);
+            });
+            OpenNewOperation = new RelayCommand<OperationCardViewModel>(vm => {
+                NotifyColleagues(App.Messages.MSG_OPEN_NEW_OPERATION, new Operation(tricount.Id));
             });
         }
 
         private ObservableCollection<OperationCardViewModel> _operations;
         private Tricount _tricount;
-        private DateTime _createdAt;
         private string _filter;
 
         // Properties
@@ -60,6 +65,9 @@ namespace prbd_2324_a06.ViewModel
         // Commandes
         public ICommand ClearFilter { get; set; }
         public ICommand DisplayOperation { get; set; }
+        public ICommand OpenNewOperation { get; set; }
+        public ICommand OpenEditOperation { get; set; }
+
 
         // Méthodes 
 
