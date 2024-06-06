@@ -21,7 +21,8 @@ public partial class App
         MSG_DELETE_OPERATION,
         MSG_CLOSE_WINDOW,
         MSG_NEW_TRICOUNT,
-        MSG_DISPLAY_TRICOUNT
+        MSG_DISPLAY_TRICOUNT,
+        MSG_DISPLAY_OPERATION
     }
 
     public App() {

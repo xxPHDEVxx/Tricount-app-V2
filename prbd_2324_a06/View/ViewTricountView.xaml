@@ -4,11 +4,11 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
-                   xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+                   xmlns:vw="clr-namespace:prbd_2324_a06.View"
                    xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance Type=vm:ViewTricountViewModel, IsDesignTimeCreatable=False}"
-                   FontSize="14" d:DesignHeight="600" d:DesignWidth="800"
+                   FontSize="14" d:DesignHeight="600" d:DesignWidth="900"
                    x:Name="uc">
     <Grid>
         <Grid.RowDefinitions>
@@ -32,19 +32,21 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="10">
-                    <TextBlock FontSize="24" FontWeight="Bold" Text="Vacances - À la mer du nord" />
-                    <TextBlock Margin="0,5" FontStyle="Italic" Text="Created by Boris on 10/10/2023" />
-
-                    <DataGrid Name="OperationsGrid" AutoGenerateColumns="False" Margin="0,10">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Dépense" Binding="{Binding Depense}" Width="*" />
-                            <DataGridTextColumn Header="Montant" Binding="{Binding Montant}" Width="*" />
-                            <DataGridTextColumn Header="Payé par" Binding="{Binding PayePar}" Width="*" />
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <Button Content="Ajouter une dépense" Width="150" Margin="5" />
+                    <ListView x:Name="listView" ItemsSource="{Binding Operations}"  BorderBrush="Transparent"
+                              SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
+            
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <vw:OperationCardView />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button Content="+" Width="40" FontSize="61" Padding="-20,-25,-20,-15"  HorizontalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Margin="10">
