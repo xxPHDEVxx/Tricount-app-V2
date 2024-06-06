@@ -27,6 +27,10 @@ namespace prbd_2324_a06.ViewModel;
 
                 OnRefreshData();
                 ClearFilter = new RelayCommand(() => Filter = "");
+                NewTricount = new RelayCommand(() => {
+                    NotifyColleagues(App.Messages.MSG_NEW_TRICOUNT, new Tricount());
+                });
+
 
     }
 
