@@ -5,23 +5,26 @@ using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel;
 
-    public class ListViewModel : ViewModelCommon {
-        private ObservableCollection<TricountCardViewModel> _tricounts;
+public class ListViewModel : ViewModelCommon
+{
+    private ObservableCollection<TricountCardViewModel> _tricounts;
 
-        public ObservableCollection<TricountCardViewModel> Tricounts {
-            get => _tricounts;
-            set => SetProperty(ref _tricounts, value);
-        }
-        public ICommand ClearFilter { get; set; }
+    public ObservableCollection<TricountCardViewModel> Tricounts {
+        get => _tricounts;
+        set => SetProperty(ref _tricounts, value);
+    }
 
-        public ICommand NewTricount {  get; set; }
+    public ICommand ClearFilter { get; set; }
 
-            //observable de card tricount
-            private string _filter;
-            public string Filter {
-                get => _filter;
-                set => SetProperty(ref _filter, value, OnRefreshData);
-            }
+    public ICommand NewTricount { get; set; }
+
+    //observable de card tricount
+    private string _filter;
+
+    public string Filter {
+        get => _filter;
+        set => SetProperty(ref _filter, value, OnRefreshData);
+    }
 
             public ListViewModel() : base() {
 
@@ -40,7 +43,7 @@ namespace prbd_2324_a06.ViewModel;
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()) 
             : CurrentUser.GetFiltered(Filter);
 
-            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t => new TricountCardViewModel(t)));
-         }
+        Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
+            new TricountCardViewModel(t)));
     }
-
+}

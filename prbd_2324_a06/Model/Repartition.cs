@@ -1,23 +1,32 @@
+<<<<<<< HEAD
 ﻿using Microsoft.EntityFrameworkCore.Query.Internal;
 using PRBD_Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+=======
+﻿using PRBD_Framework;
+>>>>>>> develop
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace prbd_2324_a06.Model;
 
-public class Repartition : EntityBase<PridContext> {
+public class Repartition : EntityBase<PridContext>
+{
+    public Repartition() {
+    }
 
-    [ForeignKey(nameof(Operation))]
-    public int OperationId { get; set; }
+    public Repartition(int operationId, int userId, int weight) {
+        OperationId = operationId;
+        UserId = userId;
+        Weight = weight;
+    }
+
+    [ForeignKey(nameof(Operation))] public int OperationId { get; set; }
     public virtual Operation Operation { get; set; }
 
-    [ForeignKey(nameof(User))]
-    public int UserId { get; set; }
+    [ForeignKey(nameof(User))] public int UserId { get; set; }
     public virtual User User { get; set; }
     public int Weight { get; set; }
 
@@ -30,3 +39,6 @@ public class Repartition : EntityBase<PridContext> {
         return q;
     }
 }
+
+
+

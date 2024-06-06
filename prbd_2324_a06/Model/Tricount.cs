@@ -1,14 +1,6 @@
-﻿using Microsoft.Extensions.Primitives;
-using PRBD_Framework;
-using System;
-using System.Collections.Generic;
+﻿using PRBD_Framework;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace prbd_2324_a06.Model;
 

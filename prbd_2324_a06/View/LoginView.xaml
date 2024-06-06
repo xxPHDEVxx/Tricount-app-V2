@@ -53,7 +53,7 @@
                 <Run Text="If you don't have a login and a password, click" />
                 <Hyperlink Command="{Binding GoToSignUpCommand}">
                     <Run Text="here" />
-                </Hyperlink >
+                </Hyperlink>
                 <Run Text="to sign-up." />
             </TextBlock>
         </DockPanel>
@@ -64,26 +64,54 @@
             </TextBlock>
         </DockPanel>
         <DockPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs1" Content="{Binding DefaultUserName[0], StringFormat=' {0})'}"
-                    Padding="5,0,5,0" 
-                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[0]}" />
+            <Button x:Name="btnLoginAs1" Padding="5,0,5,0"
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[0]}">
+                <TextBlock>
+                    <Run Text="Login as" />
+                    <Run Text="{Binding DefaultUser[0].FullName}" />
+                    <Run Text="( " />
+                    <Run Text="{Binding DefaultUserRole[0]}" />
+                    <Run Text=" )" />
+                </TextBlock>
+            </Button>
         </DockPanel>
         <DockPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs2" Content="{Binding DefaultUserName[1], StringFormat=' {0})'}"
-                    Padding="5,0,5,0" 
-                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}" />
+            <Button x:Name="btnLoginAs2" Padding="5,0,5,0"
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}">
+                <TextBlock>
+                    <Run Text="Login as" />
+                    <Run Text="{Binding DefaultUser[1].FullName}" />
+                    <Run Text="( " />
+                    <Run Text="{Binding DefaultUserRole[1]}" />
+                    <Run Text=" )" />
+                </TextBlock>
+            </Button>
 
         </DockPanel>
         <DockPanel Grid.Row="7" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs3" Content="{Binding DefaultUserName[2], StringFormat=' {0})'}"
-                    Padding="5,0,5,0" 
-                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[2]}"/>
+            <Button x:Name="btnLoginAs3" Padding="5,0,5,0"
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}">
+                <TextBlock>
+                    <Run Text="Login as" />
+                    <Run Text="{Binding DefaultUser[2].FullName}" />
+                    <Run Text="( " />
+                    <Run Text="{Binding DefaultUserRole[2]}" />
+                    <Run Text=" )" />
+                </TextBlock>
+            </Button>
 
         </DockPanel>
         <DockPanel Grid.Row="8" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs4" Content="{Binding DefaultUserName[3], StringFormat=' Login as {0})'}"
-                    Padding="5,0,5,0" 
-                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[3]}" />
+            <Button x:Name="btnLoginAs4" Padding="5,0,5,0"
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}">
+                <TextBlock>
+                    <Run Text="Login as" />
+                    <Run Text="{Binding DefaultUser[3].FullName}" />
+                    <Run Text="( " />
+                    <Run Text="{Binding DefaultUserRole[3]}" />
+                    <Run Text=" )" />
+                </TextBlock>
+            </Button>
         </DockPanel>
     </Grid>
 </f:WindowBase>
