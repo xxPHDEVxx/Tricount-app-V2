@@ -16,6 +16,14 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand SaveCommand { get; set; }
     public ICommand CancelCommand { get; set; }
     // Attributes et propriétés
+    public ObservableCollectionFast<User> Users { get; } = new();
+    private User _selectedUser;
+
+    public User SelectedUser {
+        get => _selectedUser;
+        set => SetProperty(ref _selectedUser, value);
+    }
+
     private ICollection<User> _participants;
     private string _title;
     public string Title {
@@ -48,6 +56,8 @@ public class TricountDetailViewModel : ViewModelCommon
     public TricountDetailViewModel(Tricount tricount, bool isNew) : base() {
         _tricount = tricount;
         _isNew = isNew;
+        Users.RefreshFromModel(App.Context.Users.OrderBy(m => m.FullName));
+
         //SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         //CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
     }

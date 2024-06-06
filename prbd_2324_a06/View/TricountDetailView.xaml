@@ -11,7 +11,7 @@
                    d:DataContext="{d:DesignInstance Type=vm:TricountDetailViewModel, IsDesignTimeCreatable=False}"
                    mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="800">
-    <Grid Margin="0,0,0,-73">
+    <Grid Margin="0,0,0,-25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -71,13 +71,27 @@
                     </Grid>
                     <Grid Grid.Row="2">
                         <!-- Container for dynamic content -->
-                        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="160"
+                        <ScrollViewer Grid.Row="0" Grid.Column="0" Height="160"
                               VerticalScrollBarVisibility="Auto">
-                            <StackPanel x:Name="ParticipantsPanel" Orientation="Vertical" Margin="0,10,0,0" Height="136" />
+                            <StackPanel x:Name="PanelParticipants" Orientation="Vertical" Margin="0,10,0,0" Height="136" />
                         </ScrollViewer>
                     </Grid>
-                    <Grid Grid.Row="3">
-                        
+                    <Grid Grid.Row="3" Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid Margin="39,-27,-139,27">
+                                <Button x:Name="btnAdd" Content="Add" Command="{Binding AddParticipant}" Width="auto" Padding="5,1" IsCancel="True" Margin="267,-5,-158,5" />
+                                <ComboBox ItemsSource="{Binding Users}" DisplayMemberPath="FullName"
+                                  SelectedItem="{Binding SelectedUser}"  Margin="0,-5,-62,5"
+                                  />
+                            </Grid>
+                        </Grid>
+                        <WrapPanel Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Width="auto"/>
+                        <Button x:Name="btnAddAll" Content="Add Everybody" Command="{Binding AddEvery}" Width="auto" Padding="5,1" IsDefault="True"  Margin="100,0,-156,2" Grid.Column="1"/>
+                        <Button x:Name="btnAddMe" Content="Add myself" Command="{Binding AddMySelf}" Padding="5,1" IsCancel="True" Margin="50,0,-62,2"/>
                     </Grid>
 
                 </Grid>
@@ -87,18 +101,22 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="1">
-
+                        <TextBlock Margin="27,0,-27,0"> Templates:</TextBlock>
                     </Grid>
+                    <Grid Grid.Row="2">
+                        <!-- Container for dynamic content -->
+                        <ScrollViewer Grid.Row="0" Grid.Column="0" Height="160"
+                              VerticalScrollBarVisibility="Auto">
+                            <StackPanel  Orientation="Vertical" Margin="0,10,0,0" Height="136" />
+                        </ScrollViewer>
+                    </Grid>               
                 </Grid>
             </StackPanel>
 
         </Grid>
-        <Grid Grid.Row="6" Margin="0,347,0,-277">
+        <Grid Grid.Row="5" Margin="10,179,26,-109">
             <WrapPanel Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="1" Width="auto">
                 <Button x:Name="btnCancel" Content="Cancel" Command="{Binding Cancel}" Width="auto" Padding="5,1" IsCancel="True"/>
                 <Button x:Name="btnSave" Content="Save" Command="{Binding Save}" Width="auto" Margin="10,0,0,0" Padding="5,1" IsDefault="True"/>

@@ -9,7 +9,7 @@ using System.Windows;
 namespace prbd_2324_a06.View
 {
     /// <summary>
-    /// Logique d'interaction pour AddTricountView.xaml
+    /// Logique d'interaction pour TricountDetailView.xaml
     /// </summary>
     public partial class TricountDetailView : UserControlBase
     {
@@ -51,6 +51,7 @@ namespace prbd_2324_a06.View
 
             }
         }
+
 
     }
 }
