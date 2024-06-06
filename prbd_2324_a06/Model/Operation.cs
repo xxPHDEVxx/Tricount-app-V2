@@ -35,10 +35,6 @@ public class Operation : EntityBase<PridContext>
 
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 
-    public int GetHighestOperationId() {
-        return Context.Operations.Max(o => o.Id) + 1;
-    }
-    
     public void Delete() {
         Repartitions.Clear();
         Context.Operations.Remove(this);
@@ -52,7 +48,18 @@ public class Operation : EntityBase<PridContext>
             AddError(nameof(Title), "required");
         else if (Title.Length < 3)
             AddError(nameof(Title), "length must be >= 3");
-
         return !HasErrors;
+    }
+
+    public int GetHighestOperationId() {
+        return Context.Operations.Max(o => o.Id) + 1;
+    }
+
+
+    public IQueryable<Repartition> GetRepartitionByOperation() {
+        var q = from r in Context.Repartitions
+            where r.OperationId == Id
+            select r;
+        return q;
     }
 }

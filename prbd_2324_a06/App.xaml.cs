@@ -19,7 +19,8 @@ public partial class App
         MSG_ADD_OPERATION,
         MSG_EDIT_OPERATION,
         MSG_DELETE_OPERATION,
-        MSG_CLOSE_WINDOW
+        MSG_CLOSE_WINDOW,
+        MSG_NEW_TRICOUNT
     }
 
     public App() {

@@ -6,6 +6,7 @@
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
                    StartupUri="View/ViewTricountDetailView.xaml">
 
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
