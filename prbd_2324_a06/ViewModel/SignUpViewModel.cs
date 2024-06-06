@@ -6,13 +6,23 @@ namespace prbd_2324_a06.ViewModel
 {
     public class SignUpViewModel : ViewModelCommon
     {
+        public SignUpViewModel() : base() {
+            SignUpCommand = new RelayCommand(SignUpAction,
+                () => _mail != null && _password != null
+                                    && _checkPaswword != null && !HasErrors);
+        }
+
+        // Commandes
         public ICommand SignUpCommand { get; set; }
+        
+        // Attributes
 
         private string _mail;
         private string _name;
         private string _password;
         private string _checkPaswword;
 
+        // Properties
         public string Mail {
             get => _mail;
             set => SetProperty(ref _mail, value, () => Validate());
@@ -33,15 +43,10 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _checkPaswword, value, () => Validate());
         }
 
-        public SignUpViewModel() : base() {
-            SignUpCommand = new RelayCommand(SignUpAction,
-                () => _mail != null && _password != null
-                                    && _checkPaswword != null && !HasErrors);
-        }
-        
+        // Méthode commande
         private void SignUpAction() {
             if (Validate()) {
-                var user = new User(Mail, Password, Name, 0);
+                var user = new User(Mail, Password, Name);
                 Context.Users.Add(user);
                 Context.SaveChanges();
                 NotifyColleagues(App.Messages.MSG_SIGN_UP, user);
@@ -49,6 +54,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
 
+        // Méthodes validations
         public override bool Validate() {
             ClearErrors();
 

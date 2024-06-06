@@ -15,7 +15,11 @@ public partial class App
         MSG_DISPLAY_SIGN_UP,
         MSG_LOGIN,
         MSG_LOGOUT,
-        MSG_RESET
+        MSG_RESET,
+        MSG_ADD_OPERATION,
+        MSG_EDIT_OPERATION,
+        MSG_DELETE_OPERATION,
+        MSG_CLOSE_WINDOW
     }
 
     public App() {
