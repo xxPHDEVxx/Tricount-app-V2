@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace prbd_2324_a06.Model;
 
 public enum Role {
-    Member = 0,
+    User = 0,
     Administrator = 1
 }
 
@@ -15,25 +15,22 @@ public class User : EntityBase<PridContext>
     public string Mail { get; set; }
     public string HashedPassword { get; set; }
     public string FullName { get; set; }
-    public int Role { get; protected set; } 
-
+    public Role Role { get; protected set; } = Role.User;
     public User() { }
     
     // constructeur avec autoincrémentation pour sign up
-    public User(string mail, string hashed_password, string full_name, int role) {
+    public User(string mail, string hashed_password, string full_name) {
         UserId = GetHighestUserId() + 1;
         Mail = mail;
         HashedPassword = hashed_password;
         FullName = full_name;
-        Role = role;
     }
     
-    public User(int userdId,string mail, string hashed_password, string full_name, int role) {
+    public User(int userdId,string mail, string hashed_password, string full_name) {
         UserId = userdId;
         Mail = mail;
         HashedPassword = hashed_password;
         FullName = full_name;
-        Role = role;
     }
     
     // Return the highest UserId

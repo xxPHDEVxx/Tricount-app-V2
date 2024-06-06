@@ -15,30 +15,28 @@ namespace prbd_2324_a06.ViewModel
 
         // attributs et propriétés
         private string _mail;
-
+        private User[] _defaultUser;
+        private Role[] _defaultUserRole;
+        private string _password;
+        
         public string Mail {
             get => _mail;
             set => SetProperty(ref _mail, value, () => Validate());
         }
-
-        private string _password;
-
+        
         public string Password {
             get => _password;
             set => SetProperty(ref _password, value, () => Validate());
         }
-
-        private User[] _defaultUser;
-        private string[] _defaultUserName;
 
         public User[] DefaultUser {
             get => _defaultUser;
             set => SetProperty(ref _defaultUser, value);
         }
 
-        public string[] DefaultUserName {
-            get => _defaultUserName;
-            set => SetProperty(ref _defaultUserName, value);
+        public Role[] DefaultUserRole {
+            get => _defaultUserRole;
+            set => SetProperty(ref _defaultUserRole, value);
         }
 
         /**
@@ -47,15 +45,15 @@ namespace prbd_2324_a06.ViewModel
          * -> Mise en place des commandes pour navigation ( Login, Sign up, ...)
          */
         public LoginViewModel() : base() {
+            DefaultUserRole = new Role[4];
             DefaultUser = new User[4];
-            DefaultUserName = new string[4];
             int user = 1;
             for (int i = 0; i < 4; i++) {
                 if (user == 4) {
                     user++;
                 }
                 DefaultUser[i] = Context.Users.FirstOrDefault(u => u.UserId == user);
-                DefaultUserName[i] = DefaultUser[i].FullName;
+                DefaultUserRole[i] = DefaultUser[i].Role;
                 user++;
             }
 
