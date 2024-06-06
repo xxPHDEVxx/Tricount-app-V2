@@ -138,7 +138,8 @@ namespace prbd_2324_a06.ViewModel
                 SaveWeights();
                 Context.SaveChanges();
                 RaisePropertyChanged();
-                NotifyColleagues(App.Messages.MSG_ADD_OPERATION);
+                NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED,Operation);
+                NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW);
             }
         }
 

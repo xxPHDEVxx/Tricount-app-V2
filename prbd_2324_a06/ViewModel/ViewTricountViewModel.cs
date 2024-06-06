@@ -21,6 +21,8 @@ namespace prbd_2324_a06.ViewModel
             OpenNewOperation = new RelayCommand<OperationCardViewModel>(vm => {
                 NotifyColleagues(App.Messages.MSG_OPEN_NEW_OPERATION, new Operation(tricount.Id));
             });
+            Register<Operation>(App.Messages.MSG_OPERATION_CHANGED, operation => OnRefreshData());
+
         }
 
         private ObservableCollection<OperationCardViewModel> _operations;

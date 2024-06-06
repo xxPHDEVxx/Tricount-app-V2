@@ -16,15 +16,13 @@ public partial class App
         MSG_LOGIN,
         MSG_LOGOUT,
         MSG_RESET,
-        MSG_ADD_OPERATION,
-        MSG_EDIT_OPERATION,
-        MSG_DELETE_OPERATION,
-        MSG_CLOSE_WINDOW,
+        MSG_CLOSE_OPERATION_WINDOW,
         MSG_NEW_TRICOUNT,
         MSG_DISPLAY_TRICOUNT,
         MSG_DISPLAY_OPERATIONS,
         MSG_OPEN_NEW_OPERATION,
-        MSG_OPEN_OPERATION
+        MSG_OPEN_OPERATION,
+        MSG_OPERATION_CHANGED
     }
 
     public App() {

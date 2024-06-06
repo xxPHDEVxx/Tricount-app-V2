@@ -149,7 +149,9 @@ namespace prbd_2324_a06.ViewModel
                 SaveWeights();
                 Context.SaveChanges();
                 RaisePropertyChanged();
-                NotifyColleagues(App.Messages.MSG_EDIT_OPERATION);
+                NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+                NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW);
+
             }
         }
 
@@ -186,8 +188,8 @@ namespace prbd_2324_a06.ViewModel
         // Delete 
         private void DeleteAction() {
             Operation.Delete();
-            NotifyColleagues(App.Messages.MSG_DELETE_OPERATION);
-            NotifyColleagues(App.Messages.MSG_CLOSE_WINDOW);
+            NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED,Operation);
+            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW);
         }
 
         private void SaveTemplateAction() {

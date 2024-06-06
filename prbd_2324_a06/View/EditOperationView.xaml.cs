@@ -28,7 +28,7 @@ namespace prbd_2324_a06.View
             initializeTemplates();
 
             // fermeture de la fenêtre
-            Register(App.Messages.MSG_CLOSE_WINDOW,
+            Register(App.Messages.MSG_CLOSE_OPERATION_WINDOW,
                 Close);
         }
 
@@ -101,6 +101,7 @@ namespace prbd_2324_a06.View
                     _vm.CalculAmount();
                 };
             }
+
             _vm.CalculAmount();
         }
 
