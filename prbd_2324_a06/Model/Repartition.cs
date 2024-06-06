@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
-using PRBD_Framework;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-=======
+
 ﻿using PRBD_Framework;
->>>>>>> develop
 using System.ComponentModel.DataAnnotations.Schema;
 
 
