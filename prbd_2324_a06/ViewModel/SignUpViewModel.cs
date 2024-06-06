@@ -46,7 +46,7 @@ namespace prbd_2324_a06.ViewModel
         // Méthode commande
         private void SignUpAction() {
             if (Validate()) {
-                var user = new User(Mail, Password, Name, 0);
+                var user = new User(Mail, Password, Name);
                 Context.Users.Add(user);
                 Context.SaveChanges();
                 NotifyColleagues(App.Messages.MSG_SIGN_UP, user);

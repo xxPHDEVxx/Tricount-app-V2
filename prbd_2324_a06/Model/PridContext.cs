@@ -38,6 +38,16 @@ public class PridContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
+        
+        // l'entité User ...
+        modelBuilder.Entity<User>()
+            // doit utiliser la propriété Role comme discriminateur ...
+            .HasDiscriminator(m => m.Role)
+            // en mappant la valeur Role.Member sur le type Member ...
+            .HasValue<User>(Role.User)
+            // et en mappant la valeur Role.Administator sur le type Administrator ...
+            .HasValue<Administrator>(Role.Administrator);
+
 
         // User-Repartition: Many-to-Many
         modelBuilder.Entity<Repartition>()
@@ -117,15 +127,19 @@ public class PridContext : DbContextBase
     }
 
     private static void seedData(ModelBuilder modelBuilder) {
-        var boris = new User(1, "boverhaegen@epfc.eu", "Password1,", "Boris", 0);
-        var benoit = new User(2, "bepenelle@epfc.eu", "Password1,", "Benoit", 0);
-        var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier", 0);
-        var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc", 0);
-        var admin = new User(5, "admin@epfc.eu", "Password1,", "Admin", 1);
+
+        var boris = new User(1, "boverhaegen@epfc.eu", "Password1,", "Boris");
+        var benoit = new User(2, "bepenelle@epfc.eu", "Password1,", "Benoit");
+        var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier");
+        var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc");
+        var admin = new User(5, "admin@epfc.eu", "Password1,", "Admin");
+
 
         modelBuilder.Entity<User>()
-            .HasData(boris, benoit, xavier, marc, admin);
-
+            .HasData(boris, benoit, xavier, marc,admin);
+        
+        /*modelBuilder.Entity<Administrator>()
+            .HasData(admin);*/ // à modifier pour créer administrator une fois bug réglé
 
         modelBuilder.Entity<Tricount>()
             .HasData(
@@ -266,6 +280,7 @@ public class PridContext : DbContextBase
     }
     
     public DbSet<User> Users => Set<User>();
+    public DbSet<Administrator> Administrators => Set<Administrator>();
     public DbSet<Tricount> Tricounts => Set<Tricount>();
     public DbSet<Template> Templates => Set<Template>();
     public DbSet<Operation> Operations => Set<Operation>();
