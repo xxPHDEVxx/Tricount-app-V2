@@ -10,6 +10,7 @@ public partial class MainView : WindowBase
         
     }
     
+    
     private void Logout_Click(object sender, System.Windows.RoutedEventArgs e) {
         NotifyColleagues(App.Messages.MSG_LOGOUT);
     }
