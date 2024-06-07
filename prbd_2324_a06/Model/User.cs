@@ -78,6 +78,13 @@ public class User : EntityBase<PridContext>
                         select t;
         return tricounts;
     }
+    public IQueryable<Tricount> GetAllFiltered(string Filter) {
+        var filtered = from t in Context.Tricounts
+                       where t.Title.Contains(Filter)
+                       orderby t.Title
+                       select t;
+        return filtered;
+    }
     public static string GetUserNameById(int userId) {
         var u = Context.Users.SingleOrDefault(u => u.UserId == userId);
         return u.FullName;

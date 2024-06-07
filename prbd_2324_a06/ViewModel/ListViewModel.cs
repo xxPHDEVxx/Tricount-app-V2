@@ -42,11 +42,18 @@ public class ListViewModel : ViewModelCommon
     protected override void OnRefreshData() {
             var UserId = CurrentUser.UserId;
 
+        if (CurrentUser.Role == Role.Administrator) {
+            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetAll()
+                : CurrentUser.GetAllFiltered(Filter);
+        Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
+            new TricountCardViewModel(t)));
+        } else {
 
         IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()) 
             : CurrentUser.GetFiltered(Filter);
 
         Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
             new TricountCardViewModel(t)));
+        }
     }
 }
