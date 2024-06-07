@@ -19,9 +19,10 @@ namespace prbd_2324_a06.View
 
             Register<Tricount>(App.Messages.MSG_CLOSE_TAB, tricount => DoCloseTab(tricount));
             Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => DoCloseTab(tricount));
-        
+            Register<Tricount>(App.Messages.MSG_EDIT_TRICOUNT, tricount => DoDisplayTricount(tricount, false));
+
         }
-        
+
 
         // Gestionnaire d'événement pour le clic sur le bouton de déconnexion
         private void Logout_Click(object sender, System.Windows.RoutedEventArgs e)
