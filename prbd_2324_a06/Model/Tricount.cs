@@ -119,18 +119,7 @@ public class Tricount : EntityBase<PridContext>
             .FirstOrDefault();
     }
 
-    public void DeleteOperations() {
-        // Récupérer les opérations liées au tricount à supprimer
-        var operationsToDelete = GetOperations();
-
-        // Supprimer les opérations récupérées de la base de données
-        Context.Operations.RemoveRange(operationsToDelete);
-
-        // Enregistrer les modifications dans la base de données
-    }
-
     public void Delete() {
-        DeleteOperations();
         Subscriptions.Clear();
         Templates.Clear();
         Context.Tricounts.Remove(this);

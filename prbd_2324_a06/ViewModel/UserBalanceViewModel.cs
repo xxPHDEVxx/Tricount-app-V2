@@ -101,7 +101,7 @@ namespace prbd_2324_a06.ViewModel
                 ColumnA = 0;
                 ColumnB = 1;
             }
-            Width = 110 / (GetMaxExpense() / Math.Abs(User.GetMyBalance(Tricount)));
+            Width = 90 / (GetMaxExpense() / Math.Abs(User.GetMyBalance(Tricount)));
         }
 
         private double GetMaxExpense() {
