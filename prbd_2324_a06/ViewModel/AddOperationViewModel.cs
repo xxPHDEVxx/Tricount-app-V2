@@ -10,8 +10,10 @@ namespace prbd_2324_a06.ViewModel
     {
         // ajouter en parametre Tricount pour lier au reste du code
         public AddOperationViewModel(Operation operation) : base() {
-            //Tricount = tricount;
+            
+            // Initialisation Propriétés
             Tricount = Context.Tricounts.Find(operation.TricountId);
+            Operation = operation;
             CurrentUser = App.CurrentUser;
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
@@ -20,6 +22,7 @@ namespace prbd_2324_a06.ViewModel
                 Content = CurrentUser.FullName
             };
             NoTemplates = GetTemplatesTricount().Any();
+            
             // initialisation des commandes 
             AddCommand = new RelayCommand(AddAction,
                 () => !HasErrors && Error == "");
@@ -29,7 +32,6 @@ namespace prbd_2324_a06.ViewModel
                     ? SelectedTemplate != null
                     : SelectedTemplate.Content.ToString() != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
-            Operation = new Operation();
         }
 
         // Commandes
