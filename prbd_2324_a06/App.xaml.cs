@@ -23,13 +23,9 @@ public partial class App
         MSG_OPEN_NEW_OPERATION,
         MSG_OPEN_OPERATION,
         MSG_OPERATION_CHANGED,
-        MSG_ADD_OPERATION,
         MSG_TRICOUNT_CHANGED,
         MSG_CLOSE_TAB,
         MSG_PARTICIPANT_ADDED, 
-        MSG_EDIT_OPERATION,
-        MSG_DELETE_OPERATION,
-        MSG_CLOSE_WINDOW
     }
 
     public App() {
