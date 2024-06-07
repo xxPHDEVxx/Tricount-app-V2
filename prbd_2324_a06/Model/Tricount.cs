@@ -110,4 +110,11 @@ public class Tricount : EntityBase<PridContext>
         Subscriptions.Add(s);
         Context.SaveChanges();
     }
+    // récupere la derniere opération
+    public Operation GetLatestOperation() {
+        return Context.Operations
+            .Where(o => o.TricountId == Id)
+            .OrderByDescending(o => o.OperationDate) 
+            .FirstOrDefault();
+    }
 }
