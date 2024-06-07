@@ -24,8 +24,12 @@ namespace prbd_2324_a06.View
             initializeTemplates();
 
             // fermeture de la fenêtre
-            Register(App.Messages.MSG_CLOSE_OPERATION_WINDOW,
-                Close);
+            Register<Operation>( App.Messages.MSG_CLOSE_OPERATION_WINDOW, operationo => {
+                Close();
+            });
+            this.Closed += (sender, e) => {
+                _vm.Close();
+            }; 
         }
 
         // Initialise checkBox's template with the tricount's participants
@@ -167,6 +171,7 @@ namespace prbd_2324_a06.View
 
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
+            _vm.Close();
             Close();
         }
     }

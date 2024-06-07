@@ -138,8 +138,8 @@ namespace prbd_2324_a06.ViewModel
                 SaveWeights();
                 Context.SaveChanges();
                 RaisePropertyChanged();
-                NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED,Operation);
-                NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW);
+                NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+                Close();
             }
         }
 
@@ -272,6 +272,10 @@ namespace prbd_2324_a06.ViewModel
             } else {
                 AddError(nameof(Amount), "Can't be empty !");
             }
+        }
+
+        protected internal void Close() {
+            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW,Operation);
         }
     }
 }
