@@ -13,20 +13,12 @@ namespace prbd_2324_a06.View
             InitializeComponent();
 
             // Enregistrement des messages pour l'affichage des différentes vues
-            Register<User>(App.Messages.MSG_DISPLAY_SIGN_UP, _ => DisplaySignUpView());
             Register<Tricount>(App.Messages.MSG_NEW_TRICOUNT, tricount => DoDisplayTricount(tricount, true));
             Register<Tricount>(App.Messages.MSG_DISPLAY_TRICOUNT, tricount => DoDisplayViewTricount(tricount));
             Register<Operation>(App.Messages.MSG_OPEN_OPERATION, operation => OpenOperation(operation, false));
             Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperation(operation, true));
         }
-
-        // Affichage de la fenêtre de sign up
-        private void DisplaySignUpView()
-        {
-            var signUpWindow = new SignUpView();
-            Close(); // Ferme la fenêtre principale
-            signUpWindow.Show(); // Affiche la fenêtre de sign up
-        }
+        
 
         // Gestionnaire d'événement pour le clic sur le bouton de déconnexion
         private void Logout_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -82,6 +74,12 @@ namespace prbd_2324_a06.View
             }
         }
         
-        
+        public void EnableOtherWindows(bool enable)
+        {
+            foreach (var window in _otherWindows)
+            {
+                window.IsEnabled = enable;
+            }
+        }
     }
 }
