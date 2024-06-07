@@ -57,7 +57,11 @@ public class TricountDetailViewModel : ViewModelCommon
         get => _tricount;
         set => SetProperty(ref _tricount, value);
     }
-
+    private User _user;
+    public User User {
+        get => _user;
+        set => SetProperty(ref _user, value);
+    }
     private bool _isNew;
     public bool IsNew {
         get => _isNew;
@@ -70,6 +74,8 @@ public class TricountDetailViewModel : ViewModelCommon
             .Where(u => u.UserId != CurrentUser.UserId)
             .Select(m => m.FullName)
             );
+
+        User = CurrentUser;
         
         if (!IsNew) {
             Tricount.Title = tricount.Title;
@@ -89,18 +95,18 @@ public class TricountDetailViewModel : ViewModelCommon
 
     public override void SaveAction() {
        if (IsNew) {
-            var tricount = new Tricount(Title, Description, Date, CurrentUser);
-            Context.Tricounts.Add(Tricount);
-            IsNew = false;
-            if (!Participants.IsNullOrEmpty()) {
-            foreach (var user in Participants) {
-                var u = User.GetUserByName(user);
-                Tricount.NewSubscriber(u.UserId);
-           }
-                
-            }
+            Context.Add(Tricount);
+            Console.WriteLine(Tricount.Title);
+            //IsNew = false;
+            //if (!Participants.IsNullOrEmpty()) {
+            //    foreach (var user in Participants) {
+            //        var u = User.GetUserByName(user);
+            //        Tricount.NewSubscriber(u.UserId);
+            //    }                       
+            //}
         }
         Context.SaveChanges();
+        RaisePropertyChanged();
         NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
     }
 
