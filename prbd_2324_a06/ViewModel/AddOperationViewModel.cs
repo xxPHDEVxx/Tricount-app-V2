@@ -142,6 +142,7 @@ namespace prbd_2324_a06.ViewModel
                 Context.SaveChanges();
                 RaisePropertyChanged();
                 NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+                NotifyColleagues(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, Tricount);
                 Close();
             }
         }
