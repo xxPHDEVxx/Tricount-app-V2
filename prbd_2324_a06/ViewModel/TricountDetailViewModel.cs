@@ -17,23 +17,23 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand SaveCommand { get; set; }
     public ICommand CancelCommand { get; set; }
     // Attributes et propriétés
-    public ObservableCollectionFast<User> Users { get; } = new();
-    private ComboBoxItem _selectedUser;
+    public ObservableCollectionFast<string> Users { get; } = new ObservableCollectionFast<string>();
 
-    public ComboBoxItem SelectedUser {
+    private string _selectedUser;
+    public string SelectedUser {
         get => _selectedUser;
         set => SetProperty(ref _selectedUser, value);
     }
 
-    private List<string> _participants;
-    public List<string> Participants {
+    private ObservableCollection<string> _participants;
+    public ObservableCollection<string> Participants {
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
     private string _title;
     public string Title {
         get => _title;
-        set => SetProperty(ref _title, value, ()=>Validate());
+        set => SetProperty(ref _title, value, () => Validate());
     }
 
     private string _description;
@@ -51,6 +51,7 @@ public class TricountDetailViewModel : ViewModelCommon
     private Tricount _tricount;
     public Tricount Tricount {
         get => _tricount;
+        set => SetProperty(ref _tricount, value);
     }
 
     private bool _isNew;
@@ -59,9 +60,17 @@ public class TricountDetailViewModel : ViewModelCommon
         set => SetProperty(ref _isNew, value);
     }
     public TricountDetailViewModel(Tricount tricount, bool isNew) : base() {
-        _tricount = tricount;
-        _isNew = isNew;
-        Users.RefreshFromModel(App.Context.Users.OrderBy(m => m.FullName));
+        Tricount = tricount;
+        IsNew = isNew;
+        Users.RefreshFromModel(App.Context.Users
+            .Select(m => m.FullName));
+
+        if (!IsNew) {
+            Tricount.Title = tricount.Title;
+            Tricount.Description = tricount.Description;
+            Tricount.CreatedAt = tricount.CreatedAt;
+
+        }
 
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
@@ -69,40 +78,48 @@ public class TricountDetailViewModel : ViewModelCommon
     }
 
     public override void SaveAction() {
-        //if (IsNew) {
-        //    var tricount = new Tricount(Title, Description, Date, CurrentUser);
-        //    Context.Tricounts.Add(Tricount);
-        //    IsNew = false;
-        //    foreach (var user in Participants) {
-        //        Tricount.NewSubscriber(user);
-        //    }
-        //}
-        //Context.SaveChanges();
-        //RaisePropertyChanged();
-        //NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
+       if (IsNew) {
+            var tricount = new Tricount(Title, Description, Date, CurrentUser);
+            Context.Tricounts.Add(Tricount);
+            IsNew = false;
+            if (!Participants.IsNullOrEmpty()) {
+            foreach (var user in Participants) {
+                var u = User.GetUserByName(user);
+                Tricount.NewSubscriber(u.UserId);
+           }
+                
+            }
+        }
+        Context.SaveChanges();
+        NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
     }
 
     private bool CanSaveAction() {
         if (IsNew)
-            return Tricount.Validate() && !HasErrors;
+            return Validate() && !HasErrors;
         return Tricount != null && Tricount.IsModified && !HasErrors;
     }
     private void AddParticipantAction() {
-        Console.WriteLine(SelectedUser.Content.ToString());
-        //if (SelectedUser != null && !Participants.Contains(SelectedUser)) {
-        //    Participants.Add(SelectedUser);
-        //    NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
-        //}
+        if (Participants == null && SelectedUser != null) {
+            Participants.Add(SelectedUser);
+            NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
+            
+        }
+        if (SelectedUser != null && !Participants.Contains(SelectedUser)) {
+            Participants.Add(SelectedUser);
+            NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
+
+        }
     }
 
-    //private bool CanAddParticipantAction() {
-    //    if (Participants == null) {
-    //        return false;
+   private bool CanAddParticipantAction() {
+        if (Participants == null) {
+           return false;
            
-    //    } else {
-    //    return SelectedUser != null && !Participants.Contains(SelectedUser);
-    //    }
-    //}
+        } else {
+        return SelectedUser != null && !Participants.Contains(SelectedUser);
+        }
+    }
     public override void CancelAction() {
         ClearErrors();
         if (IsNew) {
@@ -120,10 +137,17 @@ public class TricountDetailViewModel : ViewModelCommon
 
     public override bool Validate() {
         ClearErrors();
-        // On délègue la validation à l'entité Tricount
-        Tricount.Validate();
-        // On ajoute les erreurs détectées par l'entité Tricount à notre propre liste d'erreurs
-        AddErrors(Tricount.Errors);
+        if (string.IsNullOrWhiteSpace(Title))
+            AddError(nameof(Title), "required");
+        else if (Title.Length < 3)
+            AddError(nameof(Title), "length must be >= 3");
+
+
+        // Validation de la description si elle contient quelque chose
+        if (!string.IsNullOrWhiteSpace(Description) && Description.Length < 3) {
+            AddError(nameof(Description), "length must be >= 3, ");
+        }
+
         return !HasErrors;
     }
 

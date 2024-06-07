@@ -45,5 +45,21 @@ public class Operation : EntityBase<PridContext>
                 select r;
         return q;
     }
+    public void Delete() {
+        Repartitions.Clear();
+        Context.Operations.Remove(this);
+        Context.SaveChanges();
     }
+
+    public override bool Validate() {
+        ClearErrors();
+
+        if (string.IsNullOrWhiteSpace(Title))
+            AddError(nameof(Title), "required");
+        else if (Title.Length < 3)
+            AddError(nameof(Title), "length must be >= 3");
+
+        return !HasErrors;
+    }
+}
 

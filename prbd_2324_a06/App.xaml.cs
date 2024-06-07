@@ -20,7 +20,10 @@ public partial class App
         MSG_NEW_TRICOUNT, 
         MSG_TRICOUNT_CHANGED,
         MSG_CLOSE_TAB,
-        MSG_PARTICIPANT_ADDED
+        MSG_PARTICIPANT_ADDED, 
+        MSG_EDIT_OPERATION,
+        MSG_DELETE_OPERATION,
+        MSG_CLOSE_WINDOW
     }
 
     public App() {

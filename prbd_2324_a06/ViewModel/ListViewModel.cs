@@ -26,13 +26,13 @@ public class ListViewModel : ViewModelCommon
         set => SetProperty(ref _filter, value, OnRefreshData);
     }
 
-            public ListViewModel() : base() {
+    public ListViewModel() : base() {
 
-                OnRefreshData();
-                ClearFilter = new RelayCommand(() => Filter = "");
-                NewTricount = new RelayCommand(() => {
-                    NotifyColleagues(App.Messages.MSG_NEW_TRICOUNT, new Tricount());
-                });
+        OnRefreshData();
+        ClearFilter = new RelayCommand(() => Filter = "");
+        NewTricount = new RelayCommand(() => {
+            NotifyColleagues(App.Messages.MSG_NEW_TRICOUNT, new Tricount());
+        });
 
 
     }
