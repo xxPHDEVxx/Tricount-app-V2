@@ -83,7 +83,7 @@ public class TricountDetailViewModel : ViewModelCommon
         Tricount = tricount;
         IsNew = isNew;
         Users.RefreshFromModel(App.Context.Users
-            .Where(u => u.UserId != CurrentUser.UserId)
+            .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
             .Select(m => m.FullName)
         );
 
@@ -157,18 +157,9 @@ public class TricountDetailViewModel : ViewModelCommon
     }
 
     private bool CanAddParticipantAction() {
-        if (!Users.IsNullOrEmpty()) {
+        if (!Users.IsNullOrEmpty() && SelectedUser != null) {
             return true;
         }
-
-        if (SelectedUser != null) {
-            return true;
-        }
-
-        if (SelectedUser == null) {
-            return false;
-        }
-
         return false;
     }
 
