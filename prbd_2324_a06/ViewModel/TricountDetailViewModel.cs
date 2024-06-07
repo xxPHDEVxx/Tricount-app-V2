@@ -36,7 +36,7 @@ public class TricountDetailViewModel : ViewModelCommon
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
-
+    public string CreatedBy => $"Created By {CurrentUser.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}";
     private string _title;
 
     public string Title {
