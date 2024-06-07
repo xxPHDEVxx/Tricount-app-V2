@@ -81,7 +81,7 @@ public class TricountDetailViewModel : ViewModelCommon
         Participants = new ObservableCollection<string>();
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
-        AddCommand = new RelayCommand(AddParticipantAction);
+        AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
         AddMySelf = new RelayCommand(AddMySelfAction, CanAddMySelfAction);
         AddEvery = new RelayCommand(AddAllAction,CanAddAllAction);
 
@@ -130,12 +130,18 @@ public class TricountDetailViewModel : ViewModelCommon
     }
 
    private bool CanAddParticipantAction() {
-        if (Participants == null) {
-           return false;
-           
-        } else {
-        return SelectedUser != null && !Participants.Contains(SelectedUser);
+        if (!Users.IsNullOrEmpty()) {
+            return true;
         }
+        if (SelectedUser != null) {
+            return true;
+        }
+        if (SelectedUser == null) {
+            
+        return false;
+        }
+        return false;
+        
     }
     public override void CancelAction() {
         ClearErrors();

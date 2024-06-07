@@ -1,13 +1,9 @@
 ﻿using PRBD_Framework;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
-using NumericUpDownLib;
 using System.Windows.Controls;
 using System.Windows;
 using System.Collections.ObjectModel;
-using Microsoft.IdentityModel.Tokens;
-using System.Windows.Media.Imaging;
-using FontAwesome6.Fonts;
 using System.Windows.Media;
 
 
