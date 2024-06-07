@@ -21,10 +21,11 @@ namespace prbd_2324_a06.View
             DataContext = _vm = new TricountDetailViewModel(tricount, isNew);
             InitializeComponent();
             InitializeComboBox();
-
+            newParticipants();
         }
 
         private void InitializeComboBox() {
+            PanelParticipants.Children.Clear();
             // fetching users from the database
             ObservableCollection<string> users = _vm.Participants;
             if (!users.IsNullOrEmpty()) {
@@ -33,10 +34,10 @@ namespace prbd_2324_a06.View
                 // Create a new Grid for each user
                 Grid userGrid = new Grid();
                 userGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                userGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                userGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                 // Create Textbox
-                TextBox textBox = new TextBox { };
+                TextBox textBox = new TextBox { Text = user};
                 Grid.SetColumn(textBox, 0);
                 userGrid.Children.Add(textBox);
 
@@ -51,10 +52,15 @@ namespace prbd_2324_a06.View
 
                 // Add the userGrid to the ParticipantsPanel
                 PanelParticipants.Children.Add(userGrid);
-
             }
             }
 
+        }
+
+        private void newParticipants() {
+            btnAdd.Click += (sender, e) => {
+                InitializeComboBox();
+            };
         }
 
 

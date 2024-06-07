@@ -72,6 +72,7 @@ public class TricountDetailViewModel : ViewModelCommon
 
         }
 
+        Participants = new ObservableCollection<string>();
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction);
@@ -100,16 +101,20 @@ public class TricountDetailViewModel : ViewModelCommon
         return Tricount != null && Tricount.IsModified && !HasErrors;
     }
     private void AddParticipantAction() {
-        if (Participants == null && SelectedUser != null) {
+        if (Participants != null && SelectedUser != null) {
             Participants.Add(SelectedUser);
             NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
-            
-        }
-        if (SelectedUser != null && !Participants.Contains(SelectedUser)) {
-            Participants.Add(SelectedUser);
-            NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
+            Console.WriteLine(Participants.Count);
 
         }
+
+        if (Participants == null || SelectedUser == null || Participants.Contains(SelectedUser)) {
+            return;
+        }
+
+        Participants.Add(SelectedUser);
+        Console.WriteLine(Participants.Count);
+        NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
     }
 
    private bool CanAddParticipantAction() {
