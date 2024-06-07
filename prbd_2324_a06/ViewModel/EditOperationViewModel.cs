@@ -4,26 +4,27 @@ using PRBD_Framework;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml;
 
 namespace prbd_2324_a06.ViewModel
 {
     public class EditOperationViewModel : ViewModelCommon
     {
         // ajouter en parametre Tricount pour lier au reste du code
-        public EditOperationViewModel() : base() {
+        public EditOperationViewModel(Operation operation) : base() {
             // initialisation des propriétés
-            //Tricount = tricount;
-            Tricount = Context.Tricounts.Find(4); // pour les tests
-            Operation = Context.Operations.Find(2); // pour les tests
+            Tricount = Context.Tricounts.Find(operation.TricountId);
+            Operation = operation;
             if (Operation != null) {
-                Amount = Operation.Amount.ToString(CultureInfo.CurrentCulture);
+                Amount = $"{Operation.Amount:F2}";
                 OperationDate = Operation.OperationDate;
             }
 
+            CurrentUser = App.CurrentUser;
+            Initiator = new ComboBoxItem {
+                Content = CurrentUser.FullName
+            };
             NoTemplates = GetTemplatesTricount().Any();
-            // Une fois liée au reste du code à décommenté
-            // CurrentUser = App.CurrentUser.FullName;
-            CurrentUser = Context.Users.Find(2);
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
@@ -150,7 +151,8 @@ namespace prbd_2324_a06.ViewModel
                 SaveWeights();
                 Context.SaveChanges();
                 RaisePropertyChanged();
-                NotifyColleagues(App.Messages.MSG_EDIT_OPERATION);
+                NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+                Close();
             }
         }
 
@@ -187,8 +189,8 @@ namespace prbd_2324_a06.ViewModel
         // Delete 
         private void DeleteAction() {
             Operation.Delete();
-            NotifyColleagues(App.Messages.MSG_DELETE_OPERATION);
-            NotifyColleagues(App.Messages.MSG_CLOSE_WINDOW);
+            NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+            Close();
         }
 
         private void SaveTemplateAction() {
@@ -285,15 +287,21 @@ namespace prbd_2324_a06.ViewModel
 
                     // insertion montants dans textblock
                     i = 0;
-                    int part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
+                    double part = totalWeight < 1
+                        ? double.Parse(Amount) * totalWeight
+                        : double.Parse(Amount) / totalWeight;
                     foreach (var item in TextBlocks) {
-                        item.Text = (part * weights[i]).ToString() + " €";
+                        item.Text = $"{part * weights[i]:F2} €";
                         i++;
                     }
                 }
             } else {
                 AddError(nameof(Amount), "Can't be empty !");
             }
+        }
+
+        protected internal void Close() {
+            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW,Operation);
         }
     }
 }

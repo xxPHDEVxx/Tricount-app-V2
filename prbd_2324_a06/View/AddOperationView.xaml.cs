@@ -12,8 +12,11 @@ namespace prbd_2324_a06.View
 {
     public partial class AddOperationView : WindowBase
     {
-        public AddOperationView() {
+        private readonly AddOperationViewModel _vm;
+
+        public AddOperationView(Operation operation) {
             InitializeComponent();
+            DataContext = _vm = new AddOperationViewModel(operation);
 
             // initialisation dynamique des éléments graphiques
             InitializeCheckBox();
@@ -21,14 +24,18 @@ namespace prbd_2324_a06.View
             initializeTemplates();
 
             // fermeture de la fenêtre
-            Register(App.Messages.MSG_CLOSE_WINDOW,
-                Close);
+            Register<Operation>( App.Messages.MSG_CLOSE_OPERATION_WINDOW, operationo => {
+                Close();
+            });
+            this.Closed += (sender, e) => {
+                _vm.Close();
+            }; 
         }
 
         // Initialise checkBox's template with the tricount's participants
         private void InitializeCheckBox() {
             // fetching users from the database
-            List<User> users = vm.GetUsersTricount();
+            List<User> users = _vm.GetUsersTricount();
 
             foreach (var user in users) {
                 // Create a new Grid for each user
@@ -42,7 +49,7 @@ namespace prbd_2324_a06.View
                     Content = user.FullName, Margin = new Thickness(2), Width = 80, IsChecked = true,
                     VerticalAlignment = VerticalAlignment.Center
                 };
-                vm.CheckBoxItems.Add(checkBox);
+                _vm.CheckBoxItems.Add(checkBox);
                 Grid.SetColumn(checkBox, 0);
                 userGrid.Children.Add(checkBox);
 
@@ -55,7 +62,7 @@ namespace prbd_2324_a06.View
                     HorizontalAlignment = HorizontalAlignment.Center,
                     Name = user.FullName
                 };
-                vm.Numerics.Add(numericUpDown);
+                _vm.Numerics.Add(numericUpDown);
                 Grid.SetColumn(numericUpDown, 1);
                 userGrid.Children.Add(numericUpDown);
 
@@ -65,7 +72,7 @@ namespace prbd_2324_a06.View
                     Width = 50, FontWeight = FontWeights.Bold,
                     TextAlignment = TextAlignment.Left
                 };
-                vm.TextBlocks.Add(textBlock);
+                _vm.TextBlocks.Add(textBlock);
                 Grid.SetColumn(textBlock, 2);
                 userGrid.Children.Add(textBlock);
 
@@ -75,20 +82,20 @@ namespace prbd_2324_a06.View
                 // Gestionnaire d'événements pour la CheckBox
                 checkBox.Checked += (sender, e) => {
                     UpdateNumericUpDownState(checkBox, numericUpDown);
-                    vm.Validate();
-                    vm.CalculAmount();
+                    _vm.Validate();
+                    _vm.CalculAmount();
                 };
                 checkBox.Unchecked += (sender, e) => {
                     UpdateNumericUpDownState(checkBox, numericUpDown);
-                    vm.Validate();
-                    vm.CalculAmount();
+                    _vm.Validate();
+                    _vm.CalculAmount();
                 };
 
                 // Gestionnaire d'évènements pour le Numeric
                 numericUpDown.ValueChanged += (sender, e) => {
                     UpdateCheckBoxState(checkBox, numericUpDown);
-                    vm.Validate();
-                    vm.CalculAmount();
+                    _vm.Validate();
+                    _vm.CalculAmount();
                 };
             }
         }
@@ -114,7 +121,7 @@ namespace prbd_2324_a06.View
         // Initialize comboBoxItem with the participants of the Operation's Tricount.
         private void InitializeCombobox() {
             // fetching users from the database
-            List<User> users = vm.GetUsersTricount();
+            List<User> users = _vm.GetUsersTricount();
             foreach (var user in users) {
                 // Create ComboBox
                 ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = user.FullName };
@@ -132,7 +139,7 @@ namespace prbd_2324_a06.View
             // Rechercher l'élément correspondant dans la ComboBox
             ComboBoxItem defaultItem = InitiatorComboBox.Items
                 .OfType<ComboBoxItem>()
-                .FirstOrDefault(item => item.Content.ToString() == vm.CurrentUser.FullName);
+                .FirstOrDefault(item => item.Content.ToString() == _vm.CurrentUser.FullName);
             // Si l'élément par défaut existe, le sélectionner
             if (defaultItem != null) {
                 InitiatorComboBox.SelectedItem = defaultItem;
@@ -141,7 +148,7 @@ namespace prbd_2324_a06.View
 
         // Initialize comboBoxItem with the templates of the Operation's Tricount.
         private void initializeTemplates() {
-            List<Template> templates = vm.GetTemplatesTricount();
+            List<Template> templates = _vm.GetTemplatesTricount();
             foreach (var template in templates) {
                 // Create ComboBox
                 ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = template.Title };
@@ -164,6 +171,7 @@ namespace prbd_2324_a06.View
 
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
+            _vm.Close();
             Close();
         }
     }

@@ -10,18 +10,17 @@ namespace prbd_2324_a06.View
     {
         public LoginView() {
             InitializeComponent();
-            
-            // Affichage fenêtre sign up
             Register<User>(App.Messages.MSG_DISPLAY_SIGN_UP, _ => DisplaySignUpView());
+
         }
         
-        // Affichage fenêtre Sign up
-        private void DisplaySignUpView() {
+        // Affichage de la fenêtre de sign up
+        private void DisplaySignUpView()
+        {
             var signUpWindow = new SignUpView();
-            Close();
-            signUpWindow.Show();
+            Close(); // Ferme la fenêtre principale
+            signUpWindow.Show(); // Affiche la fenêtre de sign up
         }
-        
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
             Close();

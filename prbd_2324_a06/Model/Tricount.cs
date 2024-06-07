@@ -30,8 +30,7 @@ public class Tricount : EntityBase<PridContext>
         Creator = creator;
     }
 
-    public IQueryable<User> GetParticipants()
-    {
+    public IQueryable<User> GetParticipants() {
         var userIds = Subscriptions
             .Where(sub => sub.TricountId == Id)
             .Select(sub => sub.UserId)
@@ -43,53 +42,31 @@ public class Tricount : EntityBase<PridContext>
         return participants;
     }
 
+
     public string GetCreatorName() {
         return User.GetUserNameById(CreatorId);
     }
+
     public int NumberOfParticipants() {
         var q = (from s in Subscriptions
-                 where s.UserId != CreatorId
-                 select s).Count();
+            where s.UserId != CreatorId
+            select s).Count();
         return q;
     }
 
+
     public IQueryable<Operation> GetOperations() {
-    var q = from o in Context.Operations
+        var q = from o in Context.Operations
             where o.TricountId == Id
             select o;
-     return q;
-
+        return q;
     }
 
-    public double GetBalance(User user) {
-        var operations = GetOperations().ToList();
-
-        double userExpenses = 0, weight = 0, userPaid = 0;
-        foreach (var operation in operations) {
-            if (operation.Initiator.Equals(user))
-                userPaid += operation.Amount;
-
-            var repartitions = operation.Repartitions.ToList();
-            double userWeight = 0;
-            for (int i = 0; i < repartitions.Count; i++) {
-                weight += repartitions[i].Weight;
-                if (repartitions[i].User.Equals(user))
-                    userWeight = repartitions[i].Weight;
-            }
-
-            if (userWeight != 0)
-                userExpenses += operation.Amount * (userWeight / weight);
-
-            weight = 0;
-        }
-
-        return userPaid - userExpenses;
-    }
 
     public double GetTotal() {
         var total = Context.Operations
-                      .Where(o => o.TricountId == Id)
-                      .Sum(o => Math.Round(o.Amount, 2));
+            .Where(o => o.TricountId == Id)
+            .Sum(o => Math.Round(o.Amount, 2));
         return total;
     }
 
@@ -102,9 +79,8 @@ public class Tricount : EntityBase<PridContext>
             .Where(t => id.Contains(t.Id));
         return templates;
     }
-    
-    public Template GetTemplateByTitle(string title)
-    {
+
+    public Template GetTemplateByTitle(string title) {
         return Templates.FirstOrDefault(t => t.Title == title);
     }
 }
