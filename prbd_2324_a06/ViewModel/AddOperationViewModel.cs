@@ -16,8 +16,9 @@ namespace prbd_2324_a06.ViewModel
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
-            Initiator = new ComboBoxItem();
-            Initiator.Content = CurrentUser.FullName;
+            Initiator = new ComboBoxItem {
+                Content = CurrentUser.FullName
+            };
             NoTemplates = GetTemplatesTricount().Any();
             // initialisation des commandes 
             AddCommand = new RelayCommand(AddAction,
@@ -275,7 +276,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         protected internal void Close() {
-            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW,Operation);
+            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW, Operation);
         }
     }
 }

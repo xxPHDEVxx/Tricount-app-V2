@@ -11,6 +11,7 @@ namespace prbd_2324_a06.ViewModel
             User = user;
             Tricount = tricount;
             UpdateStyle();
+            IsCurrentUser();
         }
 
         private User _user;
@@ -37,6 +38,13 @@ namespace prbd_2324_a06.ViewModel
         public Brush BackgroundColor {
             get => _backgroundColor;
             set => SetProperty(ref _backgroundColor, value);
+        }
+        
+        private string _current;
+
+        public string Current {
+            get => _current;
+            set => SetProperty(ref _current, value);
         }
 
         private int _columnB;
@@ -98,6 +106,10 @@ namespace prbd_2324_a06.ViewModel
             }
 
             return Math.Abs(max);
+        }
+
+        public void IsCurrentUser() {
+            Current = User == App.CurrentUser ? " (me)" : "";
         }
     }
 }
