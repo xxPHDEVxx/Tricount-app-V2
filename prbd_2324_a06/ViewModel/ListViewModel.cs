@@ -31,7 +31,7 @@ public class ListViewModel : ViewModelCommon
         OnRefreshData();
         ClearFilter = new RelayCommand(() => Filter = "");
         NewTricount = new RelayCommand(() => {
-            NotifyColleagues(App.Messages.MSG_NEW_TRICOUNT, new Tricount());
+            NotifyColleagues(App.Messages.MSG_OPEN_TRICOUNT, new Tricount());
         });
         DisplayTricount = new RelayCommand<TricountCardViewModel>(vm => {
             NotifyColleagues(App.Messages.MSG_DISPLAY_TRICOUNT, vm.Tricount);

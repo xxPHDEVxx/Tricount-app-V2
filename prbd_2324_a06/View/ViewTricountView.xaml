@@ -90,8 +90,10 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Content="Edit" Margin="5" Width="70" />
-                <Button Content="Delete" Grid.Column="1" Margin="5" Width="70" />
+                <Button Content="Edit" Margin="5" Width="70" 
+                        Command="{Binding EditTricount}"/>
+                <Button Content="Delete" Grid.Column="1" Margin="5" Width="70" 
+                        Command="{Binding DeleteTricount}"/>
             </Grid>
         </StackPanel>
     </Grid>

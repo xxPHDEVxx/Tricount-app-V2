@@ -20,7 +20,6 @@ public class Tricount : EntityBase<PridContext>
 
     public virtual ICollection<Template> Templates { get; protected set; } = new HashSet<Template>();
 
-
     public Tricount() { }
 
     public Tricount(string title, string description, DateTime createdAt, User creator) {
@@ -34,9 +33,8 @@ public class Tricount : EntityBase<PridContext>
     public string GetCreatorName() {
         return User.GetUserNameById(CreatorId);
     }
-    
-    public int GetHighestTricountId()
-    {
+
+    public int GetHighestTricountId() {
         return Context.Tricounts.Max(o => o.Id) + 1;
     }
 
@@ -62,6 +60,7 @@ public class Tricount : EntityBase<PridContext>
             .Sum(o => Math.Round(o.Amount, 2));
         return total;
     }
+
     public IQueryable<User> GetParticipants() {
         var userIds = Subscriptions
             .Where(sub => sub.TricountId == Id)
@@ -104,17 +103,37 @@ public class Tricount : EntityBase<PridContext>
 
         return !HasErrors;
     }
+
     public void NewSubscriber(int userId) {
         var s = new Subscription { UserId = userId, TricountId = Id };
         Context.Subscriptions.Add(s);
         Subscriptions.Add(s);
         Context.SaveChanges();
     }
+
     // récupere la derniere opération
     public Operation GetLatestOperation() {
         return Context.Operations
             .Where(o => o.TricountId == Id)
-            .OrderByDescending(o => o.OperationDate) 
+            .OrderByDescending(o => o.OperationDate)
             .FirstOrDefault();
+    }
+
+    public void DeleteOperations() {
+        // Récupérer les opérations liées au tricount à supprimer
+        var operationsToDelete = GetOperations();
+
+        // Supprimer les opérations récupérées de la base de données
+        Context.Operations.RemoveRange(operationsToDelete);
+
+        // Enregistrer les modifications dans la base de données
+    }
+
+    public void Delete() {
+        DeleteOperations();
+        Subscriptions.Clear();
+        Templates.Clear();
+        Context.Tricounts.Remove(this);
+        Context.SaveChanges();
     }
 }

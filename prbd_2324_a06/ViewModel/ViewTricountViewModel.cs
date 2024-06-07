@@ -1,7 +1,6 @@
 ﻿using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.JavaScript;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
@@ -15,15 +14,18 @@ namespace prbd_2324_a06.ViewModel
             DisplayOperation = new RelayCommand<TricountCardViewModel>(vm => {
                 NotifyColleagues(App.Messages.MSG_DISPLAY_OPERATIONS, vm.Tricount);
             });
+            EditTricount = new RelayCommand(() => {
+                NotifyColleagues(App.Messages.MSG_OPEN_TRICOUNT, Tricount);
+            });
+            DeleteTricount = new RelayCommand(DeleteAction);
             OpenEditOperation = new RelayCommand<OperationCardViewModel>(vm => {
-                NotifyColleagues(App.Messages.MSG_OPEN_OPERATION, vm.Operation);
-            });
-            OpenNewOperation = new RelayCommand<OperationCardViewModel>(vm => {
-                NotifyColleagues(App.Messages.MSG_OPEN_NEW_OPERATION, new Operation(tricount.Id));
-            });
-            Register<Operation>(App.Messages.MSG_OPERATION_CHANGED, operation => OnRefreshData());
-
-        }
+                    NotifyColleagues(App.Messages.MSG_OPEN_OPERATION, vm.Operation);
+                });
+                OpenNewOperation = new RelayCommand<OperationCardViewModel>(vm => {
+                    NotifyColleagues(App.Messages.MSG_OPEN_NEW_OPERATION, new Operation(tricount.Id));
+                });
+                Register<Operation>(App.Messages.MSG_OPERATION_CHANGED, operation => OnRefreshData());
+            }
 
         private ObservableCollection<OperationCardViewModel> _operations;
         private ObservableCollection<UserBalanceViewModel> _users;
@@ -41,6 +43,7 @@ namespace prbd_2324_a06.ViewModel
             get => _users;
             set => SetProperty(ref _users, value);
         }
+
         public Tricount Tricount {
             get => _tricount;
             set => SetProperty(ref _tricount, value);
@@ -74,14 +77,24 @@ namespace prbd_2324_a06.ViewModel
         public ICommand DisplayOperation { get; set; }
         public ICommand OpenNewOperation { get; set; }
         public ICommand OpenEditOperation { get; set; }
+        public ICommand EditTricount { get; set; }
+        public ICommand DeleteTricount { get; set; }
 
 
         // Méthodes 
 
+        // Delete
+        
+        private void DeleteAction() {
+            Tricount.Delete();
+            NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
+            NotifyColleagues(App.Messages.MSG_CLOSE_TAB, Tricount);
+        }
+        
         // Permet le Refresh
         protected override void OnRefreshData() {
             if (Tricount == null) return;
-            
+
             // Récupérer les participants par ordre alphabétique
             IQueryable<User> participants = Tricount.GetParticipants().OrderBy(u => u.FullName);
 

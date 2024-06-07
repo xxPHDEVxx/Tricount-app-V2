@@ -17,7 +17,8 @@ public partial class App
         MSG_LOGOUT,
         MSG_RESET,
         MSG_CLOSE_OPERATION_WINDOW,
-        MSG_NEW_TRICOUNT,
+        MSG_OPEN_TRICOUNT,
+        MSG_EDIT_TRICOUNT,
         MSG_DISPLAY_TRICOUNT,
         MSG_DISPLAY_OPERATIONS,
         MSG_OPEN_NEW_OPERATION,
@@ -25,7 +26,8 @@ public partial class App
         MSG_OPERATION_CHANGED,
         MSG_TRICOUNT_CHANGED,
         MSG_CLOSE_TAB,
-        MSG_PARTICIPANT_ADDED, 
+        MSG_PARTICIPANT_ADDED,
+        MSG_DELETE_TRICOUNT
     }
 
     public App() {

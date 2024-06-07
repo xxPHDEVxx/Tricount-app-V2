@@ -11,7 +11,8 @@ namespace prbd_2324_a06.View
             InitializeComponent();
 
             // Enregistrement des messages pour l'affichage des différentes vues
-            Register<Tricount>(App.Messages.MSG_NEW_TRICOUNT, tricount => DoDisplayTricount(tricount, true));
+            Register<Tricount>(App.Messages.MSG_OPEN_TRICOUNT, tricount => DoDisplayTricount(tricount, true));
+            Register<Tricount>(App.Messages.MSG_EDIT_TRICOUNT, tricount => DoDisplayTricount(tricount, false));
             Register<Tricount>(App.Messages.MSG_DISPLAY_TRICOUNT, tricount => DoDisplayViewTricount(tricount));
             Register<Operation>(App.Messages.MSG_OPEN_OPERATION, operation => OpenOperation(operation, false));
             Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperation(operation, true));
@@ -33,9 +34,13 @@ namespace prbd_2324_a06.View
 
         // Affichage d'un tricount dans un nouvel onglet
         private void DoDisplayTricount(Tricount tricount, bool isNew) {
-            if (tricount != null)
-                OpenTab(isNew ? "<New Tricount>" : tricount.Title, tricount.Title,
-                    () => new TricountDetailView(tricount, isNew));
+            if (tricount != null) {
+                if (isNew) {
+                    OpenTab("<New Tricount>", tricount.Title, () => new TricountDetailView(tricount, true));
+                } else {
+                    OpenTab(tricount.Title, tricount.Title, () => new TricountDetailView(tricount, false));
+                }
+            }
         }
 
         // Affichage d'un tricount dans une vue de consultation
