@@ -24,6 +24,7 @@ public class Tricount : EntityBase<PridContext>
     public Tricount() { }
 
     public Tricount(string title, string description, DateTime createdAt, User creator) {
+        Id = GetHighestTricountId();
         Title = title;
         Description = description;
         CreatedAt = createdAt;
@@ -32,6 +33,11 @@ public class Tricount : EntityBase<PridContext>
 
     public string GetCreatorName() {
         return User.GetUserNameById(CreatorId);
+    }
+    
+    public int GetHighestTricountId()
+    {
+        return Context.Tricounts.Max(o => o.Id) + 1;
     }
 
     public int NumberOfParticipants() {
