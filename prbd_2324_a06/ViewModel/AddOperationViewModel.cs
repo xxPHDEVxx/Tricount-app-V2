@@ -10,15 +10,19 @@ namespace prbd_2324_a06.ViewModel
     {
         // ajouter en parametre Tricount pour lier au reste du code
         public AddOperationViewModel(Operation operation) : base() {
-            //Tricount = tricount;
+            
+            // Initialisation Propriétés
             Tricount = Context.Tricounts.Find(operation.TricountId);
+            Operation = operation;
             CurrentUser = App.CurrentUser;
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
-            Initiator = new ComboBoxItem();
-            Initiator.Content = CurrentUser.FullName;
+            Initiator = new ComboBoxItem {
+                Content = CurrentUser.FullName
+            };
             NoTemplates = GetTemplatesTricount().Any();
+            
             // initialisation des commandes 
             AddCommand = new RelayCommand(AddAction,
                 () => !HasErrors && Error == "");
@@ -28,7 +32,6 @@ namespace prbd_2324_a06.ViewModel
                     ? SelectedTemplate != null
                     : SelectedTemplate.Content.ToString() != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
-            Operation = new Operation();
         }
 
         // Commandes
@@ -275,7 +278,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         protected internal void Close() {
-            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW,Operation);
+            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW, Operation);
         }
     }
 }

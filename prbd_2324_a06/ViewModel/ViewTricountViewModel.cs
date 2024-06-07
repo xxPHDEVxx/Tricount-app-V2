@@ -90,7 +90,8 @@ namespace prbd_2324_a06.ViewModel
                 new UserBalanceViewModel(u, Tricount)));
 
             IQueryable<Operation> operations = Tricount.GetOperations()
-                .OrderByDescending(o => o.OperationDate);
+                .OrderByDescending(o => o.OperationDate)
+                .ThenByDescending(o => o.Id); // Tri secondaire par OperationId
 
             Operations = new ObservableCollection<OperationCardViewModel>(operations.Select(o =>
                 new OperationCardViewModel(o)));
