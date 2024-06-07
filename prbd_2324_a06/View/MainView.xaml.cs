@@ -6,8 +6,6 @@ namespace prbd_2324_a06.View
 {
     public partial class MainView : WindowBase
     {
-        private List<Window> _otherWindows = new List<Window>();
-
         public MainView()
         {
             InitializeComponent();
@@ -24,6 +22,7 @@ namespace prbd_2324_a06.View
         private void Logout_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NotifyColleagues(App.Messages.MSG_LOGOUT);
+            
         }
 
         // Gestionnaire d'événement pour le clic sur le bouton de réinitialisation
@@ -71,14 +70,6 @@ namespace prbd_2324_a06.View
                     var window = new EditOperationView(operation);
                     window.Show();
                 }
-            }
-        }
-        
-        public void EnableOtherWindows(bool enable)
-        {
-            foreach (var window in _otherWindows)
-            {
-                window.IsEnabled = enable;
             }
         }
     }
