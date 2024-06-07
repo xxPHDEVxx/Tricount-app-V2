@@ -1,20 +1,27 @@
-﻿using prbd_2324_a06.Model;
-using System.Collections.ObjectModel;
-using System.Configuration;
-
+﻿using PRBD_Framework;
+using System.Windows.Input;
 namespace prbd_2324_a06.ViewModel;
 
-public class MainViewModel : PRBD_Framework.ViewModelBase<User, PridContext>
+public class MainViewModel : ViewModelCommon
 {
-    public string Title => "prbd_2324_a06";
-    private ObservableCollection<User> _members;
-    public ObservableCollection<User> Members {
-        get => _members;
-        set => SetProperty(ref _members, value, () =>
-        Console.WriteLine("cette ligne est appelé a l'assignatin du members"));
-    }
+    public ICommand ReloadDataCommand { get; set; }
 
     public MainViewModel() : base() {
-        Members = new ObservableCollection<User>(Context.Users);
+        ReloadDataCommand = new RelayCommand(() => {
+            // refuser un reload s'il y a des changements en cours
+            if (Context.ChangeTracker.HasChanges()) return;
+            // permet de renouveller le contexte EF
+            App.ClearContext();
+            // notifie tout le monde qu'il faut rafraîchir les données
+            NotifyColleagues(ApplicationBaseMessages.MSG_REFRESH_DATA);
+        });
+    }
+
+    public static string Title {
+        get => $"MyTricount ({CurrentUser?.Mail})";
+            }
+
+    protected override void OnRefreshData() {
+        // pour plus tard
     }
 }

@@ -1,0 +1,71 @@
+﻿<f:UserControlBase x:Class="prbd_2324_a06.View.ListView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                   xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+                   xmlns:vw="clr-namespace:prbd_2324_a06.View"
+                   xmlns:visualBasic="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic.Core"
+                   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                   mc:Ignorable="d"
+                   d:DesignHeight="780" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:ListViewModel />
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" FontSize="14" Grid.ColumnSpan="2"
+                     Margin="0,0,-566,0" />
+            <Button Content="Clear" Grid.Column="1" Command="{Binding ClearFilter}" Margin="618,0,-613,0" />
+        </Grid>
+        <ListView x:Name="listView" Margin="10,5,46,5" Grid.Row="2" ItemsSource="{Binding Tricounts}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding DisplayTricount}"
+                                           CommandParameter="{Binding ElementName=listView, Path=SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <vw:TricountCardView />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button x:Name="btnNew" Content="New Tricount" Command="{Binding NewTricount}" HorizontalAlignment="Left"
+                Margin="10,10" Grid.Row="3" Padding="5,1" />
+        <StackPanel Orientation="Horizontal" Grid.Row =" 3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
+            <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                <Rectangle Width="20" Height="20" Fill="LightGray" VerticalAlignment="Center" />
+                <TextBlock Text=" Null Balance" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                <Rectangle Width="20" Height="20" Fill="LightGreen" VerticalAlignment="Center" />
+                <TextBlock Text=" Positive Balance" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                <Rectangle Width="20" Height="20" Fill="LightSalmon" VerticalAlignment="Center" />
+                <TextBlock Text=" Negative Balance" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</f:UserControlBase>

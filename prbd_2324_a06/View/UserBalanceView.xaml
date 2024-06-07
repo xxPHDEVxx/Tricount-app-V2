@@ -1,0 +1,39 @@
+﻿<f:UserControlBase x:Class="prbd_2324_a06.View.UserBalanceView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+                   mc:Ignorable="d"
+                   d:DataContext="{d:DesignInstance Type=vm:UserBalanceViewModel, IsDesignTimeCreatable=False}"
+                   FontSize="14" d:DesignHeight="50" d:DesignWidth="250" Padding="5"
+                   x:Name="uc">
+    <Border Name="Border" CornerRadius="10" Padding="5" Margin="0,0,0,5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="{Binding ColumnA}"
+                   HorizontalAlignment="{Binding SideA}" Margin="5">
+            <Run Text="{Binding User.FullName}"></Run>
+            <Run Text="{Binding Current}" FontWeight="Bold"></Run>
+            </TextBlock>
+
+            <Grid Grid.Column="{Binding ColumnB}">
+                <Rectangle Fill="{Binding BackgroundColor}"  RadiusX="5" RadiusY="5"
+                       Width="{Binding Width}" Height="20" HorizontalAlignment="{Binding SideB}" VerticalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="{Binding SideB}" VerticalAlignment="Center">
+                <Run Text="{Binding Balance}" FontWeight="Bold" />
+                </TextBlock>
+            </Grid>
+
+
+        </Grid>
+    </Border>
+</f:UserControlBase>

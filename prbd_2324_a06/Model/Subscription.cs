@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 namespace prbd_2324_a06.Model;
 
 public class Subscription : EntityBase<PridContext> {
+    public Subscription(int userId, int tricountId) {
+        UserId = userId;
+        TricountId = tricountId;
+    }
+    public Subscription(){}
+
     [ForeignKey(nameof(User))]
     public int UserId { get; set; }
     public virtual User User { get; set; }

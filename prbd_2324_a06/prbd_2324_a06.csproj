@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="Dirkster.NumericUpDownLib" Version="3.4.0" />
+    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.15" />
@@ -29,6 +30,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PRBD_Framework\PRBD_Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="View\LoginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

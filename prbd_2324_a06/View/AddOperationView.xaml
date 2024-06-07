@@ -1,0 +1,95 @@
+﻿<f:WindowBase x:Class="prbd_2324_a06.View.AddOperationView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+              xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+              xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+              mc:Ignorable="d"
+              Title="Add Operation"
+              Width="320" Height="510">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Title -->
+        <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="10" Padding="0,0,5,5" />
+        <TextBox x:Name="Title" Grid.Row="0" Grid.Column="1" Margin="10"
+                 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- Amount -->
+        <TextBlock Text="Amount:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="10" Padding="0,0,5,5" />
+        <TextBox x:Name="AmountTextBox" Grid.Row="1" Grid.Column="1" Margin="10"
+                 Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- Initiator -->
+        <TextBlock Text="Initiator:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
+        <ComboBox x:Name="InitiatorComboBox" Grid.Row="2" Grid.Column="1" Margin="10"
+            SelectedItem="{Binding Initiator}">
+        </ComboBox>
+
+        <!-- Date -->
+        <TextBlock Text="Date:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
+        <DatePicker x:Name="DateDatePicker" Grid.Row="3" Grid.Column="1"
+                    DisplayDateEnd="{x:Static sys:DateTime.Now}" DisplayDateStart="{Binding StartDate}"
+                    SelectedDate="{x:Static sys:DateTime.Now}" Margin="10" />
+
+        <!-- Template -->
+        <TextBlock Text="Template:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="10">
+            <ComboBox x:Name="TemplateComboBox" Width="150" IsEnabled="{Binding NoTemplates}">
+                <!-- Add templates here -->
+            </ComboBox>
+            <Button x:Name="ApplyTemplateButton" Content="Apply" Margin="5,0,0,0"
+                    Command="{Binding ApplyTemplate}" />
+        </StackPanel>
+
+        <!-- Participants -->
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical" Margin="0,10,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Container for dynamic content -->
+                <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" MaxHeight="150"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="ParticipantsPanel" Orientation="Vertical" Margin="0,10,0,0" />
+                </ScrollViewer>
+            </Grid>
+        </StackPanel>
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Error}" Foreground="Red" Margin="0,5,0,0" />
+        <!-- Save as New Template Button -->
+        <Button x:Name="SaveTemplateButton" Content="Save as New Template" Grid.Row="7" Grid.Column="0"
+                Grid.ColumnSpan="2" Margin="0,10,0,0"
+                Command="{Binding SaveTemplate}" />
+
+        <!-- Add and Cancel Buttons -->
+        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="AddButton" Content="Add" Margin="5" Padding="15,0,15,0"
+                    Command="{Binding AddCommand}" />
+            <Button x:Name="CancelButton" Content="Cancel" Margin="5" Padding="10,0,10,0"
+                    Click="btnCancel_Click" />
+        </StackPanel>
+    </Grid>
+</f:WindowBase>
