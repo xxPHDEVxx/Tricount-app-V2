@@ -133,6 +133,7 @@ public class PridContext : DbContextBase
         var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier");
         var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc");
         var admin = new User(5, "admin@epfc.eu", "Password1,", "Admin");
+        admin.Role = Role.Administrator;
 
 
         modelBuilder.Entity<User>()

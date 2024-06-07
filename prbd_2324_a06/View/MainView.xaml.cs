@@ -1,6 +1,7 @@
 ﻿using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace prbd_2324_a06.View
 {
@@ -17,6 +18,8 @@ namespace prbd_2324_a06.View
             Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperation(operation, true));
 
             Register<Tricount>(App.Messages.MSG_CLOSE_TAB, tricount => DoCloseTab(tricount));
+            Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => DoCloseTab(tricount));
+        
         }
         
 
@@ -76,6 +79,13 @@ namespace prbd_2324_a06.View
         }
     private void DoCloseTab(Tricount tricount) {
         tabControl.CloseByTag(string.IsNullOrEmpty(tricount.Title) ? "<New Tricount>" : tricount.Title);
+    }
+
+    private void DoRenameTab(string header) {
+        if (tabControl.SelectedItem is TabItem tab) {
+            MyTabControl.RenameTab(tab, header);
+            tab.Tag = header;
+        }
     }
     }
 
