@@ -20,6 +20,9 @@ namespace prbd_2324_a06.ViewModel
                 OperationDate = Operation.OperationDate;
             }
 
+            SelectedTemplate = new ComboBoxItem() {
+                Content = "-- Choose a template --"
+            };
             CurrentUser = App.CurrentUser;
             Initiator = new ComboBoxItem {
                 Content = CurrentUser.FullName
@@ -303,7 +306,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         protected internal void Close() {
-            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW,Operation);
+            NotifyColleagues(App.Messages.MSG_CLOSE_OPERATION_WINDOW, Operation);
         }
     }
 }
