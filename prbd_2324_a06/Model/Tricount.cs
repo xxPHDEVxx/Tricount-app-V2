@@ -36,26 +36,24 @@ public class Tricount : EntityBase<PridContext>
 
     public int NumberOfParticipants() {
         var q = (from s in Subscriptions
-                 where s.UserId != CreatorId
-                 select s).Count();
+            where s.UserId != CreatorId
+            select s).Count();
         return q;
     }
 
 
     public IQueryable<Operation> GetOperations() {
-    var q = from o in Context.Operations
+        var q = from o in Context.Operations
             where o.TricountId == Id
             select o;
-     return q;
-
+        return q;
     }
-
 
 
     public double GetTotal() {
         var total = Context.Operations
-                      .Where(o => o.TricountId == Id)
-                      .Sum(o => Math.Round(o.Amount, 2));
+            .Where(o => o.TricountId == Id)
+            .Sum(o => Math.Round(o.Amount, 2));
         return total;
     }
     public IQueryable<User> GetParticipants() {

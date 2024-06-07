@@ -1,5 +1,4 @@
-
-﻿using PRBD_Framework;
+using PRBD_Framework;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
@@ -24,9 +23,8 @@ public class Repartition : EntityBase<PridContext>
     public int Weight { get; set; }
 
     public int GetWeightForUserAndOperation(int userId, int operationId) {
-
         var q = Context.Repartitions
-            .Where(r => r.OperationId ==  OperationId)
+            .Where(r => r.OperationId == OperationId)
             .Where(r => r.UserId == UserId)
             .Sum(r => r.Weight);
         return q;

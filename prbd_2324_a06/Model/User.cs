@@ -4,22 +4,22 @@ using System.Runtime.CompilerServices;
 
 namespace prbd_2324_a06.Model;
 
-public enum Role {
+public enum Role
+{
     User = 0,
     Administrator = 1
 }
 
 public class User : EntityBase<PridContext>
 {
-    [Key]
-    public int UserId { get; set; }
+    [Key] public int UserId { get; set; }
     public string Mail { get; set; }
     public string HashedPassword { get; set; }
     public string FullName { get; set; }
     public Role Role { get; protected set; } = Role.User;
 
     public User() { }
-    
+
     // constructeur avec autoincrémentation pour sign up
     public User(string mail, string hashed_password, string full_name) {
         UserId = GetHighestUserId() + 1;
@@ -27,50 +27,52 @@ public class User : EntityBase<PridContext>
         HashedPassword = hashed_password;
         FullName = full_name;
     }
-    
-    public User(int userdId,string mail, string hashed_password, string full_name) {
+
+    public User(int userdId, string mail, string hashed_password, string full_name) {
         UserId = userdId;
         Mail = mail;
         HashedPassword = hashed_password;
         FullName = full_name;
     }
-    
+
     // Return the highest UserId
-    public int GetHighestUserId()
-    {
+    public int GetHighestUserId() {
         return Context.Users.Max(u => u.UserId);
     }
+
     // Return User found by name
     public static User GetUserByName(string name) {
         return Context.Users.FirstOrDefault(u => u.FullName == name);
     }
-    
+
     public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
     public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 
     public IQueryable<Tricount> GetTricounts() {
         var tricounts = from t in Context.Tricounts
-                        where t.CreatorId == UserId
-                        select t;
+            where t.CreatorId == UserId
+            select t;
         return tricounts;
     }
+
     public IQueryable<Tricount> GetFiltered(string Filter) {
         var filtered = from t in GetTricounts().Union(GetParticipatedTricounts())
-                       where t.Title.Contains(Filter)
-                       orderby t.Title
-                       select t;
+            where t.Title.Contains(Filter)
+            orderby t.Title
+            select t;
         return filtered;
     }
+
     public IQueryable<Tricount> GetParticipatedTricounts() {
         var participatedTricounts = from s in Context.Subscriptions
-                                    join t in Context.Tricounts on s.TricountId equals t.Id
-                                    where s.UserId == UserId
-                                    select t;
+            join t in Context.Tricounts on s.TricountId equals t.Id
+            where s.UserId == UserId
+            select t;
         return participatedTricounts;
     }
 
-    public static string GetUserNameById(int userId) { 
-        var u =  Context.Users.SingleOrDefault (u => u.UserId == userId);
+    public static string GetUserNameById(int userId) {
+        var u = Context.Users.SingleOrDefault(u => u.UserId == userId);
         return u.FullName;
     }
 
@@ -86,20 +88,22 @@ public class User : EntityBase<PridContext>
                 }
             }
         }
+
         var total = (tricount.GetTotal() / operationWeight) * userWeight;
         myExpenses = Math.Round(total, 2);
         return myExpenses;
     }
+
     public double GetMyBalance(Tricount tricount) {
         double myPaid = 0;
         double myExpenses = GetMyExpenses(tricount);
 
         foreach (var operation in tricount.GetOperations()) {
-                if (operation.InitiatorId == UserId) {
-                myPaid += Math.Round(operation.Amount,2); 
-                }
+            if (operation.InitiatorId == UserId) {
+                myPaid += Math.Round(operation.Amount, 2);
+            }
         }
 
-        return Math.Round(myPaid - myExpenses,2);
+        return Math.Round(myPaid - myExpenses, 2);
     }
 }

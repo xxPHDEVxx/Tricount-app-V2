@@ -5,7 +5,7 @@
                    xmlns:m="clr-namespace:prbd_2324_a06.Model"
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
                    StartupUri="View/LoginView.xaml">
-
+    
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

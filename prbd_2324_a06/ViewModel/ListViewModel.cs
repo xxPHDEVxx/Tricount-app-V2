@@ -15,6 +15,7 @@ public class ListViewModel : ViewModelCommon
     }
 
     public ICommand ClearFilter { get; set; }
+    public ICommand DisplayTricount { get; set; }
 
     public ICommand NewTricount { get; set; }
 
@@ -27,13 +28,14 @@ public class ListViewModel : ViewModelCommon
     }
 
     public ListViewModel() : base() {
-
         OnRefreshData();
         ClearFilter = new RelayCommand(() => Filter = "");
         NewTricount = new RelayCommand(() => {
             NotifyColleagues(App.Messages.MSG_NEW_TRICOUNT, new Tricount());
         });
-
+        DisplayTricount = new RelayCommand<TricountCardViewModel>(vm => {
+            NotifyColleagues(App.Messages.MSG_DISPLAY_TRICOUNT, vm.Tricount);
+        });
 
     }
 

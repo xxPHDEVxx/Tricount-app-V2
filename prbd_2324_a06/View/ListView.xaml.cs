@@ -19,7 +19,7 @@ namespace prbd_2324_a06.View
     /// <summary>
     /// Logique d'interaction pour ListView.xaml
     /// </summary>
-    public partial class ListView : UserControl
+    public partial class ListView : UserControlBase
     {
         public ListView() {
             InitializeComponent();

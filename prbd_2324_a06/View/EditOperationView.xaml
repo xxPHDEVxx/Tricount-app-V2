@@ -9,9 +9,6 @@
               mc:Ignorable="d"
               Title="Edit Operation"
               Width="320" Height="480">
-    <Window.DataContext>
-        <vm:EditOperationViewModel x:Name="vm" />
-    </Window.DataContext>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -42,7 +39,7 @@
         <!-- Initiator -->
         <TextBlock Text="Initiator:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
         <ComboBox x:Name="InitiatorComboBox" Grid.Row="2" Grid.Column="1" Margin="10"
-                  SelectedValue="{Binding Initiator}">
+                  SelectedItem="{Binding Initiator}">
         </ComboBox>
 
         <!-- Date -->
@@ -54,8 +51,7 @@
         <!-- Template -->
         <TextBlock Text="Template:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="10">
-            <ComboBox x:Name="TemplateComboBox" Width="150" IsEnabled="{Binding NoTemplates}"
-                      SelectedValue="{Binding SelectedTemplate}">
+            <ComboBox x:Name="TemplateComboBox" Width="150" IsEnabled="{Binding NoTemplates}">
                 <!-- Add templates here -->
             </ComboBox>
             <Button x:Name="ApplyTemplateButton" Content="Apply" Margin="5,0,0,0"

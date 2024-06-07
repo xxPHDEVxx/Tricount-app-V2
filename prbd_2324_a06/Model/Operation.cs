@@ -17,6 +17,12 @@ public class Operation : EntityBase<PridContext>
         InitiatorId = initiatorId;
     }
 
+    // constrcuteur -> new operation
+    public Operation(int tricountId) {
+        Id = GetHighestOperationId();
+        TricountId = tricountId;
+    }
+
     public Operation() {
     }
 
@@ -58,8 +64,8 @@ public class Operation : EntityBase<PridContext>
             AddError(nameof(Title), "required");
         else if (Title.Length < 3)
             AddError(nameof(Title), "length must be >= 3");
-
         return !HasErrors;
     }
+
 }
 
