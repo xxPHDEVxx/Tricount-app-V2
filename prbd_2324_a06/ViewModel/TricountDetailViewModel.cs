@@ -12,13 +12,14 @@ public class TricountDetailViewModel : ViewModelCommon
     private User GetCurrentUser() {
         return App.CurrentUser;
     }
-    // Commandes
+    //// Commandes
     public ICommand AddCommand { get; set; }
     public ICommand AddMySelf { get; set; }
     public ICommand AddEvery { get; set; }
     public ICommand AddTemplate { get; set; }
     public ICommand SaveCommand { get; set; }
     public ICommand CancelCommand { get; set; }
+
     // Attributes et propriétés
     public ObservableCollectionFast<string> Users { get; } = new ObservableCollectionFast<string>();
 
@@ -69,7 +70,7 @@ public class TricountDetailViewModel : ViewModelCommon
             .Where(u => u.UserId != CurrentUser.UserId)
             .Select(m => m.FullName)
             );
-
+        
         if (!IsNew) {
             Tricount.Title = tricount.Title;
             Tricount.Description = tricount.Description;
@@ -81,8 +82,8 @@ public class TricountDetailViewModel : ViewModelCommon
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction);
-        AddMySelf = new RelayCommand(AddMySelfAction);
-        AddEvery = new RelayCommand(AddAllAction);
+        AddMySelf = new RelayCommand(AddMySelfAction, CanAddMySelfAction);
+        AddEvery = new RelayCommand(AddAllAction,CanAddAllAction);
 
     }
 
@@ -176,14 +177,21 @@ public class TricountDetailViewModel : ViewModelCommon
         }
     }
 
+    private bool CanAddMySelfAction () {
+        var currentUser = GetCurrentUser().FullName;
+        return !Participants.Contains(currentUser);
+    }
+
     private void AddAllAction() {
         if (IsNew) {
             foreach (var user in Users) {
                 if (!Participants.Contains(user)) {
-                    Participants.Add(user);        
+                   Participants.Add(user);        
                 }
             }
-
         }
+    }
+    private bool CanAddAllAction() {
+        return !Users.IsNullOrEmpty() ;
     }
 }

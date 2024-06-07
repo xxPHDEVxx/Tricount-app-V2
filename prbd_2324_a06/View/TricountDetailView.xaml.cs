@@ -19,6 +19,9 @@ namespace prbd_2324_a06.View
     public partial class TricountDetailView : UserControlBase
     {
         private readonly TricountDetailViewModel _vm;
+        private User GetCurrentUser() {
+            return App.CurrentUser;
+        }
 
         public TricountDetailView(Tricount tricount, bool isNew) {
             DataContext = _vm = new TricountDetailViewModel(tricount, isNew);
@@ -40,11 +43,19 @@ namespace prbd_2324_a06.View
 
                 // Create Textbox
                 TextBlock textBox = new TextBlock { Text = user, VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(2), Width = 100, FontWeight = FontWeights.Bold,
+                    Margin = new Thickness(2), Width = 300,
                     TextAlignment = TextAlignment.Left
                 };
                 Grid.SetColumn(textBox, 0);
                 userGrid.Children.Add(textBox);
+
+                    if (user == GetCurrentUser().FullName) {
+                        textBox.FontWeight = FontWeights.Bold;
+                        TextBlock creator = new TextBlock {
+                            Text = "(creator)", Margin = new Thickness(40,0,0,0), VerticalAlignment = VerticalAlignment.Center, TextAlignment = TextAlignment.Left, FontWeight = FontWeights.Bold,
+                        };
+                        userGrid.Children.Add(creator);
+                    }
 
                     // Create button
                     Button delete = new Button {
@@ -72,9 +83,11 @@ namespace prbd_2324_a06.View
                         // et on le remet dans la liste
                         _vm.Users.Add(user);
                     };
-                    
-                    Grid.SetColumn(delete, 1);
-                    userGrid.Children.Add(delete);
+                    if (user != GetCurrentUser().FullName) {
+                        Grid.SetColumn(delete, 1);
+                        userGrid.Children.Add(delete);
+                        
+                    }
 
 
                     // Add the userGrid to the ParticipantsPanel
@@ -85,7 +98,7 @@ namespace prbd_2324_a06.View
         }
 
         private void btnAddMe_Click(object sender, RoutedEventArgs e) {
-            _vm.AddMySelf.Execute(null);
+                 _vm.AddMySelf.Execute(null);
                 InitializeComboBox();
         }
 
@@ -96,8 +109,8 @@ namespace prbd_2324_a06.View
 
         private void btnAddAll_Click(object sender, RoutedEventArgs e) {
             _vm.AddEvery.Execute(null);
-            InitializeComboBox();
             _vm.Users.Clear();
+            InitializeComboBox();
 
         }
     }
