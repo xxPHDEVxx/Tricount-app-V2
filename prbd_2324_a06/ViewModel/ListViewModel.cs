@@ -36,13 +36,14 @@ public class ListViewModel : ViewModelCommon
         DisplayTricount = new RelayCommand<TricountCardViewModel>(vm => {
             NotifyColleagues(App.Messages.MSG_DISPLAY_TRICOUNT, vm.Tricount);
         });
-
+        Console.WriteLine(CurrentUser.Role);
     }
 
     protected override void OnRefreshData() {
             var UserId = CurrentUser.UserId;
-        
-            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()) 
+
+
+        IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()) 
             : CurrentUser.GetFiltered(Filter);
 
         Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>

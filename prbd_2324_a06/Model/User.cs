@@ -51,6 +51,7 @@ public class User : EntityBase<PridContext>
     public IQueryable<Tricount> GetTricounts() {
         var tricounts = from t in Context.Tricounts
             where t.CreatorId == UserId
+            orderby t.CreatedAt descending
             select t;
         return tricounts;
     }
@@ -67,10 +68,16 @@ public class User : EntityBase<PridContext>
         var participatedTricounts = from s in Context.Subscriptions
             join t in Context.Tricounts on s.TricountId equals t.Id
             where s.UserId == UserId
+            orderby t.CreatedAt descending
             select t;
         return participatedTricounts;
     }
-
+    public IQueryable<Tricount> GetAll() {
+        var tricounts = from t in Context.Tricounts
+                        orderby t.CreatedAt descending
+                        select t;
+        return tricounts;
+    }
     public static string GetUserNameById(int userId) {
         var u = Context.Users.SingleOrDefault(u => u.UserId == userId);
         return u.FullName;
