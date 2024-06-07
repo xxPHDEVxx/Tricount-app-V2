@@ -9,6 +9,9 @@ namespace prbd_2324_a06.ViewModel;
 
 public class TricountDetailViewModel : ViewModelCommon
 {
+    private User GetCurrentUser() {
+        return App.CurrentUser;
+    }
     // Commandes
     public ICommand AddCommand { get; set; }
     public ICommand AddMySelf { get; set; }
@@ -63,7 +66,9 @@ public class TricountDetailViewModel : ViewModelCommon
         Tricount = tricount;
         IsNew = isNew;
         Users.RefreshFromModel(App.Context.Users
-            .Select(m => m.FullName));
+            .Where(u => u.UserId != CurrentUser.UserId)
+            .Select(m => m.FullName)
+            );
 
         if (!IsNew) {
             Tricount.Title = tricount.Title;
@@ -76,6 +81,9 @@ public class TricountDetailViewModel : ViewModelCommon
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction);
+        AddMySelf = new RelayCommand(AddMySelfAction);
+        AddEvery = new RelayCommand(AddAllAction);
+
     }
 
     public override void SaveAction() {
@@ -103,6 +111,7 @@ public class TricountDetailViewModel : ViewModelCommon
     private void AddParticipantAction() {
         if (Participants != null && SelectedUser != null) {
             Participants.Add(SelectedUser);
+            Users.Remove(SelectedUser);
             NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
             Console.WriteLine(Participants.Count);
 
@@ -113,8 +122,10 @@ public class TricountDetailViewModel : ViewModelCommon
         }
 
         Participants.Add(SelectedUser);
+        Users.Remove(SelectedUser);
         Console.WriteLine(Participants.Count);
         NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
+        SelectedUser = null;
     }
 
    private bool CanAddParticipantAction() {
@@ -156,6 +167,23 @@ public class TricountDetailViewModel : ViewModelCommon
         return !HasErrors;
     }
 
+    private void AddMySelfAction() {
+        if (IsNew) {
+            var currentUser = GetCurrentUser().FullName;
+            if (!Participants.Contains(currentUser)) {
+                Participants.Add(currentUser);
+            }
+        }
+    }
 
+    private void AddAllAction() {
+        if (IsNew) {
+            foreach (var user in Users) {
+                if (!Participants.Contains(user)) {
+                    Participants.Add(user);        
+                }
+            }
 
+        }
+    }
 }
