@@ -11,7 +11,6 @@
                    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                    mc:Ignorable="d"
                    d:DesignHeight="780" d:DesignWidth="800">
-
     <UserControl.DataContext>
         <vm:ListViewModel />
     </UserControl.DataContext>
@@ -53,5 +52,20 @@
         </ListView>
         <Button x:Name="btnNew" Content="New Tricount" Command="{Binding NewTricount}" HorizontalAlignment="Left"
                 Margin="10,10" Grid.Row="3" Padding="5,1" />
+        <StackPanel Orientation="Horizontal" Grid.Row =" 3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
+            <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                <Rectangle Width="20" Height="20" Fill="LightGray" VerticalAlignment="Center" />
+                <TextBlock Text=" Null Balance" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                <Rectangle Width="20" Height="20" Fill="LightGreen" VerticalAlignment="Center" />
+                <TextBlock Text=" Positive Balance" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                <Rectangle Width="20" Height="20" Fill="LightSalmon" VerticalAlignment="Center" />
+                <TextBlock Text=" Negative Balance" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </f:UserControlBase>
