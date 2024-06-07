@@ -69,12 +69,6 @@
                         <ListView x:Name="listView2" ItemsSource="{Binding Users}" BorderBrush="Transparent"
                                   SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   HorizontalAlignment="Center">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseDoubleClick">
-                                    <i:InvokeCommandAction Command="{Binding OpenEditOperation}"
-                                                           CommandParameter="{Binding ElementName=listView, Path=SelectedItem}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />

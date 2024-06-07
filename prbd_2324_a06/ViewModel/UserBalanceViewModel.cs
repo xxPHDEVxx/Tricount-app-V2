@@ -27,7 +27,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         public string Balance {
-            get => $"{User.GetMyBalance(Tricount):F2}";
+            get => Tricount.GetOperations().ToList().Count != 0 ? $"{User.GetMyBalance(Tricount):F2} €" : "0,00 €";
             set => SetProperty($"{User.GetMyBalance(Tricount):F2}", value
                 , Tricount, (t, b) => { });
         }
@@ -67,20 +67,37 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _sideB, value);
         }
 
+        private double _width;
+
+        public double Width {
+            get => _width;
+            set => SetProperty(ref _width, value);
+        }
+
         private void UpdateStyle() {
-            if (int.Parse(Balance) >= 0) {
-                SideA = HorizontalAlignment.Right;
-                SideB = HorizontalAlignment.Left;
-                ColumnA = 0;
-                ColumnB = 1;
-                BackgroundColor = Brushes.LightGreen;
-            } else {
+            if (User.GetMyBalance(Tricount) < 0) {
                 SideA = HorizontalAlignment.Left;
                 SideB = HorizontalAlignment.Right;
                 ColumnA = 1;
                 ColumnB = 0;
                 BackgroundColor = Brushes.Salmon;
+            } else {
+                SideA = HorizontalAlignment.Right;
+                SideB = HorizontalAlignment.Left;
+                ColumnA = 0;
+                ColumnB = 1;
+                BackgroundColor = Brushes.LightGreen;
+            } 
+            Width = 110 / (GetMaxExpense() / Math.Abs(User.GetMyBalance(Tricount)));
+        }
+
+        private double GetMaxExpense() {
+            double max = 0;
+            foreach (var user in Tricount.GetParticipants().ToList()) {
+                max = max < user.GetMyBalance(Tricount) ? user.GetMyBalance(Tricount) : max;
             }
+
+            return Math.Abs(max);
         }
     }
 }
