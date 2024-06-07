@@ -106,7 +106,7 @@ public class TricountDetailViewModel : ViewModelCommon
     public override void SaveAction() {
         // Add propriétés au tricount 
         if (IsNew) {
-            Tricount = new Tricount(Title, Description, Date, User);
+            Tricount = new Tricount(Title, Description, DateTime.Today, User);
             Context.Add(Tricount);
             AddSubscriptions();
         }

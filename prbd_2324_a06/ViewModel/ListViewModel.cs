@@ -37,10 +37,10 @@ public class ListViewModel : ViewModelCommon
             NotifyColleagues(App.Messages.MSG_DISPLAY_TRICOUNT, vm.Tricount);
         });
         Console.WriteLine(CurrentUser.Role);
+        Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => OnRefreshData());
     }
 
     protected override void OnRefreshData() {
-            var UserId = CurrentUser.UserId;
 
         if (CurrentUser.Role == Role.Administrator) {
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetAll()
