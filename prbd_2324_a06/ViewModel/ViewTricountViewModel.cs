@@ -77,7 +77,8 @@ namespace prbd_2324_a06.ViewModel
         protected override void OnRefreshData() {
             if (Tricount == null) return;
 
-            IQueryable<Operation> operations = Tricount.GetOperations();
+            IQueryable<Operation> operations = Tricount.GetOperations()
+                .OrderByDescending(o => o.OperationDate);
 
             Operations = new ObservableCollection<OperationCardViewModel>(operations.Select(o =>
                 new OperationCardViewModel(o)));
