@@ -26,6 +26,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         private ObservableCollection<OperationCardViewModel> _operations;
+        private ObservableCollection<UserBalanceViewModel> _users;
         private Tricount _tricount;
         private string _filter;
 
@@ -36,6 +37,10 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _operations, value);
         }
 
+        public ObservableCollection<UserBalanceViewModel> Users {
+            get => _users;
+            set => SetProperty(ref _users, value);
+        }
         public Tricount Tricount {
             get => _tricount;
             set => SetProperty(ref _tricount, value);
@@ -76,6 +81,13 @@ namespace prbd_2324_a06.ViewModel
         // Permet le Refresh
         protected override void OnRefreshData() {
             if (Tricount == null) return;
+            
+            // Récupérer les participants par ordre alphabétique
+            IQueryable<User> participants = Tricount.GetParticipants().OrderBy(u => u.FullName);
+
+            // Mettre à jour les données avec les utilisateurs participants
+            Users = new ObservableCollection<UserBalanceViewModel>(participants.Select(u =>
+                new UserBalanceViewModel(u, Tricount)));
 
             IQueryable<Operation> operations = Tricount.GetOperations()
                 .OrderByDescending(o => o.OperationDate);

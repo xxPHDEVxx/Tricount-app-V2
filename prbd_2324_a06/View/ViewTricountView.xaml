@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <TextBlock Margin="10" HorizontalAlignment="Center">
@@ -35,7 +36,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="10">
-                    <ScrollViewer Height="400"  VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Height="400" VerticalScrollBarVisibility="Auto">
 
                         <ListView x:Name="listView" ItemsSource="{Binding Operations}" BorderBrush="Transparent"
                                   SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -63,14 +64,40 @@
                             Command="{Binding OpenNewOperation}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="10">
-                    <TextBlock FontSize="18" FontWeight="Bold" Text="Soldes" Margin="0,20,0,10" />
-                    <DataGrid Name="BalancesGrid" AutoGenerateColumns="False" Margin="0,10">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Personne" Binding="{Binding Personne}" Width="*" />
-                            <DataGridTextColumn Header="Solde" Binding="{Binding Solde}" Width="*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <ScrollViewer Height="400" VerticalScrollBarVisibility="Auto">
+
+                        <ListView x:Name="listView2" ItemsSource="{Binding Users}" BorderBrush="Transparent"
+                                  SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  HorizontalAlignment="Center">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding OpenEditOperation}"
+                                                           CommandParameter="{Binding ElementName=listView, Path=SelectedItem}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <vw:UserBalanceView />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
                 </StackPanel>
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Content="Edit" Margin="5" Width="70" />
+                <Button Content="Delete" Grid.Column="1" Margin="5" Width="70" />
             </Grid>
         </StackPanel>
     </Grid>
