@@ -89,13 +89,18 @@ namespace prbd_2324_a06.ViewModel
                 ColumnA = 1;
                 ColumnB = 0;
                 BackgroundColor = Brushes.Salmon;
-            } else {
+            } else if((User.GetMyBalance(Tricount) > 0)) {
                 SideA = HorizontalAlignment.Right;
                 SideB = HorizontalAlignment.Left;
                 ColumnA = 0;
                 ColumnB = 1;
                 BackgroundColor = Brushes.LightGreen;
-            } 
+            }  else {
+                SideA = HorizontalAlignment.Right;
+                SideB = HorizontalAlignment.Left;
+                ColumnA = 0;
+                ColumnB = 1;
+            }
             Width = 110 / (GetMaxExpense() / Math.Abs(User.GetMyBalance(Tricount)));
         }
 

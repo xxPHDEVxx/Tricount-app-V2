@@ -20,19 +20,19 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Column="{Binding ColumnA}"
-                       HorizontalAlignment="{Binding SideA}" Margin="5">
-                <Run Text="{Binding User.FullName}"></Run>
-                <Run Text="{Binding Current}" FontWeight="Bold"></Run>
+                   HorizontalAlignment="{Binding SideA}" Margin="5">
+            <Run Text="{Binding User.FullName}"></Run>
+            <Run Text="{Binding Current}" FontWeight="Bold"></Run>
             </TextBlock>
 
-            <Border Grid.Column="{Binding ColumnB}"
-                    CornerRadius="10"
-                    Background="{Binding BackgroundColor}">
-
-                <TextBlock Margin="5" HorizontalAlignment="{Binding SideB}">
-                    <Run Text="{Binding Balance}" FontWeight="Bold" />
+            <Grid Grid.Column="{Binding ColumnB}">
+                <Rectangle Fill="{Binding BackgroundColor}"
+                       Width="{Binding Width}" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="{Binding SideB}" VerticalAlignment="Center">
+                <Run Text="{Binding Balance}" FontWeight="Bold" />
                 </TextBlock>
-            </Border>
+            </Grid>
+
 
         </Grid>
     </Border>

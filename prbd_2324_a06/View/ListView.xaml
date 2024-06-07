@@ -59,7 +59,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
                 <Rectangle Width="20" Height="20" Fill="LightGreen" VerticalAlignment="Center" />
-                <TextBlock Text=" Positive Balance" VerticalAlignment="Center" Margin="5,0,0,0" />
+                <TextBlock Text=" Positive Balance" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
                 <Rectangle Width="20" Height="20" Fill="LightSalmon" VerticalAlignment="Center" />
