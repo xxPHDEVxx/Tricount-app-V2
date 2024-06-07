@@ -26,8 +26,8 @@
             </TextBlock>
 
             <Grid Grid.Column="{Binding ColumnB}">
-                <Rectangle Fill="{Binding BackgroundColor}"
-                       Width="{Binding Width}" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Rectangle Fill="{Binding BackgroundColor}"  RadiusX="5" RadiusY="5"
+                       Width="{Binding Width}" Height="20" HorizontalAlignment="{Binding SideB}" VerticalAlignment="Center"/>
                 <TextBlock HorizontalAlignment="{Binding SideB}" VerticalAlignment="Center">
                 <Run Text="{Binding Balance}" FontWeight="Bold" />
                 </TextBlock>
