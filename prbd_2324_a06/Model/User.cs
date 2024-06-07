@@ -16,7 +16,7 @@ public class User : EntityBase<PridContext>
     public string Mail { get; set; }
     public string HashedPassword { get; set; }
     public string FullName { get; set; }
-    public Role Role { get; protected set; } = Role.User;
+    public Role Role { get; protected internal set; } = Role.User;
 
     public User() { }
 
