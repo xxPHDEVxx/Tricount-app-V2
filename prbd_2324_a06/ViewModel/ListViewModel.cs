@@ -44,7 +44,7 @@ public class ListViewModel : ViewModelCommon
 
     protected override void OnRefreshData() {
 
-        if (CurrentUser.Role == Role.Administrator) {
+        if (CurrentUser.Role is Role.Administrator) {
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetAll()
                 : CurrentUser.GetAllFiltered(Filter);
         Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
