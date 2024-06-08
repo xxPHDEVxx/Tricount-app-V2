@@ -1,20 +1,13 @@
-﻿using CalcBinding;
-using Microsoft.IdentityModel.Tokens;
-using NumericUpDownLib;
+﻿using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
 {
-    public partial class OperationView : WindowBase
+    public partial class OperationView
     {
         private readonly OperationViewModel _vm;
 
@@ -28,13 +21,9 @@ namespace prbd_2324_a06.View
             initializeTemplates();
 
             // fermeture de la fenêtre
-            Register<Operation>( App.Messages.MSG_CLOSE_OPERATION_WINDOW, operationo => {
+            Register<Operation>( App.Messages.MSG_CLOSE_OPERATION_WINDOW, _ => {
                 Close();
             });
-            this.Closed += (sender, e) => {
-                _vm.Close();
-            }; 
-
         }
 
         // Initialise checkBox's template with the tricount's participants
@@ -52,7 +41,7 @@ namespace prbd_2324_a06.View
 
                 // Create CheckBox
                 CheckBox checkBox = new CheckBox {
-                    Content = user.FullName, Margin = new Thickness(2), Width = 80, IsChecked = true,
+                    Content = user.FullName, Margin = new Thickness(2), Width = 80,
                     VerticalAlignment = VerticalAlignment.Center
                 };
                 _vm.CheckBoxItems.Add(checkBox);
@@ -105,6 +94,7 @@ namespace prbd_2324_a06.View
                     _vm.Validate();
                     _vm.CalculAmount();
                 };
+                UpdateCheckBoxState(checkBox, numericUpDown);
             }
 
             _vm.CalculAmount();
@@ -181,7 +171,6 @@ namespace prbd_2324_a06.View
 
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
-            _vm.Close();
             Close();
         }
     }

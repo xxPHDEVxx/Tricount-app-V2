@@ -90,6 +90,7 @@ namespace prbd_2324_a06.ViewModel
         private void DeleteAction() {
             Tricount.Delete();
             NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
+            NotifyColleagues(App.Messages.MSG_DELETED);
             NotifyColleagues(App.Messages.MSG_CLOSE_TAB, Tricount);
         }
         

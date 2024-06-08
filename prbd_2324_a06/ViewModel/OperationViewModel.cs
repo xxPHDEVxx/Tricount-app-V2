@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace prbd_2324_a06.ViewModel
 {
-    public class OperationViewModel : ViewModelCommon
+    public class OperationViewModel : DialogViewModelBase<Operation, PridContext>
     {
         // ajouter en parametre Tricount pour lier au reste du code
         public OperationViewModel(Operation operation) : base() {
@@ -113,7 +113,7 @@ namespace prbd_2324_a06.ViewModel
 
         public DateTime OperationDate {
             get => _operationDate;
-            set => SetProperty(ref _operationDate, value);
+            set => SetProperty(ref _operationDate, value, () => Validate());
         }
 
         public Tricount Tricount {
@@ -215,6 +215,7 @@ namespace prbd_2324_a06.ViewModel
             Operation.Delete();
             NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
             NotifyColleagues(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, Tricount);
+            NotifyColleagues(App.Messages.MSG_DELETED);
             Close();
         }
 
@@ -247,6 +248,7 @@ namespace prbd_2324_a06.ViewModel
             ClearErrors();
             Operation.Validate();
             IsValidAmount();
+            IsValidDate();
             AddErrors(Operation.Errors);
             Error = !ValidateCheckBoxes() ? "You must check at least one participant !" : "";
 
@@ -294,6 +296,15 @@ namespace prbd_2324_a06.ViewModel
                 }
             } else
                 AddError(nameof(Amount), "Can't be empty !");
+        }
+
+        private void IsValidDate() {
+            if (OperationDate < Tricount.CreatedAt) {
+                AddError(nameof(OperationDate),$"Cannot be before {Tricount.CreatedAt:dd-MM-yyyy}.");
+            }
+            if (OperationDate > DateTime.Today) {
+                AddError(nameof(OperationDate),"cannot be in the future.");
+            }
         }
 
         public void CalculAmount() {

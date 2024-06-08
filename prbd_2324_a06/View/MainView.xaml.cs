@@ -1,4 +1,5 @@
 ﻿using prbd_2324_a06.Model;
+using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,10 +15,11 @@ namespace prbd_2324_a06.View
             Register<Tricount>(App.Messages.MSG_OPEN_TRICOUNT, tricount => DoDisplayTricount(tricount, true));
             Register<Tricount>(App.Messages.MSG_EDIT_TRICOUNT, tricount => DoDisplayTricount(tricount, false));
             Register<Tricount>(App.Messages.MSG_DISPLAY_TRICOUNT, tricount => DoDisplayViewTricount(tricount));
-            Register<Operation>(App.Messages.MSG_OPEN_OPERATION, operation => OpenOperation(operation));
-            Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperation(operation));
+            Register<Operation>(App.Messages.MSG_OPEN_OPERATION, operation => OpenOperationAction(operation));
+            Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperationAction(operation));
             Register<Tricount>(App.Messages.MSG_CLOSE_TAB, tricount => DoCloseTab(tricount));
             Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => DoCloseTab(tricount));
+            Register(App.Messages.MSG_DELETED, DeleteAction);
         }
 
 
@@ -57,12 +59,12 @@ namespace prbd_2324_a06.View
                 tabControl.SetFocus(tab);
         }
 
-        // Ouverture d'une opération dans une fenêtre modale
-        private void OpenOperation(Operation operation) {
-            if (operation != null) {
-                var window = new OperationView(operation);
-                window.Show();
-            }
+        private void OpenOperationAction(Operation operation) {
+            ApplicationRoot.ShowDialog<OperationViewModel, Operation, PridContext>(operation);
+        }
+
+        private void DeleteAction() {
+            MessageBox.Show("Delete was successful", "Delete Confirmation");
         }
 
         private void DoCloseTab(Tricount tricount) {

@@ -86,7 +86,8 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     .ToList();
 
             var participants = Context.Users // Sélectionne les utilisateurs à partir des ID récupérés
-                .Where(user => userIds.Contains(user.UserId));
+                .Where(user => userIds.Contains(user.UserId))
+                .OrderBy(user => user.FullName); // Trie les participants par ordre alphabétique
 
             return participants; // Retourne les participants
         }
