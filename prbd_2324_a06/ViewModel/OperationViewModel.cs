@@ -2,6 +2,7 @@
 using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml;
@@ -19,7 +20,7 @@ namespace prbd_2324_a06.ViewModel
             Amount = $"{Operation.Amount:F2}";
             OperationDate = Operation.Title == null ? DateTime.Today : Operation.OperationDate;
             Button = Operation.Title == null ? "Add" : "Save";
-            Visible = Operation.Title == null ? 1 : 0;
+            Visible = Operation.Title == null ? Visibility.Hidden : Visibility.Visible;
             SelectedTemplate = new ComboBoxItem() {
                 Content = "-- Choose a template --"
             };
@@ -67,7 +68,7 @@ namespace prbd_2324_a06.ViewModel
         private string _error;
         private string _windowTitle;
         private string _button;
-        private int _visible;
+        private Visibility _visible;
 
         // Properties
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
@@ -151,7 +152,7 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _button, value);
         }
 
-        public int Visible {
+        public Visibility Visible {
             get => _visible;
             set => SetProperty(ref _visible, value);
         }
