@@ -25,5 +25,10 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     templateItem => templateItem.User.FullName, // Clé : Nom complet de l'utilisateur
                     templateItem => templateItem.Weight); // Valeur : Poids de l'élément de modèle
         }
+
+        public void delete() {
+            TemplateItems.Clear();
+            Context.Templates.Remove(this);
+        }
     }
 }

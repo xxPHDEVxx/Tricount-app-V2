@@ -1,4 +1,5 @@
 ﻿using CalcBinding;
+using Microsoft.IdentityModel.Tokens;
 using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
@@ -6,17 +7,20 @@ using PRBD_Framework;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Documents;
 using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
 {
-    public partial class AddOperationView : WindowBase
+    public partial class OperationView : WindowBase
     {
-        private readonly AddOperationViewModel _vm;
+        private readonly OperationViewModel _vm;
 
-        public AddOperationView(Operation operation) {
+        public OperationView(Operation operation) {
             InitializeComponent();
-            DataContext = _vm = new AddOperationViewModel(operation);
+            DataContext = _vm = new OperationViewModel(operation);
 
             // initialisation dynamique des éléments graphiques
             InitializeCheckBox();
@@ -30,12 +34,14 @@ namespace prbd_2324_a06.View
             this.Closed += (sender, e) => {
                 _vm.Close();
             }; 
+
         }
 
         // Initialise checkBox's template with the tricount's participants
         private void InitializeCheckBox() {
-            // fetching users from the database
+            // fetching from the database
             List<User> users = _vm.GetUsersTricount();
+            List<Repartition> repartitions = _vm.GetRepartitions();
 
             foreach (var user in users) {
                 // Create a new Grid for each user
@@ -56,11 +62,13 @@ namespace prbd_2324_a06.View
                 // Create NumericUpDown
                 NumericUpDown numericUpDown = new NumericUpDown {
                     Width = 40,
-                    Value = 1,
+                    Value = repartitions.Find(r => r.UserId == user.UserId) != null
+                        ? repartitions.Find(r => r.UserId == user.UserId).Weight
+                        : 0,
                     MinValue = 0,
                     Margin = new Thickness(2),
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    Name = user.FullName
+                    Name = user.FullName,
                 };
                 _vm.Numerics.Add(numericUpDown);
                 Grid.SetColumn(numericUpDown, 1);
@@ -68,8 +76,8 @@ namespace prbd_2324_a06.View
 
                 // Create TextBlock
                 TextBlock textBlock = new TextBlock {
-                    Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(2),
-                    Width = 50, FontWeight = FontWeights.Bold,
+                    Text = "0,00 €", VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(2), Width = 50, FontWeight = FontWeights.Bold,
                     TextAlignment = TextAlignment.Left
                 };
                 _vm.TextBlocks.Add(textBlock);
@@ -98,6 +106,8 @@ namespace prbd_2324_a06.View
                     _vm.CalculAmount();
                 };
             }
+
+            _vm.CalculAmount();
         }
 
         // Gestion checkBox -> numeric

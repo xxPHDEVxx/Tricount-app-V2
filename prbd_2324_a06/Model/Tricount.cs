@@ -133,11 +133,13 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                 .OrderByDescending(o => o.OperationDate)
                 .FirstOrDefault();
         }
-
-        // Delete from Database
+        
+        // Delete in Cascade from Database
         public void Delete() {
             Subscriptions.Clear();
-            Templates.Clear();
+            foreach (var template in Templates) {
+                template.delete();
+            }
             Context.Tricounts.Remove(this);
             Context.SaveChanges();
         }

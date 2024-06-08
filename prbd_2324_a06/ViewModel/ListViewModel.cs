@@ -39,6 +39,7 @@ public class ListViewModel : ViewModelCommon
         Console.WriteLine(CurrentUser.Role);
         Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => OnRefreshData());
         Register<Tricount>(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, tricount => OnRefreshData());
+        Register( App.Messages.MSG_RESET, () => OnRefreshData());
     }
 
     protected override void OnRefreshData() {

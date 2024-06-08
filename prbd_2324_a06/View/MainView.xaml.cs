@@ -14,9 +14,8 @@ namespace prbd_2324_a06.View
             Register<Tricount>(App.Messages.MSG_OPEN_TRICOUNT, tricount => DoDisplayTricount(tricount, true));
             Register<Tricount>(App.Messages.MSG_EDIT_TRICOUNT, tricount => DoDisplayTricount(tricount, false));
             Register<Tricount>(App.Messages.MSG_DISPLAY_TRICOUNT, tricount => DoDisplayViewTricount(tricount));
-            Register<Operation>(App.Messages.MSG_OPEN_OPERATION, operation => OpenOperation(operation, false));
-            Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperation(operation, true));
-
+            Register<Operation>(App.Messages.MSG_OPEN_OPERATION, operation => OpenOperation(operation));
+            Register<Operation>(App.Messages.MSG_OPEN_NEW_OPERATION, operation => OpenOperation(operation));
             Register<Tricount>(App.Messages.MSG_CLOSE_TAB, tricount => DoCloseTab(tricount));
             Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => DoCloseTab(tricount));
         }
@@ -59,15 +58,10 @@ namespace prbd_2324_a06.View
         }
 
         // Ouverture d'une opération dans une fenêtre modale
-        private void OpenOperation(Operation operation, bool isNew) {
+        private void OpenOperation(Operation operation) {
             if (operation != null) {
-                if (isNew) {
-                    var window = new AddOperationView(operation);
-                    window.Show();
-                } else {
-                    var window = new EditOperationView(operation);
-                    window.Show();
-                }
+                var window = new OperationView(operation);
+                window.Show();
             }
         }
 

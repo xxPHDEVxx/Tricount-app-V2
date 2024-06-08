@@ -1,30 +1,40 @@
 ﻿using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using PRBD_Framework;
+using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml;
 
 namespace prbd_2324_a06.ViewModel
 {
-    public class AddOperationViewModel : ViewModelCommon
+    public class OperationViewModel : ViewModelCommon
     {
         // ajouter en parametre Tricount pour lier au reste du code
-        public AddOperationViewModel(Operation operation) : base() {
-            
-            // Initialisation Propriétés
+        public OperationViewModel(Operation operation) : base() {
+            // initialisation des propriétés
             Tricount = Context.Tricounts.Find(operation.TricountId);
             Operation = operation;
+            WindowTitle = operation.Title == null ? "Add Operation" : "Edit Operation";
+            Amount = $"{Operation.Amount:F2}";
+            OperationDate = Operation.Title == null ? DateTime.Today : Operation.OperationDate;
+            Button = Operation.Title == null ? "Add" : "Save";
+            Visible = Operation.Title == null ? 1 : 0;
+            SelectedTemplate = new ComboBoxItem() {
+                Content = "-- Choose a template --"
+            };
             CurrentUser = App.CurrentUser;
-            CheckBoxItems = new ObservableCollectionFast<CheckBox>();
-            Numerics = new ObservableCollectionFast<NumericUpDown>();
-            TextBlocks = new ObservableCollectionFast<TextBlock>();
             Initiator = new ComboBoxItem {
                 Content = CurrentUser.FullName
             };
             NoTemplates = GetTemplatesTricount().Any();
-            
+            CheckBoxItems = new ObservableCollectionFast<CheckBox>();
+            Numerics = new ObservableCollectionFast<NumericUpDown>();
+            TextBlocks = new ObservableCollectionFast<TextBlock>();
+
             // initialisation des commandes 
-            AddCommand = new RelayCommand(AddAction,
+            SaveCommand = new RelayCommand(SaveAction, () => !HasErrors && Error == "");
+            AddCommand = new RelayCommand(SaveAction,
                 () => !HasErrors && Error == "");
             ApplyTemplate = new RelayCommand(ApplyAction,
                 // vérification pour éviter Null Exception
@@ -32,25 +42,32 @@ namespace prbd_2324_a06.ViewModel
                     ? SelectedTemplate != null
                     : SelectedTemplate.Content.ToString() != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
+            DeleteCommand = new RelayCommand(DeleteAction);
         }
 
         // Commandes
+        public ICommand SaveCommand { get; set; }
         public ICommand AddCommand { get; set; }
         public ICommand ApplyTemplate { get; set; }
         public ICommand SaveTemplate { get; set; }
+        public ICommand DeleteCommand { get; set; }
 
         // Attributes
         private ObservableCollectionFast<CheckBox> _checkBoxItems;
         private ObservableCollectionFast<NumericUpDown> _numerics;
         private ObservableCollectionFast<TextBlock> _textBlocks;
-        private ComboBoxItem _initiator;
-        private ComboBoxItem _selectedTemplate;
-        private Operation _operation;
-        private string _amount;
         private User _currentUser;
+        private ComboBoxItem _initiator;
         private Tricount _tricount;
-        private string _error;
+        private Operation _operation;
+        private ComboBoxItem _selectedTemplate;
+        private string _amount;
         private bool _noTemplates;
+        private DateTime _operationDate;
+        private string _error;
+        private string _windowTitle;
+        private string _button;
+        private int _visible;
 
         // Properties
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
@@ -68,9 +85,24 @@ namespace prbd_2324_a06.ViewModel
             private init => SetProperty(ref _textBlocks, value);
         }
 
+        public string Error {
+            get => _error;
+            private set => SetProperty(ref _error, value);
+        }
+
+        public string WindowTitle {
+            get => _windowTitle;
+            private set => SetProperty(ref _windowTitle, value);
+        }
+
         public bool NoTemplates {
             get => _noTemplates;
             set => SetProperty(ref _noTemplates, value);
+        }
+
+        protected internal Operation Operation {
+            get => _operation;
+            init => SetProperty(ref _operation, value);
         }
 
         public ComboBoxItem SelectedTemplate {
@@ -78,32 +110,24 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _selectedTemplate, value);
         }
 
-        public ComboBoxItem Initiator {
-            get => _initiator;
-            set => SetProperty(ref _initiator, value);
+        public DateTime OperationDate {
+            get => _operationDate;
+            set => SetProperty(ref _operationDate, value);
         }
 
-        public string Error {
-            get => _error;
-            private set => SetProperty(ref _error, value);
-        }
-
-        public DateTime StartDate {
-            get => Tricount.CreatedAt;
-            set {
-                DateTime tricountCreatedAt = Tricount.CreatedAt;
-                SetProperty(ref tricountCreatedAt, value);
-            }
-        }
-
-        private Tricount Tricount {
+        public Tricount Tricount {
             get => _tricount;
-            init => SetProperty(ref _tricount, value);
+            set => SetProperty(ref _tricount, value);
         }
 
         public new User CurrentUser {
             get => _currentUser;
             set => SetProperty(ref _currentUser, value);
+        }
+
+        public ComboBoxItem Initiator {
+            get => _initiator;
+            set => SetProperty(ref _initiator, value);
         }
 
         public string Amount {
@@ -122,22 +146,30 @@ namespace prbd_2324_a06.ViewModel
             });
         }
 
-        private Operation Operation {
-            get => _operation;
-            init => SetProperty(ref _operation, value);
+        public string Button {
+            get => _button;
+            set => SetProperty(ref _button, value);
         }
+
+        public int Visible {
+            get => _visible;
+            set => SetProperty(ref _visible, value);
+        }
+
 
         // Méthodes Commandes
 
-        // Add
-        private void AddAction() {
+        // Edit
+        public override void SaveAction() {
             if (Validate()) {
                 Operation.Title = Title;
-                Operation.TricountId = Tricount.Id;
                 Operation.Amount = double.Parse(Amount);
-                Operation.OperationDate = DateTime.Today;
+                Operation.OperationDate = OperationDate;
                 Operation.InitiatorId = User.GetUserByName(Initiator.Content.ToString()).UserId;
-                Context.Add(Operation);
+                if (!Tricount.GetOperations().ToList().Contains(Operation)) {
+                    Context.Add(Operation);
+                }
+
                 SaveWeights();
                 Context.SaveChanges();
                 RaisePropertyChanged();
@@ -176,6 +208,15 @@ namespace prbd_2324_a06.ViewModel
             }
         }
 
+
+        // Delete 
+        private void DeleteAction() {
+            Operation.Delete();
+            NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+            NotifyColleagues(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, Tricount);
+            Close();
+        }
+
         private void SaveTemplateAction() {
         }
 
@@ -200,7 +241,7 @@ namespace prbd_2324_a06.ViewModel
             }
         }
 
-        // Méthode de validation
+        // Méthodes de validation
         public override bool Validate() {
             ClearErrors();
             Operation.Validate();
@@ -211,22 +252,9 @@ namespace prbd_2324_a06.ViewModel
             return !HasErrors;
         }
 
-        // Validation méthode for string amount -> we need a string because of textbox
-        private void IsValidAmount() {
-            if (Amount is { Length: > 0 }) {
-                if (!double.TryParse(Amount, out double value))
-                    AddError(nameof(Amount), "Not an Integer");
-                if (double.Parse(Amount) < 0.01) {
-                    AddError(nameof(Amount), "minimum 1 cent");
-                }
-            } else
-                AddError(nameof(Amount), "Can't be empty !");
-        }
-
         // Check if at least one checkbox is checked
         private bool ValidateCheckBoxes() {
-            return CheckBoxItems == null
-                   || CheckBoxItems.Any(item => item.IsChecked != null && (bool)item.IsChecked);
+            return CheckBoxItems == null || CheckBoxItems.Any(item => item.IsChecked != null && (bool)item.IsChecked);
         }
 
         // Return Users of the Operation's Tricount.
@@ -251,6 +279,22 @@ namespace prbd_2324_a06.ViewModel
             return templates;
         }
 
+        protected internal List<Repartition> GetRepartitions() {
+            return Operation.Repartitions.ToList();
+        }
+
+        // Validation méthode for string amount -> we need a string because of textbox
+        private void IsValidAmount() {
+            if (Amount is { Length: > 0 }) {
+                if (!double.TryParse(Amount, out double value))
+                    AddError(nameof(Amount), "Not an Integer");
+                if (double.Parse(Amount) < 0.01) {
+                    AddError(nameof(Amount), "minimum 1 cent");
+                }
+            } else
+                AddError(nameof(Amount), "Can't be empty !");
+        }
+
         public void CalculAmount() {
             if (Amount is { Length: > 0 }) {
                 int totalWeight = 0;
@@ -267,7 +311,9 @@ namespace prbd_2324_a06.ViewModel
 
                     // insertion montants dans textblock
                     i = 0;
-                    int part = totalWeight < 1 ? int.Parse(Amount) * totalWeight : int.Parse(Amount) / totalWeight;
+                    double part = totalWeight < 1
+                        ? double.Parse(Amount) * totalWeight
+                        : double.Parse(Amount) / totalWeight;
                     foreach (var item in TextBlocks) {
                         item.Text = $"{part * weights[i]:F2} €";
                         i++;
