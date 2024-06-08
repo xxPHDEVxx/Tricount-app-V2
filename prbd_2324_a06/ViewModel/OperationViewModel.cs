@@ -26,7 +26,9 @@ namespace prbd_2324_a06.ViewModel
             };
             CurrentUser = App.CurrentUser;
             Initiator = new ComboBoxItem {
-                Content = CurrentUser.FullName
+                Content = operation.Title == null
+                    ? CurrentUser.FullName
+                    : User.GetUserNameById(Operation.InitiatorId)
             };
             NoTemplates = GetTemplatesTricount().Any();
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
@@ -54,20 +56,20 @@ namespace prbd_2324_a06.ViewModel
         public ICommand DeleteCommand { get; set; }
 
         // Attributes
-        private ObservableCollectionFast<CheckBox> _checkBoxItems;
-        private ObservableCollectionFast<NumericUpDown> _numerics;
-        private ObservableCollectionFast<TextBlock> _textBlocks;
-        private User _currentUser;
+        private readonly ObservableCollectionFast<CheckBox> _checkBoxItems;
+        private readonly ObservableCollectionFast<NumericUpDown> _numerics;
+        private readonly ObservableCollectionFast<TextBlock> _textBlocks;
+        private readonly User _currentUser;
         private ComboBoxItem _initiator;
         private Tricount _tricount;
-        private Operation _operation;
+        private readonly Operation _operation;
         private ComboBoxItem _selectedTemplate;
         private string _amount;
         private bool _noTemplates;
         private DateTime _operationDate;
         private string _error;
         private string _windowTitle;
-        private string _button;
+        private readonly string _button;
         private Visibility _visible;
 
         // Properties
@@ -101,7 +103,7 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _noTemplates, value);
         }
 
-        protected internal Operation Operation {
+        private Operation Operation {
             get => _operation;
             init => SetProperty(ref _operation, value);
         }
@@ -121,9 +123,9 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _tricount, value);
         }
 
-        public new User CurrentUser {
+        private new User CurrentUser {
             get => _currentUser;
-            set => SetProperty(ref _currentUser, value);
+            init => SetProperty(ref _currentUser, value);
         }
 
         public ComboBoxItem Initiator {
@@ -149,7 +151,7 @@ namespace prbd_2324_a06.ViewModel
 
         public string Button {
             get => _button;
-            set => SetProperty(ref _button, value);
+            private init => SetProperty(ref _button, value);
         }
 
         public Visibility Visible {
@@ -162,36 +164,42 @@ namespace prbd_2324_a06.ViewModel
 
         // Edit
         public override void SaveAction() {
-            if (Validate()) {
-                Operation.Title = Title;
-                Operation.Amount = double.Parse(Amount);
-                Operation.OperationDate = OperationDate;
-                Operation.InitiatorId = User.GetUserByName(Initiator.Content.ToString()).UserId;
-                if (!Tricount.GetOperations().ToList().Contains(Operation)) {
-                    Context.Add(Operation);
-                }
-
-                SaveWeights();
-                Context.SaveChanges();
-                RaisePropertyChanged();
-                NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
-                NotifyColleagues(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, Tricount);
-                Close();
+            if (!Validate()) {
+                return;
             }
+
+            Operation.Title = Title;
+            Operation.Amount = double.Parse(Amount);
+            Operation.OperationDate = OperationDate;
+            Operation.InitiatorId = User.GetUserByName(Initiator.Content.ToString()).UserId;
+            if (!Tricount.GetOperations().ToList().Contains(Operation)) {
+                Context.Add(Operation);
+            }
+
+            SaveWeights();
+            Context.SaveChanges();
+            RaisePropertyChanged();
+            NotifyColleagues(App.Messages.MSG_OPERATION_CHANGED, Operation);
+            NotifyColleagues(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, Tricount);
+            Close();
         }
 
         // Save les poids de l'opération
         private void SaveWeights() {
-            if (Numerics != null) {
-                foreach (var item in Numerics) {
-                    User user = User.GetUserByName(item.Name);
-                    // Si paire operation-user existante parmi les répartitions -> modifications des poids
-                    if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id))
-                        UpdateWeight(user.UserId, item.Value);
-                    else {
-                        // Nouvelle répartition si paire operation-user inexistante parmi les répartitions
-                        Operation.Repartitions.Add(new Repartition(Operation.Id, user.UserId, item.Value));
-                    }
+            if (Numerics == null) {
+                return;
+            }
+
+            foreach (var item in Numerics) {
+                User user = User.GetUserByName(item.Name);
+                // Si paire operation-user existante parmi les répartitions -> modifications des poids
+                if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id)) {
+                    UpdateWeight(user.UserId, item.Value);
+                    Console.WriteLine("yo");
+                } else if (item.Value > 0) {
+                    // Nouvelle répartition si paire operation-user inexistante parmi les répartitions
+                    Operation.Repartitions.Add(new Repartition(Operation.Id, user.UserId, item.Value));
+                    Console.WriteLine("ya");
                 }
             }
         }
@@ -201,12 +209,12 @@ namespace prbd_2324_a06.ViewModel
             // Rechercher la répartition correspondante pour l'utilisateur spécifié
             Repartition repartition =
                 Operation.Repartitions.FirstOrDefault(r => r.UserId == userId && r.OperationId == Operation.Id);
-
-            if (repartition != null) {
-                // Mettre à jour le poids de l'utilisateur
-                repartition.Weight = newWeight;
-                Context.SaveChanges();
+            if (repartition == null) {
+                return;
             }
+            // Mettre à jour le poids de l'utilisateur
+            repartition.Weight = newWeight;
+            Context.SaveChanges();
         }
 
 
@@ -300,10 +308,11 @@ namespace prbd_2324_a06.ViewModel
 
         private void IsValidDate() {
             if (OperationDate < Tricount.CreatedAt) {
-                AddError(nameof(OperationDate),$"Cannot be before {Tricount.CreatedAt:dd-MM-yyyy}.");
+                AddError(nameof(OperationDate), $"Cannot be before {Tricount.CreatedAt:dd-MM-yyyy}.");
             }
+
             if (OperationDate > DateTime.Today) {
-                AddError(nameof(OperationDate),"cannot be in the future.");
+                AddError(nameof(OperationDate), "cannot be in the future.");
             }
         }
 

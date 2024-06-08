@@ -21,7 +21,7 @@ namespace prbd_2324_a06.View
             initializeTemplates();
 
             // fermeture de la fenêtre
-            Register<Operation>( App.Messages.MSG_CLOSE_OPERATION_WINDOW, _ => {
+            Register<Operation>(App.Messages.MSG_CLOSE_OPERATION_WINDOW, _ => {
                 Close();
             });
         }
@@ -32,7 +32,7 @@ namespace prbd_2324_a06.View
             List<User> users = _vm.GetUsersTricount();
             List<Repartition> repartitions = _vm.GetRepartitions();
 
-            foreach (var user in users) {
+            foreach (User user in users) {
                 // Create a new Grid for each user
                 Grid userGrid = new Grid();
                 userGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -76,6 +76,7 @@ namespace prbd_2324_a06.View
                 // Add the userGrid to the ParticipantsPanel
                 ParticipantsPanel.Children.Add(userGrid);
 
+
                 // Gestionnaire d'événements pour la CheckBox
                 checkBox.Checked += (sender, e) => {
                     UpdateNumericUpDownState(checkBox, numericUpDown);
@@ -94,28 +95,20 @@ namespace prbd_2324_a06.View
                     _vm.Validate();
                     _vm.CalculAmount();
                 };
+
                 UpdateCheckBoxState(checkBox, numericUpDown);
             }
-
             _vm.CalculAmount();
         }
 
         // Gestion checkBox -> numeric
         private void UpdateNumericUpDownState(CheckBox checkBox, NumericUpDown numericUpDown) {
-            if (checkBox.IsChecked == false) {
-                numericUpDown.Value = 0;
-            } else {
-                numericUpDown.Value = 1;
-            }
+            numericUpDown.Value = checkBox.IsChecked == false ? 0 : 1;
         }
 
         // Gestion numeric -> checkBox
         private void UpdateCheckBoxState(CheckBox checkBox, NumericUpDown numericUpDown) {
-            if (numericUpDown.Value == 0) {
-                checkBox.IsChecked = false;
-            } else {
-                checkBox.IsChecked = true;
-            }
+            checkBox.IsChecked = numericUpDown.Value != 0;
         }
 
         // Initialize comboBoxItem with the participants of the Operation's Tricount.
@@ -139,7 +132,7 @@ namespace prbd_2324_a06.View
             // Rechercher l'élément correspondant dans la ComboBox
             ComboBoxItem defaultItem = InitiatorComboBox.Items
                 .OfType<ComboBoxItem>()
-                .FirstOrDefault(item => item.Content.ToString() == _vm.CurrentUser.FullName);
+                .FirstOrDefault(item => item.Content.ToString() == _vm.Initiator.Content.ToString());
             // Si l'élément par défaut existe, le sélectionner
             if (defaultItem != null) {
                 InitiatorComboBox.SelectedItem = defaultItem;
