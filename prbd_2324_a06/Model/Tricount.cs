@@ -99,7 +99,8 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                 .Select(t => t.Id);
 
             var templates = Context.Templates // Sélectionne les modèles à partir des ID récupérés
-                .Where(t => id.Contains(t.Id));
+                .Where(t => id.Contains(t.Id))
+                .OrderBy(t => t.Title);
             return templates; // Retourne les modèles
         }
 

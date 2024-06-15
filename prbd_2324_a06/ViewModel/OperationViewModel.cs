@@ -21,16 +21,17 @@ namespace prbd_2324_a06.ViewModel
             OperationDate = Operation.Title == null ? DateTime.Today : Operation.OperationDate;
             Button = Operation.Title == null ? "Add" : "Save";
             Visible = Operation.Title == null ? Visibility.Hidden : Visibility.Visible;
-            SelectedTemplate = new ComboBoxItem() {
-                Content = "-- Choose a template --"
+            SelectedTemplate = new Template() {
+                Title = "-- Choose a template --"
             };
+            Participants = GetUsersTricount();
+            Templates = GetTemplatesTricount();
+            Templates.Add(SelectedTemplate);
             CurrentUser = App.CurrentUser;
-            Initiator = new ComboBoxItem {
-                Content = operation.Title == null
-                    ? CurrentUser.FullName
-                    : User.GetUserNameById(Operation.InitiatorId)
-            };
-            NoTemplates = GetTemplatesTricount().Any();
+            Initiator = operation.Title == null
+                ? CurrentUser
+                : Context.Users.Find(Operation.InitiatorId);
+            NoTemplates = Templates.Any();
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
@@ -43,9 +44,10 @@ namespace prbd_2324_a06.ViewModel
                 // vérification pour éviter Null Exception
                 () => SelectedTemplate == null
                     ? SelectedTemplate != null
-                    : SelectedTemplate.Content.ToString() != "-- Choose a template --");
+                    : SelectedTemplate.Title != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
             DeleteCommand = new RelayCommand(DeleteAction);
+            Console.WriteLine(SelectedTemplate.Title);
         }
 
         // Commandes
@@ -60,10 +62,10 @@ namespace prbd_2324_a06.ViewModel
         private readonly ObservableCollectionFast<NumericUpDown> _numerics;
         private readonly ObservableCollectionFast<TextBlock> _textBlocks;
         private readonly User _currentUser;
-        private ComboBoxItem _initiator;
+        private User _initiator;
         private Tricount _tricount;
         private readonly Operation _operation;
-        private ComboBoxItem _selectedTemplate;
+        private Template _selectedTemplate;
         private string _amount;
         private bool _noTemplates;
         private DateTime _operationDate;
@@ -71,6 +73,8 @@ namespace prbd_2324_a06.ViewModel
         private string _windowTitle;
         private readonly string _button;
         private Visibility _visible;
+        private List<User> _participants;
+        private List<Template> _templates;
 
         // Properties
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
@@ -86,6 +90,16 @@ namespace prbd_2324_a06.ViewModel
         public ObservableCollectionFast<TextBlock> TextBlocks {
             get => _textBlocks;
             private init => SetProperty(ref _textBlocks, value);
+        }
+
+        public List<User> Participants {
+            get => _participants;
+            set => SetProperty(ref _participants, value);
+        }
+        
+        public List<Template> Templates {
+            get => _templates;
+            set => SetProperty(ref _templates, value);
         }
 
         public string Error {
@@ -108,7 +122,7 @@ namespace prbd_2324_a06.ViewModel
             init => SetProperty(ref _operation, value);
         }
 
-        public ComboBoxItem SelectedTemplate {
+        public Template SelectedTemplate {
             get => _selectedTemplate;
             set => SetProperty(ref _selectedTemplate, value);
         }
@@ -128,7 +142,7 @@ namespace prbd_2324_a06.ViewModel
             init => SetProperty(ref _currentUser, value);
         }
 
-        public ComboBoxItem Initiator {
+        public User Initiator {
             get => _initiator;
             set => SetProperty(ref _initiator, value);
         }
@@ -171,7 +185,7 @@ namespace prbd_2324_a06.ViewModel
             Operation.Title = Title;
             Operation.Amount = double.Parse(Amount);
             Operation.OperationDate = OperationDate;
-            Operation.InitiatorId = User.GetUserByName(Initiator.Content.ToString()).UserId;
+            Operation.InitiatorId = Initiator.UserId;
             if (!Tricount.GetOperations().ToList().Contains(Operation)) {
                 Context.Add(Operation);
             }
@@ -234,7 +248,7 @@ namespace prbd_2324_a06.ViewModel
         private void ApplyAction() {
             // vérifications 
             if (SelectedTemplate != null && Numerics != null) {
-                string title = SelectedTemplate.Content.ToString();
+                string title = SelectedTemplate.Title;
                 if (Tricount.GetTemplateByTitle(title) != null) {
                     // récupération template sélectionné
                     var t = Tricount.GetTemplateByTitle(title);

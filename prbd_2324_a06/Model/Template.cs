@@ -16,6 +16,8 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
         public virtual Tricount Tricount { get; set; } // Propriété de navigation vers le Tricount associé
 
         public virtual ICollection<TemplateItem> TemplateItems { get; set; } = new HashSet<TemplateItem>(); // Collection d'éléments de modèle associés à ce modèle
+        
+        public Template(){}
 
         // Méthode pour récupérer un dictionnaire (paire de clé-valeur) avec l'utilisateur et son poids pour chaque répartition
         public Dictionary<string, int> GetUsersAndWeightsByTricountId() {

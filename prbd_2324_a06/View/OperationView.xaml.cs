@@ -16,9 +16,7 @@ namespace prbd_2324_a06.View
             DataContext = _vm = new OperationViewModel(operation);
 
             // initialisation dynamique des éléments graphiques
-            InitializeCheckBox();
-            InitializeCombobox();
-            initializeTemplates();
+            //InitializeCheckBox();
 
             // fermeture de la fenêtre
             Register<Operation>(App.Messages.MSG_CLOSE_OPERATION_WINDOW, _ => {
@@ -111,60 +109,10 @@ namespace prbd_2324_a06.View
             checkBox.IsChecked = numericUpDown.Value != 0;
         }
 
-        // Initialize comboBoxItem with the participants of the Operation's Tricount.
-        private void InitializeCombobox() {
-            // fetching users from the database
-            List<User> users = _vm.GetUsersTricount();
-            foreach (var user in users) {
-                // Create ComboBox
-                ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = user.FullName };
-                InitiatorComboBox.Items.Add(comboBoxItem);
-            }
-
-            // Trier les éléments de la ComboBox par ordre alphabétique
-            List<ComboBoxItem> sortedItems = InitiatorComboBox.Items.Cast<ComboBoxItem>()
-                .OrderBy(item => item.Content.ToString()).ToList();
-            InitiatorComboBox.Items.Clear();
-            foreach (var item in sortedItems) {
-                InitiatorComboBox.Items.Add(item);
-            }
-
-            // Rechercher l'élément correspondant dans la ComboBox
-            ComboBoxItem defaultItem = InitiatorComboBox.Items
-                .OfType<ComboBoxItem>()
-                .FirstOrDefault(item => item.Content.ToString() == _vm.Initiator.Content.ToString());
-            // Si l'élément par défaut existe, le sélectionner
-            if (defaultItem != null) {
-                InitiatorComboBox.SelectedItem = defaultItem;
-            }
-        }
-
-        // Initialize comboBoxItem with the templates of the Operation's Tricount.
-        private void initializeTemplates() {
-            List<Template> templates = _vm.GetTemplatesTricount();
-            foreach (var template in templates) {
-                // Create ComboBox
-                ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = template.Title };
-                TemplateComboBox.Items.Add(comboBoxItem);
-            }
-
-            // Trier les éléments de la ComboBox par ordre alphabétique
-            List<ComboBoxItem> sortedItems = TemplateComboBox.Items.Cast<ComboBoxItem>()
-                .OrderBy(item => item.Content.ToString()).ToList();
-            TemplateComboBox.Items.Clear();
-            foreach (var item in sortedItems) {
-                TemplateComboBox.Items.Add(item);
-            }
-
-            // ajout Item par défaut
-            ComboBoxItem defaultItem = new ComboBoxItem() { Content = "-- Choose a template --" };
-            TemplateComboBox.Items.Add(defaultItem);
-            TemplateComboBox.SelectedItem = defaultItem;
-        }
-
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
             Close();
         }
+        
     }
 }
