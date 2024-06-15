@@ -1,6 +1,7 @@
 ﻿using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -58,7 +59,6 @@ namespace prbd_2324_a06.View
             else
                 tabControl.SetFocus(tab);
         }
-
         private void OpenOperationAction(Operation operation) {
             ApplicationRoot.ShowDialog<OperationViewModel, Operation, PridContext>(operation);
         }
@@ -79,6 +79,11 @@ namespace prbd_2324_a06.View
                 MyTabControl.RenameTab(tab, header);
                 tab.Tag = header;
             }
+        }
+        
+        protected override void OnClosing(CancelEventArgs e) {
+            base.OnClosing(e);
+            tabControl.Dispose();
         }
     }
 }

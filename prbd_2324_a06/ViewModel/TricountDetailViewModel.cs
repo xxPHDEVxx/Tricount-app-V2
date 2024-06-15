@@ -82,7 +82,7 @@ public class TricountDetailViewModel : ViewModelCommon
     public TricountDetailViewModel(Tricount tricount, bool isNew) : base() {
         Tricount = tricount;
         IsNew = isNew;
-        Users.RefreshFromModel(App.Context.Users
+        Users.RefreshFromModel(Context.Users
             .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
             .Select(m => m.FullName)
         );
