@@ -27,7 +27,8 @@ public partial class App
         MSG_TRICOUNT_CHANGED,
         MSG_CLOSE_TAB,
         MSG_PARTICIPANT_ADDED,
-        MSG_DELETE_TRICOUNT
+        MSG_DELETE_TRICOUNT,
+        MSG_OPERATION_TRICOUNT_CHANGED
     }
 
     public App() {
@@ -74,6 +75,7 @@ public partial class App
         // Logout
         Register(this, Messages.MSG_LOGOUT, () => {
             Logout();
+            this.Reset();
             NavigateTo<LoginViewModel, User, PridContext>();
         });
 
