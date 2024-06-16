@@ -39,11 +39,12 @@ public class ListViewModel : ViewModelCommon
         Console.WriteLine(CurrentUser.Role);
         Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => OnRefreshData());
         Register<Tricount>(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, tricount => OnRefreshData());
+        Register( App.Messages.MSG_RESET, () => OnRefreshData());
     }
 
     protected override void OnRefreshData() {
 
-        if (CurrentUser.Role == Role.Administrator) {
+        if (CurrentUser.Role is Role.Administrator) {
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetAll()
                 : CurrentUser.GetAllFiltered(Filter);
         Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>

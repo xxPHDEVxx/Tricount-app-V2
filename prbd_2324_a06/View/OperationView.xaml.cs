@@ -1,40 +1,27 @@
-﻿using CalcBinding;
-using Microsoft.IdentityModel.Tokens;
-using NumericUpDownLib;
+﻿using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using prbd_2324_a06.ViewModel;
 using PRBD_Framework;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using Binding = System.Windows.Data.Binding;
 
 namespace prbd_2324_a06.View
 {
-    public partial class EditOperationView : WindowBase
+    public partial class OperationView
     {
-        private readonly EditOperationViewModel _vm;
+        private readonly OperationViewModel _vm;
 
-        public EditOperationView(Operation operation) {
+        public OperationView(Operation operation) {
             InitializeComponent();
-            DataContext = _vm = new EditOperationViewModel(operation);
+            DataContext = _vm = new OperationViewModel(operation);
 
             // initialisation dynamique des éléments graphiques
-            InitializeCheckBox();
-            InitializeCombobox();
-            initializeTemplates();
+            //InitializeCheckBox();
 
             // fermeture de la fenêtre
-            Register<Operation>( App.Messages.MSG_CLOSE_OPERATION_WINDOW, operationo => {
+            Register<Operation>(App.Messages.MSG_CLOSE_OPERATION_WINDOW, _ => {
                 Close();
             });
-            this.Closed += (sender, e) => {
-                _vm.Close();
-            }; 
-
         }
 
         // Initialise checkBox's template with the tricount's participants
@@ -43,7 +30,7 @@ namespace prbd_2324_a06.View
             List<User> users = _vm.GetUsersTricount();
             List<Repartition> repartitions = _vm.GetRepartitions();
 
-            foreach (var user in users) {
+            foreach (User user in users) {
                 // Create a new Grid for each user
                 Grid userGrid = new Grid();
                 userGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -52,7 +39,7 @@ namespace prbd_2324_a06.View
 
                 // Create CheckBox
                 CheckBox checkBox = new CheckBox {
-                    Content = user.FullName, Margin = new Thickness(2), Width = 80, IsChecked = true,
+                    Content = user.FullName, Margin = new Thickness(2), Width = 80,
                     VerticalAlignment = VerticalAlignment.Center
                 };
                 _vm.CheckBoxItems.Add(checkBox);
@@ -87,6 +74,7 @@ namespace prbd_2324_a06.View
                 // Add the userGrid to the ParticipantsPanel
                 ParticipantsPanel.Children.Add(userGrid);
 
+
                 // Gestionnaire d'événements pour la CheckBox
                 checkBox.Checked += (sender, e) => {
                     UpdateNumericUpDownState(checkBox, numericUpDown);
@@ -105,84 +93,26 @@ namespace prbd_2324_a06.View
                     _vm.Validate();
                     _vm.CalculAmount();
                 };
-            }
 
+                UpdateCheckBoxState(checkBox, numericUpDown);
+            }
             _vm.CalculAmount();
         }
 
         // Gestion checkBox -> numeric
         private void UpdateNumericUpDownState(CheckBox checkBox, NumericUpDown numericUpDown) {
-            if (checkBox.IsChecked == false) {
-                numericUpDown.Value = 0;
-            } else {
-                numericUpDown.Value = 1;
-            }
+            numericUpDown.Value = checkBox.IsChecked == false ? 0 : 1;
         }
 
         // Gestion numeric -> checkBox
         private void UpdateCheckBoxState(CheckBox checkBox, NumericUpDown numericUpDown) {
-            if (numericUpDown.Value == 0) {
-                checkBox.IsChecked = false;
-            } else {
-                checkBox.IsChecked = true;
-            }
-        }
-
-        // Initialize comboBoxItem with the participants of the Operation's Tricount.
-        private void InitializeCombobox() {
-            // fetching users from the database
-            List<User> users = _vm.GetUsersTricount();
-            foreach (var user in users) {
-                // Create ComboBox
-                ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = user.FullName };
-                InitiatorComboBox.Items.Add(comboBoxItem);
-            }
-
-            // Trier les éléments de la ComboBox par ordre alphabétique
-            List<ComboBoxItem> sortedItems = InitiatorComboBox.Items.Cast<ComboBoxItem>()
-                .OrderBy(item => item.Content.ToString()).ToList();
-            InitiatorComboBox.Items.Clear();
-            foreach (var item in sortedItems) {
-                InitiatorComboBox.Items.Add(item);
-            }
-
-            // Rechercher l'élément correspondant dans la ComboBox
-            ComboBoxItem defaultItem = InitiatorComboBox.Items
-                .OfType<ComboBoxItem>()
-                .FirstOrDefault(item => item.Content.ToString() == _vm.CurrentUser.FullName);
-            // Si l'élément par défaut existe, le sélectionner
-            if (defaultItem != null) {
-                InitiatorComboBox.SelectedItem = defaultItem;
-            }
-        }
-
-        // Initialize comboBoxItem with the templates of the Operation's Tricount.
-        private void initializeTemplates() {
-            List<Template> templates = _vm.GetTemplatesTricount();
-            foreach (var template in templates) {
-                // Create ComboBox
-                ComboBoxItem comboBoxItem = new ComboBoxItem() { Content = template.Title };
-                TemplateComboBox.Items.Add(comboBoxItem);
-            }
-
-            // Trier les éléments de la ComboBox par ordre alphabétique
-            List<ComboBoxItem> sortedItems = TemplateComboBox.Items.Cast<ComboBoxItem>()
-                .OrderBy(item => item.Content.ToString()).ToList();
-            TemplateComboBox.Items.Clear();
-            foreach (var item in sortedItems) {
-                TemplateComboBox.Items.Add(item);
-            }
-
-            // ajout Item par défaut
-            ComboBoxItem defaultItem = new ComboBoxItem() { Content = "-- Choose a template --" };
-            TemplateComboBox.Items.Add(defaultItem);
-            TemplateComboBox.SelectedItem = defaultItem;
+            checkBox.IsChecked = numericUpDown.Value != 0;
         }
 
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {
-            _vm.Close();
             Close();
         }
+        
     }
 }

@@ -1,70 +1,85 @@
-﻿using PRBD_Framework;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
-using System.Windows.Documents;
+﻿using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
+using System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
+using System.ComponentModel.DataAnnotations.Schema; // Importation de System.ComponentModel.DataAnnotations.Schema pour utiliser les attributs de base de données
+using System.Globalization; // Importation de System.Globalization pour manipuler la culture
+using System.Windows.Documents; // Importation de System.Windows.Documents pour manipuler les documents Windows
 
-namespace prbd_2324_a06.Model;
-
-public class Operation : EntityBase<PridContext>
+namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.Model
 {
-    public Operation(string title, int tricountId, double amount, DateTime operationDate, int initiatorId) {
-        Id = GetHighestOperationId();
-        Title = title;
-        TricountId = tricountId;
-        Amount = amount;
-        OperationDate = operationDate;
-        InitiatorId = initiatorId;
-    }
+    public class Operation : EntityBase<PridContext> // Définition de la classe Operation qui hérite de EntityBase<PridContext>
+    {
+        // Constructeur prenant plusieurs paramètres pour initialiser une opération
+        public Operation(string title, int tricountId, double amount, DateTime operationDate, int initiatorId) {
+            Id = GetHighestOperationId(); // Initialisation de l'ID en appelant GetHighestOperationId()
+            Title = title; // Initialisation du titre
+            TricountId = tricountId; // Initialisation de l'ID du Tricount associé
+            Amount = amount; // Initialisation du montant de l'opération
+            OperationDate = operationDate; // Initialisation de la date de l'opération
+            InitiatorId = initiatorId; // Initialisation de l'ID de l'initiateur de l'opération
+        }
 
-    // constrcuteur -> new operation
-    public Operation(int tricountId) {
-        Id = GetHighestOperationId();
-        TricountId = tricountId;
-    }
+        // Constructeur pour créer une nouvelle opération avec un ID de Tricount spécifié
+        public Operation(int tricountId) {
+            Id = GetHighestOperationId(); // Initialisation de l'ID en appelant GetHighestOperationId()
+            TricountId = tricountId; // Initialisation de l'ID du Tricount associé
+        }
 
-    public Operation() {
-    }
+        // Constructeur par défaut
+        public Operation() {
+        }
 
-    [Key] public int Id { get; set; }
-    public string Title { get; set; }
-    [ForeignKey(nameof(Tricount))] public int TricountId { get; set; }
-    public virtual Tricount Tricount { get; set; }
+        [Key] // Définition de la clé primaire
+        public int Id { get; set; } // Propriété représentant l'ID de l'opération
 
-    [Required] public double Amount { get; set; }
+        public string Title { get; set; } // Propriété représentant le titre de l'opération
 
-    [Required] public DateTime OperationDate { get; set; }
+        [ForeignKey(nameof(Tricount))] // Clé étrangère vers Tricount
+        public int TricountId { get; set; } // Propriété représentant l'ID du Tricount associé
+        public virtual Tricount Tricount { get; set; } // Propriété de navigation vers le Tricount associé
 
-    [ForeignKey(nameof(Initiator))] public int InitiatorId { get; set; }
-    public virtual User Initiator { get; set; }
+        [Required] // Annotation indiquant que la propriété est requise
+        public double Amount { get; set; } // Propriété représentant le montant de l'opération
 
+        [Required] // Annotation indiquant que la propriété est requise
+        public DateTime OperationDate { get; set; } // Propriété représentant la date de l'opération
 
-    public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
+        [ForeignKey(nameof(Initiator))] // Clé étrangère vers l'initiateur de l'opération
+        public int InitiatorId { get; set; } // Propriété représentant l'ID de l'initiateur de l'opération
+        public virtual User Initiator { get; set; } // Propriété de navigation vers l'initiateur de l'opération
 
-    public int GetHighestOperationId() {
-        return Context.Operations.Max(o => o.Id) + 1;
-    }
+        // Collection de répartitions associées à cette opération
+        public virtual ICollection<Repartition> Repartitions { get; protected set; } = new HashSet<Repartition>();
 
-    public IQueryable<Repartition> GetRepartitionByOperation() {
-        var q = from r in Context.Repartitions
-            where r.OperationId == Id
-            select r;
-        return q;
-    }
+        // Méthode pour obtenir le plus grand ID d'opération
+        public int GetHighestOperationId() {
+            return Context.Operations.Max(o => o.Id) + 1; // Retourne le plus grand ID d'opération dans le contexte + 1
+        }
 
-    public void Delete() {
-        Repartitions.Clear();
-        Context.Operations.Remove(this);
-        Context.SaveChanges();
-    }
+        // Méthode pour obtenir les répartitions associées à cette opération
+        public IQueryable<Repartition> GetRepartitionByOperation() {
+            var q = from r in Context.Repartitions // Requête LINQ pour récupérer les répartitions
+                    where r.OperationId == Id // Filtre pour les répartitions associées à cette opération
+                    select r;
+            return q; // Retourne la requête
+        }
 
-    public override bool Validate() {
-        ClearErrors();
+        // Méthode pour supprimer l'opération
+        public void Delete() {
+            Repartitions.Clear(); // Supprime toutes les répartitions associées à cette opération
+            Context.Operations.Remove(this); // Supprime cette opération du contexte
+            Context.SaveChanges(); // Enregistre les changements dans la base de données
+        }
 
-        if (string.IsNullOrWhiteSpace(Title))
-            AddError(nameof(Title), "required");
-        else if (Title.Length < 3)
-            AddError(nameof(Title), "length must be >= 3");
-        return !HasErrors;
+        // Méthode pour valider l'opération
+        public override bool Validate() {
+            ClearErrors(); // Efface les erreurs de validation précédentes
+
+            if (string.IsNullOrWhiteSpace(Title)) // Vérifie si le titre est vide ou null
+                AddError(nameof(Title), "required"); // Ajoute une erreur si le titre est requis
+            else if (Title.Length < 3) // Vérifie si le titre a une longueur inférieure à 3 caractères
+                AddError(nameof(Title), "length must be >= 3"); // Ajoute une erreur si le titre est trop court
+
+            return !HasErrors; // Retourne vrai si aucune erreur n'est présente, sinon retourne faux
+        }
     }
 }
