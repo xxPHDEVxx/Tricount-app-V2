@@ -111,11 +111,10 @@ public class TricountDetailViewModel : ViewModelCommon
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
 
         OnRefreshData();
-        IsCurrentUser();
 
     }
-    public void IsCurrentUser() {
-        Current = User == App.CurrentUser ? " (me)" : "";
+    public string IsCurrentUser(User us) {
+        return User == us ? " (creator)" : "";
     }
 
     protected override void OnRefreshData() {
@@ -214,7 +213,7 @@ public class TricountDetailViewModel : ViewModelCommon
     }
 
     private void AddMySelfAction() {
-        if (IsNew) {
+        if (!IsNew) {
             var currentUser = GetCurrentUser();
             if (!Participants.Contains(currentUser)) {
                 Participants.Add(currentUser);

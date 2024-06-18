@@ -92,7 +92,7 @@
                                                Margin="2"
                                                Grid.Column="0" >
                                                     <Run Text="{Binding FullName}"></Run>
-                                                    <Run Text="(Creator)"></Run>
+                                                    <Run Text="Creator"></Run>
                                                 </TextBlock>
 
                                                 <Button Content="delete"
