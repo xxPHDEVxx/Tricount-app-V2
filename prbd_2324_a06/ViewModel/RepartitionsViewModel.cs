@@ -4,38 +4,25 @@ namespace prbd_2324_a06.ViewModel
 {
     public class RepartitionsViewModel : ViewModelCommon
     {
-        public RepartitionsViewModel(Repartition repartition, Operation operation, string amount) {
+        public RepartitionsViewModel(Repartition repartition, OperationViewModel vm) {
             Repartition = repartition;
-            Operation = operation;
-            Amount = amount;
-        }
-
-        public string Amount {
-            get => _amount;
-            set => SetProperty(ref _amount, value, () => {
-                CalculAmount();
-            });
-        }
-
-        public string MyAmount {
-            get => _myAmount;
-            set => SetProperty(ref _myAmount, value, () => {
-            });
+            Vm = vm;
+            CalculAmount();
         }
 
         private Repartition _repartition;
-        private Operation _operation;
-        private string _amount;
         private string _myAmount;
+        private OperationViewModel _vm;
+        private int _weight;
+
+        public OperationViewModel Vm {
+            get => _vm;
+            init => SetProperty(ref _vm, value);
+        }
 
         public Repartition Repartition {
             get => _repartition;
             set => SetProperty(ref _repartition, value);
-        }
-
-        public Operation Operation {
-            get => Operation.GetOperationById(Repartition.OperationId);
-            set => SetProperty(ref _operation, value);
         }
 
         public User User {
@@ -45,21 +32,36 @@ namespace prbd_2324_a06.ViewModel
 
         public int Weight {
             get => Repartition.Weight;
-            set => SetProperty(Repartition.Weight, value, Repartition, (r, w) => { CalculAmount();});
+            set {
+                if (SetProperty(ref _weight, value)) {
+                    Repartition.Weight = value;
+                    CalculAmount();
+                }
+            }
+        }
+        
+        public string MyAmount {
+            get => _myAmount;
+            set => SetProperty(ref _myAmount, value);
+        }
+
+        public bool IsChecked {
+            get => Weight > 0;
+            set => SetProperty(Weight > 0, value, Repartition, (r, w) => CalculAmount());
         }
 
         public void CalculAmount() {
             int totalWeight = 0;
-            if (Operation.Repartitions != null) {
+            if (Vm.Operation.Repartitions != null) {
                 // Calcul du total des poids
-                foreach (var r in Operation.Repartitions) {
+                foreach (var r in Vm.Operation.Repartitions) {
                     totalWeight += r.Weight;
                 }
 
-                // insertion montants dans textblock
+                // Calcul du montant à afficher
                 double part = totalWeight < 1
-                    ? double.Parse(Amount) * totalWeight
-                    : double.Parse(Amount) / totalWeight;
+                    ? double.Parse(Vm.Amount) * totalWeight
+                    : double.Parse(Vm.Amount) / totalWeight;
 
                 MyAmount = $"{part * Weight:F2} €";
             }

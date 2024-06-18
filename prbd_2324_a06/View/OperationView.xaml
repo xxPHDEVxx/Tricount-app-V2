@@ -81,7 +81,7 @@
 
                                     <!-- CheckBox in the first column -->
                                     <CheckBox Content="{Binding User.FullName}"
-                                              IsChecked="{Binding Value, ElementName=NumericUpDown}"
+                                              IsChecked="{Binding IsChecked}"
                                               VerticalAlignment="Center"
                                               Margin="2"
                                               HorizontalAlignment="Left"
@@ -89,7 +89,7 @@
                                               Grid.Column="0" />
 
                                     <!-- NumericUpDown in the second column -->
-                                    <num:NumericUpDown Value="{Binding Weight}"
+                                    <num:NumericUpDown Value="{Binding Weight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                        x:Name="NumericUpDown"
                                                        MinValue="0"
                                                        Margin="2"

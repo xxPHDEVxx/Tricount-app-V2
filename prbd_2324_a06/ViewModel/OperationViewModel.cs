@@ -78,10 +78,8 @@ namespace prbd_2324_a06.ViewModel
         private Visibility _visible;
         private List<User> _participants;
         private List<Template> _templates;
-        private IList _weights = new ArrayList();
 
         // Properties
-
         public ObservableCollectionFast<RepartitionsViewModel> Repartitions {
             get => _repartitions;
             set => SetProperty(ref _repartitions, value);
@@ -89,11 +87,6 @@ namespace prbd_2324_a06.ViewModel
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
             get => _checkBoxItems;
             private init => SetProperty(ref _checkBoxItems, value);
-        }
-        
-        public  IList Items {
-            get => _weights;
-            init { value = _weights; }
         }
 
         public ObservableCollectionFast<NumericUpDown> Numerics {
@@ -166,8 +159,6 @@ namespace prbd_2324_a06.ViewModel
             get => _amount;
             set => SetProperty(ref _amount, value, () => {
                 Validate();
-                Console.WriteLine(Items.Count);
-                CalculAmount();
             });
         }
 
@@ -293,7 +284,7 @@ namespace prbd_2324_a06.ViewModel
 
         // Check if at least one checkbox is checked
         private bool ValidateCheckBoxes() {
-            return CheckBoxItems == null || CheckBoxItems.Any(item => item.IsChecked != null && (bool)item.IsChecked);
+            return Repartitions == null || Repartitions.Any(r => r.IsChecked);
         }
 
         // Return Users of the Operation's Tricount.
@@ -343,43 +334,15 @@ namespace prbd_2324_a06.ViewModel
                 AddError(nameof(OperationDate), "cannot be in the future.");
             }
         }
-        public void CalculAmount() {
-            if (Amount is { Length: > 0 }) {
-                int totalWeight = 0;
-                if (Numerics != null && TextBlocks != null) {
-                    int[] weights = new int[Numerics.Count];
-
-                    // Calcul du total des poids
-                    var i = 0;
-                    foreach (var item in Numerics) {
-                        totalWeight += item.Value;
-                        weights[i] = item.Value;
-                        i++;
-                    }
-
-                    // insertion montants dans textblock
-                    i = 0;
-                    double part = totalWeight < 1
-                        ? double.Parse(Amount) * totalWeight
-                        : double.Parse(Amount) / totalWeight;
-                    foreach (var item in TextBlocks) {
-                        item.Text = $"{part * weights[i]:F2} €";
-                        i++;
-                    }
-                }
-            } else {
-                AddError(nameof(Amount), "Can't be empty !");
-            }
-        }
 
         public void FillRepartitionsViewModels() {
             foreach (var user in Participants) {
                 if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id)) {
                     Repartition repartition = Operation.Repartitions.FirstOrDefault(r =>
                         r.UserId == user.UserId && r.OperationId == Operation.Id);
-                    Repartitions.Add(new RepartitionsViewModel(repartition, Operation, Amount));
+                    Repartitions.Add(new RepartitionsViewModel(repartition, this));
                 } else {
-                    Repartitions.Add(new RepartitionsViewModel(new Repartition(Operation.Id, user.UserId, 0), Operation, Amount));
+                    Repartitions.Add(new RepartitionsViewModel(new Repartition(Operation.Id, user.UserId, 0), this));
                 }
             }
         }
