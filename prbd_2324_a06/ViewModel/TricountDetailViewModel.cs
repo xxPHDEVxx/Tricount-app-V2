@@ -21,18 +21,18 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand CancelCommand { get; set; }
 
     // Attributes et propriétés
-    public ObservableCollectionFast<string> Users { get; } = new ObservableCollectionFast<string>();
+    public ObservableCollectionFast<User> Users { get; } = new ObservableCollectionFast<User>();
 
-    private string _selectedUser;
+    private User _selectedUser;
 
-    public string SelectedUser {
+    public User SelectedUser {
         get => _selectedUser;
         set => SetProperty(ref _selectedUser, value);
     }
 
-    private ObservableCollection<string> _participants;
+    private ObservableCollection<User> _participants;
 
-    public ObservableCollection<string> Participants {
+    public ObservableCollection<User> Participants {
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
@@ -71,6 +71,12 @@ public class TricountDetailViewModel : ViewModelCommon
         get => _user;
         set => SetProperty(ref _user, value);
     }
+    private string _current;
+
+    public string Current {
+        get => _current;
+        set => SetProperty(ref _current, value);
+    }
 
     private bool _isNew;
 
@@ -79,15 +85,17 @@ public class TricountDetailViewModel : ViewModelCommon
         set => SetProperty(ref _isNew, value);
     }
 
+
     public TricountDetailViewModel(Tricount tricount, bool isNew) : base() {
         Tricount = tricount;
         IsNew = isNew;
+
         Users.RefreshFromModel(Context.Users
             .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
-            .Select(m => m.FullName)
+            .OrderBy(m => m.FullName)
         );
 
-        User = CurrentUser;
+        Current = CurrentUser.FullName;
 
         if (!IsNew) {
             Tricount.Title = tricount.Title;
@@ -95,14 +103,25 @@ public class TricountDetailViewModel : ViewModelCommon
             Tricount.CreatedAt = tricount.CreatedAt;
         }
 
-        Participants = new ObservableCollection<string>();
+        Participants = new ObservableCollection<User>();
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
         AddMySelf = new RelayCommand(AddMySelfAction,CanAddMySelfAction);
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
+
+        OnRefreshData();
+        IsCurrentUser();
+
+    }
+    public void IsCurrentUser() {
+        Current = User == App.CurrentUser ? " (me)" : "";
     }
 
+    protected override void OnRefreshData() {
+
+        Participants.Add(CurrentUser);
+    }
     public override void SaveAction() {
         // Add propriétés au tricount 
         if (IsNew) {
@@ -125,7 +144,7 @@ public class TricountDetailViewModel : ViewModelCommon
             }
 
             foreach (var user in Participants) {
-                Tricount.Subscriptions.Add(new Subscription(User.GetUserByName(user).UserId, Tricount.Id));
+                Tricount.Subscriptions.Add(new Subscription(User.UserId, Tricount.Id));
             }
         }
     }
@@ -196,7 +215,7 @@ public class TricountDetailViewModel : ViewModelCommon
 
     private void AddMySelfAction() {
         if (IsNew) {
-            var currentUser = GetCurrentUser().FullName;
+            var currentUser = GetCurrentUser();
             if (!Participants.Contains(currentUser)) {
                 Participants.Add(currentUser);
             }
@@ -204,7 +223,7 @@ public class TricountDetailViewModel : ViewModelCommon
     }
 
     private bool CanAddMySelfAction() {
-        var currentUser = GetCurrentUser().FullName;
+        var currentUser = GetCurrentUser();
         return (!Participants.Contains(currentUser) && !IsNew);
     }
 
