@@ -55,6 +55,10 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             return Context.Operations.Max(o => o.Id) + 1; // Retourne le plus grand ID d'opération dans le contexte + 1
         }
 
+        public static Operation GetOperationById(int id) {
+            return Context.Operations.FirstOrDefault(o => o.Id == id);
+        }
+
         // Méthode pour obtenir les répartitions associées à cette opération
         public IQueryable<Repartition> GetRepartitionByOperation() {
             var q = from r in Context.Repartitions // Requête LINQ pour récupérer les répartitions

@@ -1,6 +1,8 @@
 ﻿using NumericUpDownLib;
 using prbd_2324_a06.Model;
 using PRBD_Framework;
+using System.Collections;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,7 +37,8 @@ namespace prbd_2324_a06.ViewModel
             CheckBoxItems = new ObservableCollectionFast<CheckBox>();
             Numerics = new ObservableCollectionFast<NumericUpDown>();
             TextBlocks = new ObservableCollectionFast<TextBlock>();
-
+            Repartitions = new ObservableCollectionFast<RepartitionsViewModel>();
+            FillRepartitionsViewModels();
             // initialisation des commandes 
             SaveCommand = new RelayCommand(SaveAction, () => !HasErrors && Error == "");
             AddCommand = new RelayCommand(SaveAction,
@@ -47,7 +50,6 @@ namespace prbd_2324_a06.ViewModel
                     : SelectedTemplate.Title != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
             DeleteCommand = new RelayCommand(DeleteAction);
-            Console.WriteLine(SelectedTemplate.Title);
         }
 
         // Commandes
@@ -61,6 +63,7 @@ namespace prbd_2324_a06.ViewModel
         private readonly ObservableCollectionFast<CheckBox> _checkBoxItems;
         private readonly ObservableCollectionFast<NumericUpDown> _numerics;
         private readonly ObservableCollectionFast<TextBlock> _textBlocks;
+        private ObservableCollectionFast<RepartitionsViewModel> _repartitions;
         private readonly User _currentUser;
         private User _initiator;
         private Tricount _tricount;
@@ -75,11 +78,22 @@ namespace prbd_2324_a06.ViewModel
         private Visibility _visible;
         private List<User> _participants;
         private List<Template> _templates;
+        private IList _weights = new ArrayList();
 
         // Properties
+
+        public ObservableCollectionFast<RepartitionsViewModel> Repartitions {
+            get => _repartitions;
+            set => SetProperty(ref _repartitions, value);
+        }
         public ObservableCollectionFast<CheckBox> CheckBoxItems {
             get => _checkBoxItems;
             private init => SetProperty(ref _checkBoxItems, value);
+        }
+        
+        public  IList Items {
+            get => _weights;
+            init { value = _weights; }
         }
 
         public ObservableCollectionFast<NumericUpDown> Numerics {
@@ -96,6 +110,7 @@ namespace prbd_2324_a06.ViewModel
             get => _participants;
             set => SetProperty(ref _participants, value);
         }
+        
         
         public List<Template> Templates {
             get => _templates;
@@ -117,7 +132,7 @@ namespace prbd_2324_a06.ViewModel
             set => SetProperty(ref _noTemplates, value);
         }
 
-        private Operation Operation {
+        public Operation Operation {
             get => _operation;
             init => SetProperty(ref _operation, value);
         }
@@ -151,6 +166,7 @@ namespace prbd_2324_a06.ViewModel
             get => _amount;
             set => SetProperty(ref _amount, value, () => {
                 Validate();
+                Console.WriteLine(Items.Count);
                 CalculAmount();
             });
         }
@@ -209,11 +225,9 @@ namespace prbd_2324_a06.ViewModel
                 // Si paire operation-user existante parmi les répartitions -> modifications des poids
                 if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id)) {
                     UpdateWeight(user.UserId, item.Value);
-                    Console.WriteLine("yo");
                 } else if (item.Value > 0) {
                     // Nouvelle répartition si paire operation-user inexistante parmi les répartitions
                     Operation.Repartitions.Add(new Repartition(Operation.Id, user.UserId, item.Value));
-                    Console.WriteLine("ya");
                 }
             }
         }
@@ -329,7 +343,6 @@ namespace prbd_2324_a06.ViewModel
                 AddError(nameof(OperationDate), "cannot be in the future.");
             }
         }
-
         public void CalculAmount() {
             if (Amount is { Length: > 0 }) {
                 int totalWeight = 0;
@@ -356,6 +369,18 @@ namespace prbd_2324_a06.ViewModel
                 }
             } else {
                 AddError(nameof(Amount), "Can't be empty !");
+            }
+        }
+
+        public void FillRepartitionsViewModels() {
+            foreach (var user in Participants) {
+                if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id)) {
+                    Repartition repartition = Operation.Repartitions.FirstOrDefault(r =>
+                        r.UserId == user.UserId && r.OperationId == Operation.Id);
+                    Repartitions.Add(new RepartitionsViewModel(repartition, Operation, Amount));
+                } else {
+                    Repartitions.Add(new RepartitionsViewModel(new Repartition(Operation.Id, user.UserId, 0), Operation, Amount));
+                }
             }
         }
 

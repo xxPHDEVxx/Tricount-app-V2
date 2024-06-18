@@ -56,6 +56,14 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     u.FullName ==
                     name); // Retourne le premier utilisateur avec le nom spécifié, ou null s'il n'y en a aucun
         }
+        
+        // Méthode pour obtenir un utilisateur par son id
+        public static User GetUserById(int id) {
+            return
+                Context.Users.FirstOrDefault(u =>
+                    u.UserId ==
+                    id); // Retourne le premier utilisateur avec le nom spécifié, ou null s'il n'y en a aucun
+        }
 
         // Collection de souscriptions associées à cet utilisateur
         public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
