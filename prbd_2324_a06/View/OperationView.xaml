@@ -1,0 +1,141 @@
+﻿<f:DialogWindowBase x:Class="prbd_2324_a06.View.OperationView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                    xmlns:num="clr-namespace:NumericUpDownLib;assembly=NumericUpDownLib"
+                    mc:Ignorable="d"
+                    Width="320" Height="510"
+                    Title="{Binding WindowTitle}"
+                    d:DataContext="{d:DesignInstance vm:OperationViewModel}"
+                    WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Title -->
+        <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="10" Padding="0,0,5,5" />
+        <TextBox x:Name="Title" Grid.Row="0" Grid.Column="1" Margin="10"
+                 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- Amount -->
+        <TextBlock Text="Amount:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="10" Padding="0,0,5,5" />
+        <TextBox x:Name="AmountTextBox" Grid.Row="1" Grid.Column="1" Margin="10"
+                 Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- Initiator -->
+        <TextBlock Text="Initiator:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
+        <ComboBox x:Name="InitiatorComboBox" Grid.Row="2" Grid.Column="1" Margin="10"
+                  ItemsSource="{Binding Participants}"
+                  DisplayMemberPath="FullName"
+                  SelectedItem="{Binding Initiator}" />
+
+        <!-- Date -->
+        <TextBlock Text="Date:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
+        <DatePicker x:Name="DateDatePicker" Grid.Row="3" Grid.Column="1"
+                    DisplayDateEnd="{x:Static sys:DateTime.Now}" DisplayDateStart="{Binding Tricount.CreatedAt}"
+                    SelectedDate="{Binding OperationDate}" Margin="10" />
+
+        <!-- Template -->
+        <TextBlock Text="Template:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="10">
+            <ComboBox x:Name="TemplateComboBox" Width="150" IsEnabled="{Binding NoTemplates}"
+                      ItemsSource="{Binding Templates}"
+                      DisplayMemberPath="Title"
+                      SelectedItem="{Binding SelectedTemplate}" />
+
+            <Button x:Name="ApplyTemplateButton" Content="Apply" Margin="5,0,0,0"
+                    Command="{Binding ApplyTemplate}" />
+        </StackPanel>
+
+        <!-- Participants -->
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
+            <!-- Container for dynamic content -->
+            <ScrollViewer MaxHeight="160" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ParticipantsPanel" Orientation="Vertical" HorizontalAlignment="Center">
+                    <ListBox ItemsSource="{Binding Repartitions}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- CheckBox in the first column -->
+                                    <CheckBox Content="{Binding User.FullName}"
+                                              IsChecked="{Binding IsChecked}"
+                                              VerticalAlignment="Center"
+                                              Margin="2"
+                                              HorizontalAlignment="Left"
+                                              Width="80"
+                                              Grid.Column="0" />
+
+                                    <!-- NumericUpDown in the second column -->
+                                    <num:NumericUpDown Value="{Binding Weight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                       x:Name="NumericUpDown"
+                                                       MinValue="0"
+                                                       Margin="2"
+                                                       HorizontalAlignment="Center"
+                                                       Grid.Column="1"
+                                                       Width="40" />
+
+                                    <!-- TextBlock in the third column -->
+                                    <TextBlock
+                                        Text="{Binding MyAmount}"
+                                        VerticalAlignment="Center"
+                                        Margin="2"
+                                        Width="50"
+                                        FontWeight="Bold"
+                                        TextAlignment="Right"
+                                        HorizontalAlignment="Right"
+                                        Grid.Column="2" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </ScrollViewer>
+        </StackPanel>
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Error}"
+                   Foreground="Red" Margin="0,5,0,0" />
+        <!-- Save as New Template Button -->
+        <Button x:Name="SaveTemplateButton" Content="Save as New Template" Grid.Row="7" Grid.Column="0"
+                Grid.ColumnSpan="2" Margin="0,10,0,0"
+                Command="{Binding SaveTemplate}" />
+
+        <!-- Add and Cancel Buttons -->
+        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="Delete" Content="Delete" Margin="5"
+                    Padding="15,0,15,0"
+                    Visibility="{Binding Visible}"
+                    Command="{Binding DeleteCommand}" />
+            <Button x:Name="AddButton" Content="{Binding Button}"
+                    Margin="5" Padding="15,0,15,0"
+                    Command="{Binding SaveCommand}"
+                    IsDefault="True" />
+            <Button x:Name="CancelButton" Content="Cancel"
+                    Margin="5" Padding="10,0,10,0"
+                    IsCancel="True"
+                    Click="btnCancel_Click" />
+        </StackPanel>
+    </Grid>
+</f:DialogWindowBase>

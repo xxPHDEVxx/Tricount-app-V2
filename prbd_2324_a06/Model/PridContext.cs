@@ -133,6 +133,7 @@ public class PridContext : DbContextBase
         var xavier = new User(3, "xapigeolet@epfc.eu", "Password1,", "Xavier");
         var marc = new User(4, "mamichel@epfc.eu", "Password1,", "Marc");
         var admin = new User(5, "admin@epfc.eu", "Password1,", "Admin");
+        admin.Role = Role.Administrator;
 
 
         modelBuilder.Entity<User>()
@@ -237,18 +238,18 @@ public class PridContext : DbContextBase
                 new Repartition { OperationId = 1, UserId = 1, Weight = 1 },
                 new Repartition { OperationId = 1, UserId = 2, Weight = 1 },
                 new Repartition { OperationId = 2, UserId = 1, Weight = 1 },
-                new Repartition { OperationId = 2, UserId = 2, Weight = 2 },
+                new Repartition { OperationId = 2, UserId = 2, Weight = 1 },
                 new Repartition { OperationId = 3, UserId = 1, Weight = 2 },
-                new Repartition { OperationId = 3, UserId = 2, Weight = 2 },
-                new Repartition { OperationId = 3, UserId = 3, Weight = 3 },
+                new Repartition { OperationId = 3, UserId = 2, Weight = 1 },
+                new Repartition { OperationId = 3, UserId = 3, Weight = 1 },
                 new Repartition { OperationId = 4, UserId = 1, Weight = 1 },
                 new Repartition { OperationId = 4, UserId = 2, Weight = 2 },
                 new Repartition { OperationId = 4, UserId = 3, Weight = 3 },
-                new Repartition { OperationId = 5, UserId = 1, Weight = 1 },
-                new Repartition { OperationId = 5, UserId = 2, Weight = 2 },
-                new Repartition { OperationId = 5, UserId = 3, Weight = 3 },
+                new Repartition { OperationId = 5, UserId = 1, Weight = 2 },
+                new Repartition { OperationId = 5, UserId = 2, Weight = 1 },
+                new Repartition { OperationId = 5, UserId = 3, Weight = 1 },
                 new Repartition { OperationId = 6, UserId = 1, Weight = 1 },
-                new Repartition { OperationId = 6, UserId = 3, Weight = 3 },
+                new Repartition { OperationId = 6, UserId = 3, Weight = 1 },
                 new Repartition { OperationId = 7, UserId = 2, Weight = 1 },
                 new Repartition { OperationId = 7, UserId = 3, Weight = 2 },
                 new Repartition { OperationId = 7, UserId = 4, Weight = 2 },
@@ -261,7 +262,6 @@ public class PridContext : DbContextBase
                 new Repartition { OperationId = 11, UserId = 2, Weight = 2 },
                 new Repartition { OperationId = 11, UserId = 4, Weight = 2 }
             );
-
 
         modelBuilder.Entity<Template>()
             .HasData(

@@ -10,7 +10,8 @@
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance Type=vm:TricountCardViewModel, IsDesignTimeCreatable=False}"
                    d:DesignHeight="300" Width="200">
-    <Border Background="Aqua" CornerRadius="10" Padding="5" Margin="0,0,0,5">
+
+    <Border Background ="{Binding BackgroundColor}" CornerRadius="10" Padding="5" Margin="0,0,0,5">
         <Grid Height="200">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -37,7 +38,7 @@
                 <TextBlock FontSize="12" TextAlignment="Center" Text="{Binding WithFriends}" TextWrapping="Wrap"
                            Margin="0,0,0,0" />
                 <TextBlock FontSize="12" TextAlignment="Center" Text="{Binding NumberOfOperations}" TextWrapping="Wrap"
-                           Margin="0, 10, 0, 0" />
+                           Margin="0, 12, 0, 0" />
             </Grid>
             <Grid Grid.Row="6" Margin="0, 50, 0,0">
                 <StackPanel>

@@ -64,7 +64,7 @@
             </TextBlock>
         </DockPanel>
         <DockPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs1" Padding="5,0,5,0"  Width="150"
+            <Button x:Name="btnLoginAs1" Padding="5,0,5,0"  Width="180"
                     Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[0]}">
                 <TextBlock>
                     <Run Text="Login as" />
@@ -76,7 +76,7 @@
             </Button>
         </DockPanel>
         <DockPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs2" Padding="5,0,5,0"  Width="150"
+            <Button x:Name="btnLoginAs2" Padding="5,0,5,0"  Width="180"
                     Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}">
                 <TextBlock>
                     <Run Text="Login as" />
@@ -89,8 +89,8 @@
 
         </DockPanel>
         <DockPanel Grid.Row="7" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs3" Padding="5,0,5,0"  Width="150"
-                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}">
+            <Button x:Name="btnLoginAs3" Padding="5,0,5,0"  Width="180"
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[2]}">
                 <TextBlock>
                     <Run Text="Login as" />
                     <Run Text="{Binding DefaultUser[2].FullName}" />
@@ -102,8 +102,8 @@
 
         </DockPanel>
         <DockPanel Grid.Row="8" Grid.ColumnSpan="2" Margin="10" HorizontalAlignment="Center">
-            <Button x:Name="btnLoginAs4" Padding="5,0,5,0" Width="150"
-                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[1]}">
+            <Button x:Name="btnLoginAs4" Padding="5,0,5,0" Width="180"
+                    Command="{Binding LoginAsCommand}" CommandParameter="{Binding DefaultUser[3]}">
                 <TextBlock>
                     <Run Text="Login as" />
                     <Run Text="{Binding DefaultUser[3].FullName}" />

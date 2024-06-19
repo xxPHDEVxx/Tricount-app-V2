@@ -1,7 +1,7 @@
 ﻿using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.JavaScript;
+using System.Windows;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel
@@ -9,12 +9,19 @@ namespace prbd_2324_a06.ViewModel
     public class ViewTricountViewModel : ViewModelCommon
     {
         public ViewTricountViewModel(Tricount tricount) : base() {
+            // Initialisation
             Tricount = tricount;
+            Visible = App.CurrentUser.Role is Role.Administrator || App.CurrentUser.UserId == Tricount.CreatorId
+                ? Visibility.Visible
+                : Visibility.Hidden;
             OnRefreshData();
-            ClearFilter = new RelayCommand(() => Filter = "");
             DisplayOperation = new RelayCommand<TricountCardViewModel>(vm => {
                 NotifyColleagues(App.Messages.MSG_DISPLAY_OPERATIONS, vm.Tricount);
             });
+            EditTricount = new RelayCommand(() => {
+                NotifyColleagues(App.Messages.MSG_OPEN_TRICOUNT, Tricount);
+            });
+            DeleteTricount = new RelayCommand(DeleteAction);
             OpenEditOperation = new RelayCommand<OperationCardViewModel>(vm => {
                 NotifyColleagues(App.Messages.MSG_OPEN_OPERATION, vm.Operation);
             });
@@ -22,13 +29,15 @@ namespace prbd_2324_a06.ViewModel
                 NotifyColleagues(App.Messages.MSG_OPEN_NEW_OPERATION, new Operation(tricount.Id));
             });
             Register<Operation>(App.Messages.MSG_OPERATION_CHANGED, operation => OnRefreshData());
-
+            // Reset
+            Register(App.Messages.MSG_RESET, () => OnRefreshData());
         }
 
         private ObservableCollection<OperationCardViewModel> _operations;
         private ObservableCollection<UserBalanceViewModel> _users;
         private Tricount _tricount;
         private string _filter;
+        private Visibility _visible;
 
         // Properties
 
@@ -41,6 +50,7 @@ namespace prbd_2324_a06.ViewModel
             get => _users;
             set => SetProperty(ref _users, value);
         }
+
         public Tricount Tricount {
             get => _tricount;
             set => SetProperty(ref _tricount, value);
@@ -58,9 +68,11 @@ namespace prbd_2324_a06.ViewModel
             });
         }
 
-        public string Filter {
-            get => _filter;
-            set => SetProperty(ref _filter, value, OnRefreshData);
+        public string Creator {
+            get => User.GetUserNameById(Tricount.CreatorId);
+            set => SetProperty(User.GetUserNameById(Tricount.CreatorId), value, Tricount, (t, c) => {
+                OnRefreshData();
+            });
         }
 
         public DateTime CreatedAt {
@@ -69,19 +81,35 @@ namespace prbd_2324_a06.ViewModel
                 , (t, d) => { });
         }
 
+        public Visibility Visible {
+            get => _visible;
+            set => SetProperty(ref _visible, value);
+        }
+
         // Commandes
         public ICommand ClearFilter { get; set; }
         public ICommand DisplayOperation { get; set; }
         public ICommand OpenNewOperation { get; set; }
         public ICommand OpenEditOperation { get; set; }
+        public ICommand EditTricount { get; set; }
+        public ICommand DeleteTricount { get; set; }
 
 
         // Méthodes 
 
+        // Delete
+
+        private void DeleteAction() {
+            Tricount.Delete();
+            NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
+            NotifyColleagues(App.Messages.MSG_DELETED);
+            NotifyColleagues(App.Messages.MSG_CLOSE_TAB, Tricount);
+        }
+
         // Permet le Refresh
         protected override void OnRefreshData() {
             if (Tricount == null) return;
-            
+
             // Récupérer les participants par ordre alphabétique
             IQueryable<User> participants = Tricount.GetParticipants().OrderBy(u => u.FullName);
 
@@ -90,7 +118,8 @@ namespace prbd_2324_a06.ViewModel
                 new UserBalanceViewModel(u, Tricount)));
 
             IQueryable<Operation> operations = Tricount.GetOperations()
-                .OrderByDescending(o => o.OperationDate);
+                .OrderByDescending(o => o.OperationDate)
+                .ThenByDescending(o => o.Id); // Tri secondaire par OperationId
 
             Operations = new ObservableCollection<OperationCardViewModel>(operations.Select(o =>
                 new OperationCardViewModel(o)));

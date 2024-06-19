@@ -21,13 +21,17 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <TextBlock Margin="10" HorizontalAlignment="Center">
-                <Run Text="{Binding Title}" FontWeight="Bold" FontSize="24"></Run>
-                <Run Text="-" FontSize="24"></Run>
-                <Run Text="{Binding Description}" FontSize="22" FontStyle="Italic"></Run>
-
+                <Run Text="{Binding Title}" FontWeight="Bold" FontSize="24"/>
+                <Run Text="-" FontSize="24"/>
+                <Run Text="{Binding Description}" FontSize="22" FontStyle="Italic"/>
             </TextBlock>
-            <TextBlock Text="{Binding CreatedAt}" FontSize="14"
-                       HorizontalAlignment="Center" />
+
+            <TextBlock HorizontalAlignment="Center">
+                <Run Text="Created By"/>
+                <Run Text="{Binding Creator}" FontWeight="Bold"/>
+                <Run Text="On"/>
+                <Run Text="{Binding Tricount.CreatedAt, StringFormat={}{0:dd-MM-yyyy}}" FontWeight="Bold"/>
+            </TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1">
             <Grid>
@@ -90,8 +94,10 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Content="Edit" Margin="5" Width="70" />
-                <Button Content="Delete" Grid.Column="1" Margin="5" Width="70" />
+                <Button Content="Edit" Margin="5" Width="70" Visibility="{Binding Visible}"
+                        Command="{Binding EditTricount}" />
+                <Button Content="Delete" Grid.Column="1" Margin="5" Width="70"
+                        Command="{Binding DeleteTricount}" Visibility="{Binding Visible}" />
             </Grid>
         </StackPanel>
     </Grid>

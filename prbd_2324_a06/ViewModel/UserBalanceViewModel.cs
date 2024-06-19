@@ -11,6 +11,7 @@ namespace prbd_2324_a06.ViewModel
             User = user;
             Tricount = tricount;
             UpdateStyle();
+            IsCurrentUser();
         }
 
         private User _user;
@@ -37,6 +38,13 @@ namespace prbd_2324_a06.ViewModel
         public Brush BackgroundColor {
             get => _backgroundColor;
             set => SetProperty(ref _backgroundColor, value);
+        }
+        
+        private string _current;
+
+        public string Current {
+            get => _current;
+            set => SetProperty(ref _current, value);
         }
 
         private int _columnB;
@@ -81,14 +89,19 @@ namespace prbd_2324_a06.ViewModel
                 ColumnA = 1;
                 ColumnB = 0;
                 BackgroundColor = Brushes.Salmon;
-            } else {
+            } else if((User.GetMyBalance(Tricount) > 0)) {
                 SideA = HorizontalAlignment.Right;
                 SideB = HorizontalAlignment.Left;
                 ColumnA = 0;
                 ColumnB = 1;
                 BackgroundColor = Brushes.LightGreen;
-            } 
-            Width = 110 / (GetMaxExpense() / Math.Abs(User.GetMyBalance(Tricount)));
+            }  else {
+                SideA = HorizontalAlignment.Right;
+                SideB = HorizontalAlignment.Left;
+                ColumnA = 0;
+                ColumnB = 1;
+            }
+            Width = 90 / (GetMaxExpense() / Math.Abs(User.GetMyBalance(Tricount)));
         }
 
         private double GetMaxExpense() {
@@ -98,6 +111,10 @@ namespace prbd_2324_a06.ViewModel
             }
 
             return Math.Abs(max);
+        }
+
+        public void IsCurrentUser() {
+            Current = User == App.CurrentUser ? " (me)" : "";
         }
     }
 }

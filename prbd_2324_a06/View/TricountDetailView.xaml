@@ -9,6 +9,7 @@
                    xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
                    xmlns:vw="clr-namespace:prbd_2324_a06.View"
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
                    d:DataContext="{d:DesignInstance Type=vm:TricountDetailViewModel, IsDesignTimeCreatable=False}"
                    mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="800">
@@ -24,7 +25,7 @@
         <!-- Title de la vue-->
         <Grid Grid.Row="1">
             <TextBlock TextAlignment="Center" >New Tricount - No description</TextBlock>
-            <TextBlock TextAlignment="Center" Margin="0, 10, 0, 0">Created by - on date</TextBlock>
+            <TextBlock TextAlignment="Center" Margin="0, 20, 0, 0" Text="{Binding CreatedBy}"></TextBlock>
         </Grid>
         <!--Description-->
         <Grid Grid.Row="2" Margin="0, 10, 0, 0">
@@ -74,7 +75,43 @@
                         <!-- Container for dynamic content -->
                         <ScrollViewer Grid.Row="0" Height="160" Width="Auto"
                               VerticalScrollBarVisibility="Auto">
-                            <StackPanel x:Name="PanelParticipants" Orientation="Vertical" Margin="0,10,0,0" Height="Auto" />
+                            <StackPanel x:Name="PanelParticipants" Orientation="Vertical" Margin="0,10,0,0" Height="Auto" >
+                                <ListBox ItemsSource="{Binding Participants}" BorderThickness="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <!-- Full name -->
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <!-- Button -->
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- TextBlock in the first column -->
+                                                <TextBlock 
+                                               VerticalAlignment="Center"
+                                               Margin="2"
+                                               Width="100"
+                                               Grid.Column="0" >
+                                                    <Run Text="{Binding User.FullName}"></Run>
+                                                    <Run Text="{Binding Current , Mode=OneWay}"></Run>
+                                                </TextBlock>
+
+                                                <Button Command="{Binding DeleteCommand}" Visibility="{Binding Visible}"
+                                                       HorizontalAlignment="Center"
+                                                       Grid.Column="1" >
+                                                    <fa:FontAwesome Icon="Trash"
+                                                    Foreground="Red"
+                                                    Width="16"
+                                                    Height="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                                </Button>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
                         </ScrollViewer>
                     </Grid>
 
@@ -91,7 +128,7 @@
                     </Grid>
                     <Grid Grid.Row="2">
                         <!-- Container for dynamic content -->
-                        <Button x:Name="btnTemplate" Content="New Template" Width ="100" Command="{Binding AddTemplate}"  IsDefault="False" Margin="0, 20, 10, 0" />
+                        <Button x:Name="btnTemplate" Content="New Template" Width ="100" Command="{Binding AddTemplate}"  IsEnabled="False" Margin="0, 20, 10, 0" />
                     </Grid>
                 </Grid>
             </StackPanel>
@@ -112,15 +149,15 @@
                 <Grid Margin="39,-27,-139,27">
                     <Button x:Name="btnAdd" Content="Add"  Command="{Binding AddCommand}"
                                     CommandParameter="{Binding SelectedUser}"
-                                     Width="auto" Padding="5,1" Margin="267,-2,-158,2" Click="btnAdd_Click" />
+                                     Width="auto" Padding="5,1" Margin="267,-2,-158,2" />
                     <ComboBox ItemsSource="{Binding Users}"
                                   SelectedItem="{Binding SelectedUser}"  Margin="0,-2,-62,2"
-                                  />
+                                 DisplayMemberPath="FullName" />
                 </Grid>
             </Grid>
             <WrapPanel Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Width="auto"/>
-            <Button x:Name="btnAddAll" Content="Add Everybody" Command="{Binding AddEvery}" Width="auto" Padding="5,1" IsDefault="True"  Margin="100,0,-156,2" Grid.Column="1" Click="btnAddAll_Click"/>
-            <Button x:Name="btnAddMe" Content="Add my Self" Command="{Binding AddMySelf}" Padding="5,1" Margin="50,0,-62,2" Click="btnAddMe_Click"/>
+            <Button x:Name="btnAddMe" Content="Add my Self" Command="{Binding AddMySelf}" Padding="5,1" Margin="50,0,-62,2"/>
+            <Button x:Name="btnAddAll" Content="Add Everybody" Command="{Binding AddEvery}" Width="auto" Padding="5,1" IsDefault="True"  Margin="84,1,-190,1" Grid.Column="1"/>
         </Grid>
     </Grid>
 </f:UserControlBase>

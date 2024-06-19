@@ -17,15 +17,18 @@ public partial class App
         MSG_LOGOUT,
         MSG_RESET,
         MSG_CLOSE_OPERATION_WINDOW,
-        MSG_NEW_TRICOUNT,
+        MSG_OPEN_TRICOUNT,
+        MSG_EDIT_TRICOUNT,
         MSG_DISPLAY_TRICOUNT,
         MSG_DISPLAY_OPERATIONS,
         MSG_OPEN_NEW_OPERATION,
         MSG_OPEN_OPERATION,
         MSG_OPERATION_CHANGED,
-        MSG_ADD_OPERATION,
         MSG_TRICOUNT_CHANGED,
         MSG_CLOSE_TAB,
+        MSG_PARTICIPANT_ADDED,
+        MSG_OPERATION_TRICOUNT_CHANGED,
+        MSG_DELETED
         MSG_PARTICIPANT_ADDED, 
         MSG_EDIT_OPERATION,
         MSG_DELETE_OPERATION,
@@ -64,16 +67,6 @@ public partial class App
             Windows[0]?.Close();
         });
         
-        Register<Operation>(this, App.Messages.MSG_OPEN_NEW_OPERATION, operation => {
-            DisableWindows();
-        });
-        Register<Operation>(this, App.Messages.MSG_OPEN_OPERATION, operation => {
-            DisableWindows();
-        });
-        Register<Operation>(this, App.Messages.MSG_CLOSE_OPERATION_WINDOW, operation => {
-            EnableWindows();
-        });
-        
         // Logout
         Register(this, Messages.MSG_LOGOUT, () => {
             Logout();
@@ -82,19 +75,6 @@ public partial class App
 
         // Reset
         Register(this, Messages.MSG_RESET, Reset);
-    }
-    
-    // Bloquer fenêtres
-    private void DisableWindows() {
-        for (int i = 0; i < Windows.Count - 1; i++) {
-            Windows[i]!.IsEnabled = false;
-        }
-    }
-    // Débloquer fenêtres
-    public void EnableWindows() {
-        for (int i = 0; i < Windows.Count; i++) {
-            Windows[i]!.IsEnabled = true;
-        }
     }
     
     public void Reset() {
