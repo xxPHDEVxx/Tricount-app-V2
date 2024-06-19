@@ -73,12 +73,6 @@ public class TricountDetailViewModel : ViewModelCommon
         get => _user;
         set => SetProperty(ref _user, value);
     }
-    private string _current;
-
-    public string Current {
-        get => _current;
-        set => SetProperty(ref _current, value);
-    }
 
     private bool _isNew;
 
@@ -97,7 +91,7 @@ public class TricountDetailViewModel : ViewModelCommon
             .OrderBy(m => m.FullName)
         );
 
-        Current = CurrentUser.FullName;
+        User = CurrentUser;
 
         if (!IsNew) {
             Tricount.Title = tricount.Title;
@@ -140,8 +134,14 @@ public class TricountDetailViewModel : ViewModelCommon
     // Add Subscriptions
     public void AddSubscriptions() {
         if (Tricount != null) {
+            if (IsNew) {
+                Tricount.Subscriptions.Add(new Subscription(User.UserId, Tricount.Id));
+            }
             foreach (var user in Participants) {
-                Tricount.Subscriptions.Add(new Subscription(user.User.UserId, Tricount.Id));
+                Tricount.Subscriptions.Add(new Subscription {
+                    UserId = user.User.UserId,
+                    TricountId = Tricount.Id
+                });
             }
         }
 
