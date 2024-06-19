@@ -32,7 +32,8 @@ public partial class App
         MSG_EDIT_OPERATION,
         MSG_DELETE_OPERATION,
         MSG_CLOSE_WINDOW,
-        
+        MSG_TITLE_CHANGED
+
     }
 
     public App() {

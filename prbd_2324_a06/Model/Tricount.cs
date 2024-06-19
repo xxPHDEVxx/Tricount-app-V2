@@ -145,5 +145,11 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             Context.Tricounts.Remove(this);
             Context.SaveChanges();
         }
+
+        public static Tricount GetTricountByTitle(string title) {
+            return  Context.Tricounts.FirstOrDefault(t =>
+                    t.Title == title);
+        }
     }
+
 }

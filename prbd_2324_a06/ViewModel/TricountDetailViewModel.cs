@@ -39,18 +39,23 @@ public class TricountDetailViewModel : ViewModelCommon
         set => SetProperty(ref _participants, value);
     }
     public string CreatedBy => $"Created By {CurrentUser.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}";
-    private string _title;
 
     public string Title {
-        get => _title;
-        set => SetProperty(ref _title, value, () => Validate());
+        get => Tricount?.Title;
+        set => SetProperty(Tricount.Title, value, Tricount, (t, v) => {
+            t.Title = v;
+            Validate();
+            NotifyColleagues(App.Messages.MSG_TITLE_CHANGED, Tricount);
+        });
     }
 
-    private string _description;
 
     public string Description {
-        get => _description;
-        set => SetProperty(ref _description, value, () => Validate());
+        get => Tricount?.Description;
+        set => SetProperty(Tricount.Description, value, Tricount, (t, v) => {
+            t.Description = v;
+            Validate();
+        });
     }
 
     private DateTime _date;
@@ -86,18 +91,9 @@ public class TricountDetailViewModel : ViewModelCommon
         Tricount = tricount;
         IsNew = isNew;
 
-        Users.RefreshFromModel(Context.Users
-            .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
-            .OrderBy(m => m.FullName)
-        );
+
 
         User = CurrentUser;
-
-        if (!IsNew) {
-            Tricount.Title = tricount.Title;
-            Tricount.Description = tricount.Description;
-            Tricount.CreatedAt = tricount.CreatedAt;
-        }
 
         Participants = new ObservableCollection<CardParticipantViewModel>();
 
@@ -114,15 +110,32 @@ public class TricountDetailViewModel : ViewModelCommon
 
 
     protected override void OnRefreshData() {
+        if (IsNew) {
+            Users.RefreshFromModel(Context.Users
+                .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
+                .OrderBy(m => m.FullName)
+            );
+            Participants.Add(new CardParticipantViewModel(this, CurrentUser));
+        } else {
+            Tricount = Model.Tricount.GetTricountByTitle(Tricount.Title);
 
-        Participants.Add(new CardParticipantViewModel(this, CurrentUser));
+            IQueryable<User> allPart = Tricount.GetParticipants();
+            Participants = new ObservableCollection<CardParticipantViewModel>(
+                allPart.OrderBy(u => u.FullName)
+                .Select(u => new CardParticipantViewModel(this, u))
+                );
+
+            Users.RefreshFromModel(Context.Users
+            .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User).OrderBy(m => m.FullName));
+        }
     }
     public override void SaveAction() {
         // Add propriétés au tricount 
         if (IsNew) {
-            Tricount = new Tricount(Title, Description, Date, User);
+            Tricount = new Tricount(Title, Description, DateTime.Today, User);
             Context.Tricounts.Add(Tricount);
             AddSubscriptions();
+            IsNew = false;
         }
 
         // ajouter code pour edit

@@ -23,6 +23,8 @@ namespace prbd_2324_a06.View
             Register(App.Messages.MSG_DELETED, DeleteAction);
             Register<Tricount>(App.Messages.MSG_EDIT_TRICOUNT, tricount => DoDisplayTricount(tricount, false));
 
+            Register<Tricount>(App.Messages.MSG_TITLE_CHANGED,
+            tricount => DoRenameTab(string.IsNullOrEmpty(tricount.Title) ? "<New Tricount>" : tricount.Title));
         }
 
 
