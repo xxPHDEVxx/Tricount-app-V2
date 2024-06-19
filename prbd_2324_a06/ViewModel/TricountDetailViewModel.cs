@@ -38,8 +38,13 @@ public class TricountDetailViewModel : ViewModelCommon
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
-    public string CreatedBy => $"Created By {CurrentUser.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}";
+    public string CreatedBy {
 
+        get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
+    } 
+    public string TricountTitle {
+        get => IsNew ? "New Tricount - no description" : $"{Tricount.Title} {Tricount.Description?? "No Description"}" ;
+    }
     public string Title {
         get => Tricount?.Title;
         set => SetProperty(Tricount.Title, value, Tricount, (t, v) => {
@@ -95,8 +100,6 @@ public class TricountDetailViewModel : ViewModelCommon
 
         User = CurrentUser;
 
-        Participants = new ObservableCollection<CardParticipantViewModel>();
-
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
@@ -117,16 +120,18 @@ public class TricountDetailViewModel : ViewModelCommon
                 .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
                 .OrderBy(m => m.FullName)
             );
+            Participants = new ObservableCollection<CardParticipantViewModel>();
+
             Participants.Add(new CardParticipantViewModel(this, CurrentUser));
         } else {
             Tricount = Model.Tricount.GetTricountByTitle(Tricount.Title);
 
-            IQueryable<User> allPart = Tricount.GetParticipants();
+            IQueryable<User> allPart = Tricount.GetParticipants().ToList().AsQueryable();
             Participants = new ObservableCollection<CardParticipantViewModel>(
-                allPart.OrderBy(u => u.FullName)
+               allPart
                 .Select(u => new CardParticipantViewModel(this, u))
                 );
-
+            //Participants = new ObservableCollection<CardParticipantViewModel>();
             Users.RefreshFromModel(Context.Users
             .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User).OrderBy(m => m.FullName));
         }

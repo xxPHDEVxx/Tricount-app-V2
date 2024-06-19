@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
         <!-- Title de la vue-->
         <Grid Grid.Row="1">
-            <TextBlock TextAlignment="Center" >New Tricount - No description</TextBlock>
+            <TextBlock TextAlignment="Center" Text="{Binding TricountTitle}"></TextBlock>
             <TextBlock TextAlignment="Center" Margin="0, 20, 0, 0" Text="{Binding CreatedBy}"></TextBlock>
         </Grid>
         <!--Description-->
