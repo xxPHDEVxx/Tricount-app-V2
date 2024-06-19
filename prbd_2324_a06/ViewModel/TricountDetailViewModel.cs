@@ -19,6 +19,7 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand AddTemplate { get; set; }
     public ICommand SaveCommand { get; set; }
     public ICommand CancelCommand { get; set; }
+    public ICommand DeleteCommand { get; set; }
 
     // Attributes et propriétés
     public ObservableCollectionFast<User> Users { get; } = new ObservableCollectionFast<User>();
@@ -110,9 +111,16 @@ public class TricountDetailViewModel : ViewModelCommon
         AddMySelf = new RelayCommand(AddMySelfAction,CanAddMySelfAction);
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
 
+        DeleteCommand = new RelayCommand(DeleteParticipantAction);
+
         OnRefreshData();
 
     }
+
+    private void DeleteParticipantAction() {
+        Console.WriteLine("delete");
+    }
+
     public string IsCurrentUser(User us) {
         return User == us ? " (creator)" : "";
     }
@@ -233,6 +241,7 @@ public class TricountDetailViewModel : ViewModelCommon
                     Participants.Add(user);
                 }
             }
+            Users.Clear();
         }
     }
 
