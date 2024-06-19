@@ -40,8 +40,11 @@ namespace prbd_2324_a06.View
         // Affichage d'un tricount dans un nouvel onglet
         private void DoDisplayTricount(Tricount tricount, bool isNew) {
             if (tricount != null) {
-                OpenTab(isNew ? "<New Tricount>" : tricount.Title, tricount.Title, () => new TricountDetailView(tricount, isNew));
-
+                if (isNew) {
+                    OpenTab("<New Tricount>", tricount.Title, () => new TricountDetailView(tricount, true));
+                } else {
+                    OpenTab(tricount.Title, tricount.Title, () => new TricountDetailView(tricount, false));
+                }
             }
         }
 
