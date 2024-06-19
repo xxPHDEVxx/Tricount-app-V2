@@ -51,8 +51,8 @@
             </Grid.ColumnDefinitions>
             <Label  Content="Creation Date" Grid.Column="1" />
             <DatePicker x:Name="DateDatePicker"  Grid.Column="1"
-                    DisplayDateEnd="{x:Static sys:DateTime.Now}" DisplayDateStart="{Binding Date}"
-                    SelectedDate="{x:Static sys:DateTime.Now}" Margin="104,0,-641,20" />
+                       DisplayDateEnd="{x:Static sys:DateTime.Now}" DisplayDateStart="{Binding Tricount.CreatedAt}"
+                       SelectedDate="{Binding Date}" Margin="104,0,-641,20" />
         </Grid>
         <Grid Grid.Row="5" Margin="0, 20, 0, 0">
             <Grid.ColumnDefinitions>

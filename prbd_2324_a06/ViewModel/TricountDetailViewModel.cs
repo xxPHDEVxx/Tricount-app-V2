@@ -123,8 +123,10 @@ public class TricountDetailViewModel : ViewModelCommon
             Participants = new ObservableCollection<CardParticipantViewModel>();
 
             Participants.Add(new CardParticipantViewModel(this, CurrentUser));
+            Date = DateTime.Now;
         } else {
             Tricount = Model.Tricount.GetTricountByTitle(Tricount.Title);
+            Date = Tricount.CreatedAt;
 
             IQueryable<User> allPart = Tricount.GetParticipants().ToList().AsQueryable();
             Participants = new ObservableCollection<CardParticipantViewModel>(
