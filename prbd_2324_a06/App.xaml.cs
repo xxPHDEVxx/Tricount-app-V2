@@ -28,12 +28,11 @@ public partial class App
         MSG_CLOSE_TAB,
         MSG_PARTICIPANT_ADDED,
         MSG_OPERATION_TRICOUNT_CHANGED,
-        MSG_DELETED
-        MSG_PARTICIPANT_ADDED, 
+        MSG_DELETED,
         MSG_EDIT_OPERATION,
         MSG_DELETE_OPERATION,
         MSG_CLOSE_WINDOW,
-        MSG_EDIT_TRICOUNT
+        
     }
 
     public App() {
