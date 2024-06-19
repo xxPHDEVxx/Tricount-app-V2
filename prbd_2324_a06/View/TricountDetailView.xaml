@@ -9,6 +9,7 @@
                    xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
                    xmlns:vw="clr-namespace:prbd_2324_a06.View"
                    xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
                    d:DataContext="{d:DesignInstance Type=vm:TricountDetailViewModel, IsDesignTimeCreatable=False}"
                    mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="800">
@@ -91,14 +92,21 @@
                                                VerticalAlignment="Center"
                                                Margin="2"
                                                Grid.Column="0" >
-                                                    <Run Text="{Binding FullName}"></Run>
-                                                    <Run Text="Creator"></Run>
+                                                    <Run Text="{Binding User.FullName}"></Run>
+                                                    <Run Text="{Binding Current , Mode=OneWay}"></Run>
                                                 </TextBlock>
 
-                                                <Button Content="delete" Command="{Binding DeleteCommand}"
+                                                <Button Command="{Binding DeleteCommand}" Visibility="{Binding Visible}"
                                                        HorizontalAlignment="Center"
                                                        Grid.Column="1" 
-                                                       Width="40"/>
+                                                       Width="40">
+                                                    <fa:FontAwesome Icon="Trash"
+                                                    Foreground="Red"
+                                                    Width="16"
+                                                    Height="16"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                                </Button>
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>

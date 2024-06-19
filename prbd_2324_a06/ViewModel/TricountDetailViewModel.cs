@@ -2,6 +2,7 @@
 using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel;
@@ -19,9 +20,9 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand AddTemplate { get; set; }
     public ICommand SaveCommand { get; set; }
     public ICommand CancelCommand { get; set; }
-    public ICommand DeleteCommand { get; set; }
 
-    // Attributes et propriétés
+
+    // Attributs et propriétés
     public ObservableCollectionFast<User> Users { get; } = new ObservableCollectionFast<User>();
 
     private User _selectedUser;
@@ -31,9 +32,9 @@ public class TricountDetailViewModel : ViewModelCommon
         set => SetProperty(ref _selectedUser, value);
     }
 
-    private ObservableCollection<User> _participants;
+    private ObservableCollection<CardParticipantViewModel> _participants;
 
-    public ObservableCollection<User> Participants {
+    public ObservableCollection<CardParticipantViewModel> Participants {
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
@@ -104,30 +105,23 @@ public class TricountDetailViewModel : ViewModelCommon
             Tricount.CreatedAt = tricount.CreatedAt;
         }
 
-        Participants = new ObservableCollection<User>();
+        Participants = new ObservableCollection<CardParticipantViewModel>();
+
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
         AddMySelf = new RelayCommand(AddMySelfAction,CanAddMySelfAction);
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
 
-        DeleteCommand = new RelayCommand(DeleteParticipantAction);
-
         OnRefreshData();
 
     }
 
-    private void DeleteParticipantAction() {
-        Console.WriteLine("delete");
-    }
 
-    public string IsCurrentUser(User us) {
-        return User == us ? " (creator)" : "";
-    }
 
     protected override void OnRefreshData() {
 
-        Participants.Add(CurrentUser);
+        Participants.Add(new CardParticipantViewModel(CurrentUser));
     }
     public override void SaveAction() {
         // Add propriétés au tricount 
@@ -165,17 +159,17 @@ public class TricountDetailViewModel : ViewModelCommon
 
     private void AddParticipantAction() {
         if (Participants != null && SelectedUser != null) {
-            Participants.Add(SelectedUser);
+            Participants.Add(new CardParticipantViewModel(SelectedUser));
             Users.Remove(SelectedUser);
             NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
             Console.WriteLine(Participants.Count);
         }
 
-        if (Participants == null || SelectedUser == null || Participants.Contains(SelectedUser)) {
+        if (Participants == null || SelectedUser == null || Participants.Contains(new CardParticipantViewModel(SelectedUser))) {
             return;
         }
 
-        Participants.Add(SelectedUser);
+        Participants.Add(new CardParticipantViewModel(SelectedUser));
         Users.Remove(SelectedUser);
         Console.WriteLine(Participants.Count);
         NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
@@ -223,23 +217,23 @@ public class TricountDetailViewModel : ViewModelCommon
     private void AddMySelfAction() {
         if (!IsNew) {
             var currentUser = GetCurrentUser();
-            if (!Participants.Contains(currentUser)) {
-                Participants.Add(currentUser);
-            }
+           // if (!Participants.Contains(currentUser)) {
+                Participants.Add(new CardParticipantViewModel( currentUser));
+            //}
         }
     }
 
     private bool CanAddMySelfAction() {
         var currentUser = GetCurrentUser();
-        return (!Participants.Contains(currentUser) && !IsNew);
+        return (! !IsNew);
     }
 
     private void AddAllAction() {
         if (IsNew) {
             foreach (var user in Users) {
-                if (!Participants.Contains(user)) {
-                    Participants.Add(user);
-                }
+               // if (!Participants.Contains(user)) {
+                    Participants.Add(new CardParticipantViewModel(user));
+                //}
             }
             Users.Clear();
         }
