@@ -17,14 +17,16 @@ public class CardParticipantViewModel : ViewModelCommon {
         get => _visible;
         set => SetProperty(ref _visible, value);
     }
-    public CardParticipantViewModel(User user) {
+    public CardParticipantViewModel(TricountDetailViewModel tricountDetailViewModel, User user) {
+        vm = tricountDetailViewModel;
         User = user;
         DeleteCommand = new RelayCommand(DeleteAction);
         Visible = User == App.CurrentUser ? Visibility.Hidden : Visibility.Visible;
     }
 
     private void DeleteAction() {
-        Console.WriteLine("delete");
+        vm.Participants.Remove(this);
+        vm.Users.Add(User);
     }
 
     public string Current => App.CurrentUser == User ? "(creator)" : "";

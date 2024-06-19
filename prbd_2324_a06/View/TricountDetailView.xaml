@@ -91,6 +91,7 @@
                                                 <TextBlock 
                                                VerticalAlignment="Center"
                                                Margin="2"
+                                               Width="100"
                                                Grid.Column="0" >
                                                     <Run Text="{Binding User.FullName}"></Run>
                                                     <Run Text="{Binding Current , Mode=OneWay}"></Run>
@@ -98,8 +99,7 @@
 
                                                 <Button Command="{Binding DeleteCommand}" Visibility="{Binding Visible}"
                                                        HorizontalAlignment="Center"
-                                                       Grid.Column="1" 
-                                                       Width="40">
+                                                       Grid.Column="1" >
                                                     <fa:FontAwesome Icon="Trash"
                                                     Foreground="Red"
                                                     Width="16"
