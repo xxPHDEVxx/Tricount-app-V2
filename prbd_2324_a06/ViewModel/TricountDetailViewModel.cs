@@ -140,15 +140,13 @@ public class TricountDetailViewModel : ViewModelCommon
     // Add Subscriptions
     public void AddSubscriptions() {
         if (Tricount != null) {
-            foreach (var user in Participants.ToList()) {
-                Tricount.Subscriptions.Add(new Subscription {
-                    UserId = user.User.UserId,
-                    TricountId = Tricount.Id
-
-                });
+            foreach (var user in Participants) {
+                Tricount.Subscriptions.Add(new Subscription(user.User.UserId, Tricount.Id));
             }
         }
-    }
+
+     }
+    
 
     // Validation before the save Action
     private bool CanSaveAction() {
