@@ -121,7 +121,7 @@ public class TricountDetailViewModel : ViewModelCommon
         // Add propriétés au tricount 
         if (IsNew) {
             Tricount = new Tricount(Title, Description, Date, User);
-            Context.Add(Tricount);
+            Context.Tricounts.Add(Tricount);
             AddSubscriptions();
         }
 
@@ -134,9 +134,6 @@ public class TricountDetailViewModel : ViewModelCommon
     // Add Subscriptions
     public void AddSubscriptions() {
         if (Tricount != null) {
-            if (IsNew) {
-                Tricount.Subscriptions.Add(new Subscription(User.UserId, Tricount.Id));
-            }
             foreach (var user in Participants) {
                 Tricount.Subscriptions.Add(new Subscription {
                     UserId = user.User.UserId,
