@@ -104,6 +104,8 @@ public class TricountDetailViewModel : ViewModelCommon
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
 
         OnRefreshData();
+        RaisePropertyChanged();
+
 
     }
 

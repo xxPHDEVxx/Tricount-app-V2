@@ -18,8 +18,8 @@ namespace prbd_2324_a06.ViewModel
             DisplayOperation = new RelayCommand<TricountCardViewModel>(vm => {
                 NotifyColleagues(App.Messages.MSG_DISPLAY_OPERATIONS, vm.Tricount);
             });
-            EditTricount = new RelayCommand<TricountDetailViewModel>(vm => {
-                    NotifyColleagues(App.Messages.MSG_EDIT_TRICOUNT, vm.Tricount);
+            EditTricount = new RelayCommand(() => {
+                NotifyColleagues(App.Messages.MSG_EDIT_TRICOUNT, Tricount);
             });
             DeleteTricount = new RelayCommand(DeleteAction);
             OpenEditOperation = new RelayCommand<OperationCardViewModel>(vm => {
