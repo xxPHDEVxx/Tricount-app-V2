@@ -15,9 +15,6 @@ namespace prbd_2324_a06.View
             InitializeComponent();
             DataContext = _vm = new OperationViewModel(operation);
 
-            // initialisation dynamique des éléments graphiques
-            //InitializeCheckBox();
-
             // fermeture de la fenêtre
             Register<Operation>(App.Messages.MSG_CLOSE_OPERATION_WINDOW, _ => {
                 Close();
@@ -25,7 +22,7 @@ namespace prbd_2324_a06.View
         }
 
         // Initialise checkBox's template with the tricount's participants
-        private void InitializeCheckBox() {
+        /*private void InitializeCheckBox() {
             // fetching from the database
             List<User> users = _vm.GetUsersTricount();
             List<Repartition> repartitions = _vm.GetRepartitions();
@@ -107,7 +104,7 @@ namespace prbd_2324_a06.View
         // Gestion numeric -> checkBox
         private void UpdateCheckBoxState(CheckBox checkBox, NumericUpDown numericUpDown) {
             checkBox.IsChecked = numericUpDown.Value != 0;
-        }
+        }*/
 
         // Bouton Cancel
         private void btnCancel_Click(object sender, RoutedEventArgs e) {

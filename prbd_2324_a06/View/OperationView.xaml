@@ -64,24 +64,24 @@
                     Command="{Binding ApplyTemplate}" />
         </StackPanel>
 
-         <!-- Participants -->
+        <!-- Participants -->
         <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
             <!-- Container for dynamic content -->
             <ScrollViewer MaxHeight="160" VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="ParticipantsPanel" Orientation="Vertical" HorizontalAlignment="Center">
-                    <ListBox ItemsSource="{Binding Participants}" BorderThickness="0">
+                    <ListBox ItemsSource="{Binding Repartitions}" BorderThickness="0">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" /> <!-- Full name -->
-                                        <ColumnDefinition Width="Auto" /> <!-- NumericUpDown -->
-                                        <ColumnDefinition Width="Auto" /> <!-- TextBlock -->
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
                                     <!-- CheckBox in the first column -->
-                                    <CheckBox Content="{Binding FullName}"
-                                              IsChecked="{Binding Value, ElementName=NumericUpDown}"
+                                    <CheckBox Content="{Binding User.FullName}"
+                                              IsChecked="{Binding IsChecked}"
                                               VerticalAlignment="Center"
                                               Margin="2"
                                               HorizontalAlignment="Left"
@@ -89,23 +89,24 @@
                                               Grid.Column="0" />
 
                                     <!-- NumericUpDown in the second column -->
-                                    <num:NumericUpDown Value="1"
+                                    <num:NumericUpDown Value="{Binding Weight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                                        x:Name="NumericUpDown"
                                                        MinValue="0"
                                                        Margin="2"
                                                        HorizontalAlignment="Center"
-                                                       Grid.Column="1" 
-                                                       Width="40"/>
+                                                       Grid.Column="1"
+                                                       Width="40" />
 
                                     <!-- TextBlock in the third column -->
-                                    <TextBlock Text="0,00 €"
-                                               VerticalAlignment="Center"
-                                               Margin="2"
-                                               Width="50"
-                                               FontWeight="Bold"
-                                               TextAlignment="Right"
-                                               HorizontalAlignment="Right"
-                                               Grid.Column="2" />
+                                    <TextBlock
+                                        Text="{Binding MyAmount}"
+                                        VerticalAlignment="Center"
+                                        Margin="2"
+                                        Width="50"
+                                        FontWeight="Bold"
+                                        TextAlignment="Right"
+                                        HorizontalAlignment="Right"
+                                        Grid.Column="2" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -113,7 +114,8 @@
                 </StackPanel>
             </ScrollViewer>
         </StackPanel>
-        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Error}" Foreground="Red" Margin="0,5,0,0" />
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Error}"
+                   Foreground="Red" Margin="0,5,0,0" />
         <!-- Save as New Template Button -->
         <Button x:Name="SaveTemplateButton" Content="Save as New Template" Grid.Row="7" Grid.Column="0"
                 Grid.ColumnSpan="2" Margin="0,10,0,0"
@@ -122,11 +124,17 @@
         <!-- Add and Cancel Buttons -->
         <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
                     HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button x:Name="Delete" Content="Delete" Margin="5" Padding="15,0,15,0" Visibility="{Binding Visible}"
+            <Button x:Name="Delete" Content="Delete" Margin="5"
+                    Padding="15,0,15,0"
+                    Visibility="{Binding Visible}"
                     Command="{Binding DeleteCommand}" />
-            <Button x:Name="AddButton" Content="{Binding Button}" Margin="5" Padding="15,0,15,0"
-                    Command="{Binding SaveCommand}" IsDefault="True" />
-            <Button x:Name="CancelButton" Content="Cancel" Margin="5" Padding="10,0,10,0" IsCancel="True"
+            <Button x:Name="AddButton" Content="{Binding Button}"
+                    Margin="5" Padding="15,0,15,0"
+                    Command="{Binding SaveCommand}"
+                    IsDefault="True" />
+            <Button x:Name="CancelButton" Content="Cancel"
+                    Margin="5" Padding="10,0,10,0"
+                    IsCancel="True"
                     Click="btnCancel_Click" />
         </StackPanel>
     </Grid>

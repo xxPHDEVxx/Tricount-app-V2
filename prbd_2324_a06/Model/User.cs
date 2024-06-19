@@ -56,6 +56,14 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     u.FullName ==
                     name); // Retourne le premier utilisateur avec le nom spécifié, ou null s'il n'y en a aucun
         }
+        
+        // Méthode pour obtenir un utilisateur par son id
+        public static User GetUserById(int id) {
+            return
+                Context.Users.FirstOrDefault(u =>
+                    u.UserId ==
+                    id); // Retourne le premier utilisateur avec le nom spécifié, ou null s'il n'y en a aucun
+        }
 
         // Collection de souscriptions associées à cet utilisateur
         public virtual ICollection<Subscription> Subscriptions { get; protected set; } = new HashSet<Subscription>();
@@ -92,19 +100,24 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
         
         public IQueryable<Tricount> GetFiltered(string Filter) {
             var filtered = from t in GetTricounts().Union(GetParticipatedTricounts())
-                where t.Title.Contains(Filter)
-                orderby t.Title
-                select t;
-            return filtered;
+                join o in Context.Operations on t.Id equals o.TricountId
+                join s in Context.Subscriptions on t.Id equals s.TricountId
+                where t.Title.ToLower().Contains(Filter) || t.Creator.FullName.ToLower().Contains(Filter) || t.Description.ToLower().Contains(Filter)
+                || o.Title.ToLower().Contains(Filter) || s.User.FullName.ToLower().Contains(Filter)
+                 orderby t.Title
+                select t ; 
+            return filtered.Distinct();
         }
 
         // Méthode pour obtenir tous les Tricounts filtrés par un terme de recherche
         public IQueryable<Tricount> GetAllFiltered(string Filter) {
             var filtered = from t in Context.Tricounts
-                where t.Title.Contains(Filter)
-                orderby t.Title
-                select t;
-            return filtered; // Retourne la liste des Tricounts filtrés
+                           join o in Context.Operations on t.Id equals o.TricountId
+                           join s in Context.Subscriptions on t.Id equals s.TricountId
+                           where t.Title.ToLower().Contains(Filter) || t.Creator.FullName.ToLower().Contains(Filter) || t.Description.ToLower().Contains(Filter)
+                            || o.Title.ToLower().Contains(Filter) || s.User.FullName.ToLower().Contains(Filter)
+                           select t;
+            return filtered.Distinct(); // Retourne la liste des Tricounts filtrés
         }
 
         // Méthode pour obtenir le nom d'utilisateur à partir de son ID

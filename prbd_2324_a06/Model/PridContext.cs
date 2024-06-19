@@ -263,7 +263,6 @@ public class PridContext : DbContextBase
                 new Repartition { OperationId = 11, UserId = 4, Weight = 2 }
             );
 
-
         modelBuilder.Entity<Template>()
             .HasData(
                 new Template { Id = 1, Title = "Boris paye double", TricountId = 4 },
