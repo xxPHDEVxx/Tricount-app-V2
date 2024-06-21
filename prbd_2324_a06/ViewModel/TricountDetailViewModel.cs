@@ -23,7 +23,11 @@ public class TricountDetailViewModel : ViewModelCommon
 
 
     // Attributs et propriétés
-    public ObservableCollectionFast<User> Users { get; } = new ObservableCollectionFast<User>();
+    private ObservableCollection<User> _users;
+    public ObservableCollection<User> Users { 
+        get => _users;
+        set => SetProperty(ref _users, value);
+            }
 
     private User _selectedUser;
 
@@ -116,10 +120,12 @@ public class TricountDetailViewModel : ViewModelCommon
 
     protected override void OnRefreshData() {
         if (IsNew) {
-            Users.RefreshFromModel(Context.Users
+            IQueryable<User> users = Context.Users
                 .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
-                .OrderBy(m => m.FullName)
-            );
+                .OrderBy(m => m.FullName);
+            Users = new ObservableCollection<User>(users.Select(u => u));
+
+           
             Participants = new ObservableCollection<CardParticipantViewModel>();
 
             Participants.Add(new CardParticipantViewModel(this, CurrentUser));
@@ -133,9 +139,14 @@ public class TricountDetailViewModel : ViewModelCommon
                allPart
                 .Select(u => new CardParticipantViewModel(this, u))
                 );
-            //Participants = new ObservableCollection<CardParticipantViewModel>();
-            Users.RefreshFromModel(Context.Users
-            .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User).OrderBy(m => m.FullName));
+
+            IQueryable<User> part = Tricount.GetParticipants();
+
+            IQueryable<User> users = Context.Users
+                .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
+                .OrderBy(m => m.FullName);
+            
+            Users = new ObservableCollection<User>(users.Except(part));
         }
     }
     public override void SaveAction() {
