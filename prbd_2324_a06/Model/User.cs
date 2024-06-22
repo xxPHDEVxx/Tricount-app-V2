@@ -56,7 +56,7 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     u.FullName ==
                     name); // Retourne le premier utilisateur avec le nom spécifié, ou null s'il n'y en a aucun
         }
-        
+
         // Méthode pour obtenir un utilisateur par son id
         public static User GetUserById(int id) {
             return
@@ -74,38 +74,38 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
         // Méthode pour obtenir les Tricounts créés par cet utilisateur
         public IQueryable<Tricount> GetTricounts() {
             var tricounts = from t in Context.Tricounts
-                where t.CreatorId == UserId
-                orderby t.CreatedAt descending
-                select t;
+                            where t.CreatorId == UserId
+                            orderby t.CreatedAt descending
+                            select t;
             return tricounts; // Retourne la liste des Tricounts créés par cet utilisateur
         }
 
         // Méthode pour obtenir les Tricounts auxquels cet utilisateur participe
         public IQueryable<Tricount> GetParticipatedTricounts() {
             var participatedTricounts = from s in Context.Subscriptions
-                join t in Context.Tricounts on s.TricountId equals t.Id
-                where s.UserId == UserId
-                orderby t.CreatedAt descending
-                select t;
+                                        join t in Context.Tricounts on s.TricountId equals t.Id
+                                        where s.UserId == UserId
+                                        orderby t.CreatedAt descending
+                                        select t;
             return participatedTricounts; // Retourne la liste des Tricounts auxquels cet utilisateur participe
         }
 
         // Méthode pour obtenir tous les Tricounts
         public IQueryable<Tricount> GetAll() {
             var tricounts = from t in Context.Tricounts
-                orderby t.CreatedAt descending
-                select t;
+                            orderby t.CreatedAt descending
+                            select t;
             return tricounts; // Retourne la liste de tous les Tricounts
         }
-        
+
         public IQueryable<Tricount> GetFiltered(string Filter) {
             var filtered = from t in GetTricounts().Union(GetParticipatedTricounts())
-                join o in Context.Operations on t.Id equals o.TricountId
-                join s in Context.Subscriptions on t.Id equals s.TricountId
-                where t.Title.ToLower().Contains(Filter) || t.Creator.FullName.ToLower().Contains(Filter) || t.Description.ToLower().Contains(Filter)
-                || o.Title.ToLower().Contains(Filter) || s.User.FullName.ToLower().Contains(Filter)
-                 orderby t.Title
-                select t ; 
+                           join o in Context.Operations on t.Id equals o.TricountId
+                           join s in Context.Subscriptions on t.Id equals s.TricountId
+                           where t.Title.ToLower().Contains(Filter) || t.Creator.FullName.ToLower().Contains(Filter) || t.Description.ToLower().Contains(Filter)
+                           || o.Title.ToLower().Contains(Filter) || s.User.FullName.ToLower().Contains(Filter)
+                           orderby t.Title
+                           select t;
             return filtered.Distinct();
         }
 
@@ -163,5 +163,13 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             // La balance est le total des crédits moins les dépenses
             return Math.Round(myPaid - myExpenses, 2);
         }
+        public IQueryable<Operation> GetOperations(Tricount tricount) {
+            var q = from o in tricount.GetOperations()
+                    join r in Context.Repartitions on o.Id equals r.OperationId
+                    where o.InitiatorId == UserId
+                    select o;
+            return q;
+        }
     }
 }
+    

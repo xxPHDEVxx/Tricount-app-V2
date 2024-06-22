@@ -3,6 +3,7 @@ using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel;
@@ -30,6 +31,11 @@ public class CardParticipantViewModel : ViewModelCommon {
     }
 
     public string Current => App.CurrentUser == User ? "(creator)" : "";
-    
+    public string NbExpenses => App.CurrentUser != User && User.GetOperations(vm.Tricount).Count() > 0 ? $"({User.GetOperations(vm.Tricount).Count().ToString()} expenses)" : "";  
+  
+
+    public bool IsEquals(CardParticipantViewModel other) {
+        return User == other.User;
+    }
 }
 

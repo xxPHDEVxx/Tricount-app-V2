@@ -23,11 +23,11 @@ public class TricountDetailViewModel : ViewModelCommon
 
 
     // Attributs et propriétés
-    private ObservableCollection<User> _users;
-    public ObservableCollection<User> Users { 
+    private ObservableCollectionFast<User> _users;
+    public ObservableCollectionFast<User> Users { 
         get => _users;
         set => SetProperty(ref _users, value);
-            }
+    }
 
     private User _selectedUser;
 
@@ -36,9 +36,9 @@ public class TricountDetailViewModel : ViewModelCommon
         set => SetProperty(ref _selectedUser, value);
     }
 
-    private ObservableCollection<CardParticipantViewModel> _participants;
+    private ObservableCollectionFast<CardParticipantViewModel> _participants;
 
-    public ObservableCollection<CardParticipantViewModel> Participants {
+    public ObservableCollectionFast<CardParticipantViewModel> Participants {
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
@@ -46,9 +46,9 @@ public class TricountDetailViewModel : ViewModelCommon
 
         get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
     } 
-    public string TricountTitle {
-        get => IsNew ? "New Tricount - no description" : $"{Tricount.Title} {Tricount.Description?? "No Description"}" ;
-    }
+
+    public string TitleHeader { get => Tricount?.Title ?? "<New Tricount>"; }
+    public string DescriptionHeader { get => Tricount?.Description ?? "No description"; }
     public string Title {
         get => Tricount?.Title;
         set => SetProperty(Tricount.Title, value, Tricount, (t, v) => {
@@ -60,7 +60,7 @@ public class TricountDetailViewModel : ViewModelCommon
 
 
     public string Description {
-        get => Tricount?.Description;
+        get => Tricount?.Description ;
         set => SetProperty(Tricount.Description, value, Tricount, (t, v) => {
             t.Description = v;
             Validate();
@@ -123,42 +123,41 @@ public class TricountDetailViewModel : ViewModelCommon
             IQueryable<User> users = Context.Users
                 .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
                 .OrderBy(m => m.FullName);
-            Users = new ObservableCollection<User>(users.Select(u => u));
+            Users = new ObservableCollectionFast<User>(users.Select(u => u));
 
            
-            Participants = new ObservableCollection<CardParticipantViewModel>();
+            Participants = new ObservableCollectionFast<CardParticipantViewModel>();
 
             Participants.Add(new CardParticipantViewModel(this, CurrentUser));
             Date = DateTime.Now;
         } else {
             Tricount = Model.Tricount.GetTricountByTitle(Tricount.Title);
             Date = Tricount.CreatedAt;
-
+            //on récupère les participants du tricont
             IQueryable<User> allPart = Tricount.GetParticipants().ToList().AsQueryable();
-            Participants = new ObservableCollection<CardParticipantViewModel>(
+            Participants = new ObservableCollectionFast<CardParticipantViewModel>(
                allPart
                 .Select(u => new CardParticipantViewModel(this, u))
                 );
 
+            //on récupere les users qui ne participent pas
             IQueryable<User> part = Tricount.GetParticipants();
 
             IQueryable<User> users = Context.Users
                 .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
                 .OrderBy(m => m.FullName);
             
-            Users = new ObservableCollection<User>(users.Except(part));
+            Users = new ObservableCollectionFast<User>(users.Except(part));
         }
     }
     public override void SaveAction() {
         // Add propriétés au tricount 
         if (IsNew) {
-            Tricount = new Tricount(Title, Description, DateTime.Today, User);
+            Tricount = new Tricount(Title, Description, Date, User);
             Context.Tricounts.Add(Tricount);
-            AddSubscriptions();
-            IsNew = false;
         }
 
-        // ajouter code pour edit
+        AddSubscriptions();
         Context.SaveChanges();
         RaisePropertyChanged();
         NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
@@ -167,15 +166,39 @@ public class TricountDetailViewModel : ViewModelCommon
     // Add Subscriptions
     public void AddSubscriptions() {
         if (Tricount != null) {
-            foreach (var user in Participants) {
-                Tricount.Subscriptions.Add(new Subscription {
-                    UserId = user.User.UserId,
-                    TricountId = Tricount.Id
-                });
+            if (IsNew) {
+                foreach (var user in Participants) {
+                    Tricount.Subscriptions.Add(new Subscription {
+                        UserId = user.User.UserId,
+                        TricountId = Tricount.Id
+                    });
+                }
+
+            } else {
+
+                var currentSubscriptions = Tricount.Subscriptions.ToList();
+
+                //Si l'user n'est pas dans les subscrptions on l'ajoute
+                foreach (var user in Participants) {
+                    if (!currentSubscriptions.Any(s => s.UserId == user.User.UserId)) {
+                        Tricount.Subscriptions.Add(new Subscription {
+                            UserId = user.User.UserId,
+                            TricountId = Tricount.Id
+                        });
+                    }
+                }
+
+                // depuis les participants, si on ne retrouve pas l'user on le supprime
+                foreach (var subscription in currentSubscriptions) {
+                    if (!Participants.Any(p => p.User.UserId == subscription.UserId)) {
+                        Tricount.Subscriptions.Remove(subscription);
+                    }
+                }
+
             }
         }
-
-     }
+    }
+        
     
 
     // Validation before the save Action
@@ -259,13 +282,12 @@ public class TricountDetailViewModel : ViewModelCommon
     private void AddAllAction() {
         if (IsNew) {
             foreach (var user in Users) {
-               // if (!Participants.Contains(user)) {
-                    Participants.Add(new CardParticipantViewModel(this, user));
-                //}
+                 Participants.Add(new CardParticipantViewModel(this, user));
             }
-            Users.Clear();
+             Users.Clear();
         }
     }
+    
 
     private bool CanAddAllAction() {
         return !Users.IsNullOrEmpty();
