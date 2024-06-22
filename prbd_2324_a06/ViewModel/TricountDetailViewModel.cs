@@ -42,6 +42,13 @@ public class TricountDetailViewModel : ViewModelCommon
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
+    
+    private ObservableCollectionFast<CardTemplateViewModel> _templates;
+
+    public ObservableCollectionFast<CardTemplateViewModel> Templates {
+        get => _templates;
+        set => SetProperty(ref _templates, value);
+    }
     public string CreatedBy {
 
         get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
@@ -109,9 +116,13 @@ public class TricountDetailViewModel : ViewModelCommon
         AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
         AddMySelf = new RelayCommand(AddMySelfAction,CanAddMySelfAction);
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
-
+        
+        AddTemplate = new RelayCommand(AddTemplateAction, CanAddTemplateAction);
+        
         OnRefreshData();
         RaisePropertyChanged();
+
+        Console.WriteLine(IsNew);
 
 
     }
@@ -148,6 +159,13 @@ public class TricountDetailViewModel : ViewModelCommon
                 .OrderBy(m => m.FullName);
             
             Users = new ObservableCollectionFast<User>(users.Except(part));
+
+            // récupere les templates
+            IQueryable<Template> templates = Tricount.GetTemplates().ToList().AsQueryable();
+
+            Templates = new ObservableCollectionFast<CardTemplateViewModel>(templates
+                .Select(t => new CardTemplateViewModel(this, t))
+                );
         }
     }
     public override void SaveAction() {
@@ -291,5 +309,15 @@ public class TricountDetailViewModel : ViewModelCommon
 
     private bool CanAddAllAction() {
         return !Users.IsNullOrEmpty();
+    }
+
+    //add template et canAdd
+    private void AddTemplateAction() {
+        //scoop de 3 - pas implémenté
+    }
+
+
+    private bool CanAddTemplateAction() {
+        return !IsNew;
     }
 }
