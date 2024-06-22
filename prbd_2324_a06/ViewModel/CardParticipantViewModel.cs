@@ -17,12 +17,13 @@ public class CardParticipantViewModel : ViewModelCommon {
     public Visibility Visible {
         get => _visible;
         set => SetProperty(ref _visible, value);
-    }
+    }    
+    
     public CardParticipantViewModel(TricountDetailViewModel tricountDetailViewModel, User user) {
         vm = tricountDetailViewModel;
         User = user;
         DeleteCommand = new RelayCommand(DeleteAction);
-        Visible = User == App.CurrentUser ? Visibility.Hidden : Visibility.Visible;
+        Visible = User == App.CurrentUser || User.GetOperations(vm.Tricount).Count() > 0 ? Visibility.Hidden : Visibility.Visible;
     }
 
     private void DeleteAction() {
