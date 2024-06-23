@@ -1,4 +1,5 @@
-﻿using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
+﻿using Microsoft.IdentityModel.Tokens;
+using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
 using
     System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
 using
@@ -150,6 +151,19 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             return  Context.Tricounts.FirstOrDefault(t =>
                     t.Title == title);
         }
+        public DateTime GetLastDate() {
+            if (GetOperations().IsNullOrEmpty()) {
+                return CreatedAt;
+            } else {
+                var date = Context.Operations.ToList()
+                        .Where(o => o.TricountId == Id)
+                        .OrderByDescending(o => o.OperationDate)
+                        .FirstOrDefault();
+            return date.OperationDate;
+
+            }
+        }
     }
+
 
 }

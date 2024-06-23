@@ -1,4 +1,5 @@
-﻿using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
+﻿using Microsoft.IdentityModel.Tokens;
+using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
 using
     System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
 
@@ -73,10 +74,11 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
 
         // Méthode pour obtenir les Tricounts créés par cet utilisateur
         public IQueryable<Tricount> GetTricounts() {
-            var tricounts = from t in Context.Tricounts
-                            where t.CreatorId == UserId
-                            orderby t.CreatedAt descending
-                            select t;
+            
+           var tricounts =  from t in Context.Tricounts
+                    where t.CreatorId == UserId
+                    orderby  t.CreatedAt descending
+                    select t;
             return tricounts; // Retourne la liste des Tricounts créés par cet utilisateur
         }
 

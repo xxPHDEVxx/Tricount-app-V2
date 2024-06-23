@@ -52,7 +52,8 @@ public class TricountDetailViewModel : ViewModelCommon
     public string CreatedBy {
 
         get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
-    } 
+    }
+    public DateTime DateLast => Tricount.GetLastDate();
 
     public string TitleHeader { get => Tricount?.Title ?? "<New Tricount>"; }
     public string DescriptionHeader { get => Tricount?.Description ?? "No description"; }
@@ -122,7 +123,8 @@ public class TricountDetailViewModel : ViewModelCommon
         OnRefreshData();
         RaisePropertyChanged();
 
-        Console.WriteLine(IsNew);
+        Console.WriteLine(Participants.Any(c => c.User == GetCurrentUser()));
+
 
 
     }
@@ -286,23 +288,23 @@ public class TricountDetailViewModel : ViewModelCommon
     private void AddMySelfAction() {
         if (!IsNew) {
             var currentUser = GetCurrentUser();
-            // if (!Participants.Contains(currentUser)) {
-            Participants.Add(new CardParticipantViewModel(this, currentUser));
-            //}
+             if (!Participants.Any(c => c.User == currentUser)) {
+                Participants.Add(new CardParticipantViewModel(this, currentUser));
+            }
         }
     }
 
     private bool CanAddMySelfAction() {
         var currentUser = GetCurrentUser();
-        return IsNew;
+        return IsNew || !Participants.Any(c => c.User == GetCurrentUser());
     }
 
     private void AddAllAction() {
-        if (IsNew) {
-            foreach (var user in Users) {
-                 Participants.Add(new CardParticipantViewModel(this, user));
+        foreach (var user in Users.ToList()) {
+            if (!Participants.Any(c => c.User == user)) {
+                Participants.Add(new CardParticipantViewModel(this, user));
             }
-             Users.Clear();
+            Users.Clear();
         }
     }
     
