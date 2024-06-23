@@ -325,6 +325,7 @@ namespace prbd_2324_a06.ViewModel
                 AddError(nameof(Amount), "Can't be empty !");
         }
 
+        // Méthode de validation pour la date
         private void IsValidDate() {
             if (OperationDate < Tricount.CreatedAt) {
                 AddError(nameof(OperationDate), $"Cannot be before {Tricount.CreatedAt:dd-MM-yyyy}.");
