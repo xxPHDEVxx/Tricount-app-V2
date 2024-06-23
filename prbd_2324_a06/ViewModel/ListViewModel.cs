@@ -46,14 +46,14 @@ public class ListViewModel : ViewModelCommon
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter)
                 ? CurrentUser.GetAll()
                 : CurrentUser.GetAllFiltered(Filter);
-            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
+            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.OrderByDescending(t => t.CreatedAt).Select(t =>
                 new TricountCardViewModel(t)));
         } else {
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter)
                 ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts())
                 : CurrentUser.GetFiltered(Filter);
 
-            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
+            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.OrderByDescending(t => t.CreatedAt).Select(t =>
                 new TricountCardViewModel(t)));
         }
     }
