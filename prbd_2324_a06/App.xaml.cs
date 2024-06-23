@@ -28,7 +28,10 @@ public partial class App
         MSG_CLOSE_TAB,
         MSG_PARTICIPANT_ADDED,
         MSG_OPERATION_TRICOUNT_CHANGED,
-        MSG_DELETED
+        MSG_DELETED,
+        MSG_TITLE_CHANGED,
+        AMOUNT_CHANGED,
+        MSG_REFRESH
     }
 
     public App() {
@@ -61,7 +64,7 @@ public partial class App
             // fermeture view sign up
             Windows[0]?.Close();
         });
-        
+
         // Logout
         Register(this, Messages.MSG_LOGOUT, () => {
             Logout();
@@ -71,13 +74,11 @@ public partial class App
         // Reset
         Register(this, Messages.MSG_RESET, Reset);
     }
-    
+
     public void Reset() {
-        // Detached Entities from tracking
-        Context.ChangeTracker.Clear();
-        Context.SaveChanges();
         // Clear database and seed data
         PrepareDatabase();
+        NotifyColleagues(Messages.MSG_REFRESH);
     }
 
     private static void PrepareDatabase() {

@@ -1,48 +1,34 @@
-﻿using NumericUpDownLib;
-using prbd_2324_a06.Model;
+﻿using prbd_2324_a06.Model;
 using PRBD_Framework;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Xml;
 
 namespace prbd_2324_a06.ViewModel
 {
     public class OperationViewModel : DialogViewModelBase<Operation, PridContext>
     {
-        // ajouter en parametre Tricount pour lier au reste du code
-        public OperationViewModel(Operation operation) : base() {
+        public OperationViewModel(Operation operation) {
             // initialisation des propriétés
             Tricount = Context.Tricounts.Find(operation.TricountId);
             Operation = operation;
             WindowTitle = operation.Title == null ? "Add Operation" : "Edit Operation";
-            Amount = $"{Operation.Amount:F2}";
+            Amount = Operation.Title != null ? $"{Operation.Amount:F2}" : "0,00";
+            Title = Operation.Title ?? "";
             OperationDate = Operation.Title == null ? DateTime.Today : Operation.OperationDate;
             Button = Operation.Title == null ? "Add" : "Save";
             Visible = Operation.Title == null ? Visibility.Hidden : Visibility.Visible;
-            SelectedTemplate = new Template() {
-                Title = "-- Choose a template --"
-            };
+            SelectedTemplate = new Template() { Title = "-- Choose a template --" };
             Participants = GetUsersTricount();
             Templates = GetTemplatesTricount();
             Templates.Add(SelectedTemplate);
             CurrentUser = App.CurrentUser;
-            Initiator = operation.Title == null
-                ? CurrentUser
-                : Context.Users.Find(Operation.InitiatorId);
+            Initiator = operation.Title == null ? CurrentUser : Context.Users.Find(Operation.InitiatorId);
             NoTemplates = Templates.Any();
-            CheckBoxItems = new ObservableCollectionFast<CheckBox>();
-            Numerics = new ObservableCollectionFast<NumericUpDown>();
-            TextBlocks = new ObservableCollectionFast<TextBlock>();
             Repartitions = new ObservableCollectionFast<RepartitionsViewModel>();
             FillRepartitionsViewModels();
+
             // initialisation des commandes 
             SaveCommand = new RelayCommand(SaveAction, () => !HasErrors && Error == "");
-            AddCommand = new RelayCommand(SaveAction,
-                () => !HasErrors && Error == "");
             ApplyTemplate = new RelayCommand(ApplyAction,
                 // vérification pour éviter Null Exception
                 () => SelectedTemplate == null
@@ -54,15 +40,11 @@ namespace prbd_2324_a06.ViewModel
 
         // Commandes
         public ICommand SaveCommand { get; set; }
-        public ICommand AddCommand { get; set; }
         public ICommand ApplyTemplate { get; set; }
         public ICommand SaveTemplate { get; set; }
         public ICommand DeleteCommand { get; set; }
 
         // Attributes
-        private readonly ObservableCollectionFast<CheckBox> _checkBoxItems;
-        private readonly ObservableCollectionFast<NumericUpDown> _numerics;
-        private readonly ObservableCollectionFast<TextBlock> _textBlocks;
         private ObservableCollectionFast<RepartitionsViewModel> _repartitions;
         private readonly User _currentUser;
         private User _initiator;
@@ -78,33 +60,20 @@ namespace prbd_2324_a06.ViewModel
         private Visibility _visible;
         private List<User> _participants;
         private List<Template> _templates;
+        private string _title;
 
         // Properties
         public ObservableCollectionFast<RepartitionsViewModel> Repartitions {
             get => _repartitions;
             set => SetProperty(ref _repartitions, value);
         }
-        public ObservableCollectionFast<CheckBox> CheckBoxItems {
-            get => _checkBoxItems;
-            private init => SetProperty(ref _checkBoxItems, value);
-        }
-
-        public ObservableCollectionFast<NumericUpDown> Numerics {
-            get => _numerics;
-            private init => SetProperty(ref _numerics, value);
-        }
-
-        public ObservableCollectionFast<TextBlock> TextBlocks {
-            get => _textBlocks;
-            private init => SetProperty(ref _textBlocks, value);
-        }
 
         public List<User> Participants {
             get => _participants;
             set => SetProperty(ref _participants, value);
         }
-        
-        
+
+
         public List<Template> Templates {
             get => _templates;
             set => SetProperty(ref _templates, value);
@@ -159,13 +128,13 @@ namespace prbd_2324_a06.ViewModel
             get => _amount;
             set => SetProperty(ref _amount, value, () => {
                 Validate();
+                ApplicationRoot.NotifyColleagues(App.Messages.AMOUNT_CHANGED);
             });
         }
 
         public string Title {
-            get => Operation?.Title;
-            set => SetProperty(Operation.Title, value, Operation, (o, t) => {
-                o.Title = t;
+            get => _title;
+            set => SetProperty(ref _title, value, () => {
                 Validate();
             });
         }
@@ -183,7 +152,7 @@ namespace prbd_2324_a06.ViewModel
 
         // Méthodes Commandes
 
-        // Edit
+        // Save/Add
         public override void SaveAction() {
             if (!Validate()) {
                 return;
@@ -207,18 +176,18 @@ namespace prbd_2324_a06.ViewModel
 
         // Save les poids de l'opération
         private void SaveWeights() {
-            if (Numerics == null) {
+            if (Repartitions == null) {
                 return;
             }
 
-            foreach (var item in Numerics) {
-                User user = User.GetUserByName(item.Name);
+            foreach (var repartition in Repartitions) {
+                User user = repartition.User;
                 // Si paire operation-user existante parmi les répartitions -> modifications des poids
                 if (Operation.Repartitions.Any(r => r.UserId == user.UserId && r.OperationId == Operation.Id)) {
-                    UpdateWeight(user.UserId, item.Value);
-                } else if (item.Value > 0) {
+                    UpdateWeight(user.UserId, repartition.Weight);
+                } else if (repartition.Weight > 0) {
                     // Nouvelle répartition si paire operation-user inexistante parmi les répartitions
-                    Operation.Repartitions.Add(new Repartition(Operation.Id, user.UserId, item.Value));
+                    Operation.Repartitions.Add(new Repartition(Operation.Id, user.UserId, repartition.Weight));
                 }
             }
         }
@@ -231,6 +200,7 @@ namespace prbd_2324_a06.ViewModel
             if (repartition == null) {
                 return;
             }
+
             // Mettre à jour le poids de l'utilisateur
             repartition.Weight = newWeight;
             Context.SaveChanges();
@@ -252,7 +222,7 @@ namespace prbd_2324_a06.ViewModel
         // Applique la template selectionnée 
         private void ApplyAction() {
             // vérifications 
-            if (SelectedTemplate != null && Numerics != null) {
+            if (SelectedTemplate != null && Repartitions != null) {
                 string title = SelectedTemplate.Title;
                 if (Tricount.GetTemplateByTitle(title) != null) {
                     // récupération template sélectionné
@@ -260,11 +230,11 @@ namespace prbd_2324_a06.ViewModel
                     // association user-weight dans un dictionnaire
                     Dictionary<string, int> UserWeight = t.GetUsersAndWeightsByTricountId();
                     // attribution des valeurs sinon 0 si user inexistant dans la template
-                    foreach (var item in Numerics) {
-                        if (UserWeight.ContainsKey(item.Name))
-                            item.Value = UserWeight[item.Name];
+                    foreach (var repartition in Repartitions) {
+                        if (UserWeight.ContainsKey(repartition.User.FullName))
+                            repartition.Weight = UserWeight[repartition.User.FullName];
                         else
-                            item.Value = 0;
+                            repartition.Weight = 0;
                     }
                 }
             }
@@ -273,13 +243,23 @@ namespace prbd_2324_a06.ViewModel
         // Méthodes de validation
         public override bool Validate() {
             ClearErrors();
-            Operation.Validate();
+            ValidateTitle();
             IsValidAmount();
             IsValidDate();
             AddErrors(Operation.Errors);
             Error = !ValidateCheckBoxes() ? "You must check at least one participant !" : "";
 
             return !HasErrors;
+        }
+
+        private void ValidateTitle() {
+            ClearErrors(); // Efface les erreurs de validation précédentes
+
+            if (string.IsNullOrWhiteSpace(Title)) // Vérifie si le titre est vide ou null
+                AddError(nameof(Title), "required"); // Ajoute une erreur si le titre est requis
+            else if (Title.Length < 3) // Vérifie si le titre a une longueur inférieure à 3 caractères
+                AddError(nameof(Title), "length must be >= 3"); // Ajoute une erreur si le titre est trop court
+
         }
 
         // Check if at least one checkbox is checked
@@ -307,10 +287,6 @@ namespace prbd_2324_a06.ViewModel
             }
 
             return templates;
-        }
-
-        protected internal List<Repartition> GetRepartitions() {
-            return Operation.Repartitions.ToList();
         }
 
         // Validation méthode for string amount -> we need a string because of textbox
@@ -346,6 +322,11 @@ namespace prbd_2324_a06.ViewModel
                     Repartitions.Add(new RepartitionsViewModel(new Repartition(Operation.Id, user.UserId, 0), this));
                 }
             }
+
+            // mise à jour montants de chaque répartition une fois la liste de répartitions complète
+            NotifyColleagues(App.Messages.AMOUNT_CHANGED);
+            // Validation une fois liste de répartitions complète pour bien vérifier chaque checkbox
+            Validate();
         }
 
         protected internal void Close() {
