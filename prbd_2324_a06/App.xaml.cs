@@ -33,7 +33,8 @@ public partial class App
         MSG_DELETE_OPERATION,
         MSG_CLOSE_WINDOW,
         MSG_TITLE_CHANGED,
-        AMOUNT_CHANGED
+        AMOUNT_CHANGED,
+        MSG_REFRESH
     }
 
     public App() {
@@ -78,11 +79,9 @@ public partial class App
     }
 
     public void Reset() {
-        // Detached Entities from tracking
-        Context.ChangeTracker.Clear();
-        Context.SaveChanges();
         // Clear database and seed data
         PrepareDatabase();
+        NotifyColleagues(Messages.MSG_REFRESH);
     }
 
     private static void PrepareDatabase() {

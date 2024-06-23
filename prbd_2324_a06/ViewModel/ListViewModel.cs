@@ -28,6 +28,7 @@ public class ListViewModel : ViewModelCommon
     }
 
     public ListViewModel() : base() {
+        Register(App.Messages.MSG_REFRESH, OnRefreshData);
         OnRefreshData();
         ClearFilter = new RelayCommand(() => Filter = "");
         NewTricount = new RelayCommand(() => {
@@ -38,23 +39,22 @@ public class ListViewModel : ViewModelCommon
         });
         Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => OnRefreshData());
         Register<Tricount>(App.Messages.MSG_OPERATION_TRICOUNT_CHANGED, tricount => OnRefreshData());
-        Register( App.Messages.MSG_RESET, () => OnRefreshData());
     }
 
     protected override void OnRefreshData() {
-
         if (CurrentUser.Role is Role.Administrator) {
-            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetAll()
+            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter)
+                ? CurrentUser.GetAll()
                 : CurrentUser.GetAllFiltered(Filter);
-        Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
-            new TricountCardViewModel(t)));
+            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
+                new TricountCardViewModel(t)));
         } else {
+            IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter)
+                ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts())
+                : CurrentUser.GetFiltered(Filter);
 
-        IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter) ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()) 
-            : CurrentUser.GetFiltered(Filter);
-
-        Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
-            new TricountCardViewModel(t)));
+            Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>
+                new TricountCardViewModel(t)));
         }
     }
 }

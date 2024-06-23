@@ -31,7 +31,7 @@ namespace prbd_2324_a06.ViewModel
             });
             Register<Operation>(App.Messages.MSG_OPERATION_CHANGED, operation => OnRefreshData());
             // Reset
-            Register(App.Messages.MSG_RESET, () => OnRefreshData());
+            Register(App.Messages.MSG_REFRESH, () => OnRefreshData());
         }
 
         private ObservableCollection<OperationCardViewModel> _operations;
