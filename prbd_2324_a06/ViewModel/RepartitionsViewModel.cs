@@ -1,4 +1,5 @@
 ﻿using prbd_2324_a06.Model;
+using PRBD_Framework;
 
 namespace prbd_2324_a06.ViewModel
 {
@@ -7,14 +8,19 @@ namespace prbd_2324_a06.ViewModel
         public RepartitionsViewModel(Repartition repartition, OperationViewModel vm) {
             Repartition = repartition;
             Vm = vm;
-            CalculAmount();
+            Weight = Repartition.Weight;
+            IsChecked = Repartition.Weight != 0;
+            Register(App.Messages.AMOUNT_CHANGED, CalculAmount);
         }
 
+        // attributs
         private Repartition _repartition;
         private string _myAmount;
         private OperationViewModel _vm;
         private int _weight;
+        private bool _isChecked;
 
+        // propriétés
         public OperationViewModel Vm {
             get => _vm;
             init => SetProperty(ref _vm, value);
@@ -31,30 +37,32 @@ namespace prbd_2324_a06.ViewModel
         }
 
         public int Weight {
-            get => Repartition.Weight;
-            set {
-                if (SetProperty(ref _weight, value)) {
-                    Repartition.Weight = value;
-                    CalculAmount();
-                }
-            }
+            get => _weight;
+            set => SetProperty(ref _weight, value, () => {
+                IsChecked = Weight != 0;
+                NotifyColleagues(App.Messages.AMOUNT_CHANGED);
+            });
         }
-        
+
         public string MyAmount {
             get => _myAmount;
             set => SetProperty(ref _myAmount, value);
         }
 
         public bool IsChecked {
-            get => Weight > 0;
-            set => SetProperty(Weight > 0, value, Repartition, (r, w) => CalculAmount());
+            get => _isChecked;
+            set => SetProperty(ref _isChecked, value, () => {
+                Vm.Validate();
+                Weight = IsChecked ? Weight > 1 ? Weight : 1 :  0;
+            });
         }
 
+        // Méthode de calcul de dépense individuelle
         public void CalculAmount() {
             int totalWeight = 0;
-            if (Vm.Operation.Repartitions != null) {
+            if (Vm.Repartitions != null) {
                 // Calcul du total des poids
-                foreach (var r in Vm.Operation.Repartitions) {
+                foreach (var r in Vm.Repartitions) {
                     totalWeight += r.Weight;
                 }
 

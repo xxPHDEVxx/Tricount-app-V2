@@ -32,8 +32,8 @@ public partial class App
         MSG_EDIT_OPERATION,
         MSG_DELETE_OPERATION,
         MSG_CLOSE_WINDOW,
-        MSG_TITLE_CHANGED
-
+        MSG_TITLE_CHANGED,
+        AMOUNT_CHANGED
     }
 
     public App() {
@@ -66,7 +66,7 @@ public partial class App
             // fermeture view sign up
             Windows[0]?.Close();
         });
-        
+
         // Logout
         Register(this, Messages.MSG_LOGOUT, () => {
             Logout();
@@ -76,7 +76,7 @@ public partial class App
         // Reset
         Register(this, Messages.MSG_RESET, Reset);
     }
-    
+
     public void Reset() {
         // Detached Entities from tracking
         Context.ChangeTracker.Clear();
