@@ -158,6 +158,7 @@ namespace prbd_2324_a06.ViewModel
         public string Amount {
             get => _amount;
             set => SetProperty(ref _amount, value, () => {
+                ApplicationRoot.NotifyColleagues(App.Messages.AMOUNT_CHANGED);
                 Validate();
             });
         }

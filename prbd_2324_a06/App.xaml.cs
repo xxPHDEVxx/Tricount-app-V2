@@ -28,7 +28,8 @@ public partial class App
         MSG_CLOSE_TAB,
         MSG_PARTICIPANT_ADDED,
         MSG_OPERATION_TRICOUNT_CHANGED,
-        MSG_DELETED
+        MSG_DELETED,
+        AMOUNT_CHANGED
     }
 
     public App() {
