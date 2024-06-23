@@ -8,6 +8,7 @@
   * Erreur Database pour la sauvegarde de certains poids après un Reset.
   * Tri Tricounts de la vue principale ne se fait que sur leur date de création.
 
+
 ### Liste des fonctionnalités supplémentaires
 
 ### Divers
