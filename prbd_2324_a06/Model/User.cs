@@ -81,14 +81,6 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     select t;
             return tricounts; // Retourne la liste des Tricounts créés par cet utilisateur
         }
-                // Méthode pour obtenir les Tricounts créés par cet utilisateur
-        //public IQueryable<Tricount> GetTricounts() {
-        //    return Context.Tricounts
-        //            .Where(t => t.CreatorId == UserId)
-        //            .OrderByDescending(t => t.GetLastDate())
-        //            .Select(t => t);
-        //     // Retourne la liste des Tricounts créés par cet utilisateur
-        //}
 
         // Méthode pour obtenir les Tricounts auxquels cet utilisateur participe
         public IQueryable<Tricount> GetParticipatedTricounts() {

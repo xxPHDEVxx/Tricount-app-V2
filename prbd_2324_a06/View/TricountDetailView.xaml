@@ -28,7 +28,6 @@
                 <Run Text="{Binding TitleHeader,  Mode=OneWay}" FontWeight="Bold" ></Run>
                 <Run Text="-" ></Run>
                 <Run Text="{Binding DescriptionHeader,  Mode=OneWay}" FontStyle="Italic"></Run>
-                <Run Text="{Binding DateLast,  Mode=OneWay}" FontStyle="Italic"></Run>
             </TextBlock>
             <TextBlock TextAlignment="Center" Margin="0, 20, 0, 0" Text="{Binding CreatedBy}"></TextBlock>
         </Grid>
