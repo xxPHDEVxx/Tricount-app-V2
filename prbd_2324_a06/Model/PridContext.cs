@@ -272,7 +272,7 @@ public class PridContext : DbContextBase
         modelBuilder.Entity<TemplateItem>()
             .HasData(
                 new TemplateItem { TemplateId = 1, UserId = 1, Weight = 2 },
-                new TemplateItem { TemplateId = 2, UserId = 2, Weight = 1 },
+                new TemplateItem { TemplateId = 1, UserId = 2, Weight = 1 },
                 new TemplateItem { TemplateId = 1, UserId = 3, Weight = 1 },
                 new TemplateItem { TemplateId = 2, UserId = 1, Weight = 1 },
                 new TemplateItem { TemplateId = 2, UserId = 3, Weight = 1 }
