@@ -10,16 +10,17 @@ namespace prbd_2324_a06.ViewModel
             Vm = vm;
             Weight = Repartition.Weight;
             IsChecked = Repartition.Weight != 0;
-            CalculAmount();
             Register(App.Messages.AMOUNT_CHANGED, CalculAmount);
         }
 
+        // attributs
         private Repartition _repartition;
         private string _myAmount;
         private OperationViewModel _vm;
         private int _weight;
         private bool _isChecked;
 
+        // propriétés
         public OperationViewModel Vm {
             get => _vm;
             init => SetProperty(ref _vm, value);
@@ -39,9 +40,7 @@ namespace prbd_2324_a06.ViewModel
             get => _weight;
             set => SetProperty(ref _weight, value, () => {
                 IsChecked = Weight != 0;
-                foreach (var repartition in Vm.Repartitions) {
-                    repartition.CalculAmount();
-                }
+                NotifyColleagues(App.Messages.AMOUNT_CHANGED);
             });
         }
 
@@ -54,13 +53,14 @@ namespace prbd_2324_a06.ViewModel
             get => _isChecked;
             set => SetProperty(ref _isChecked, value, () => {
                 Vm.Validate();
-                Weight = IsChecked ? 1 : 0;
+                Weight = IsChecked ? Weight > 1 ? Weight : 1 :  0;
             });
         }
 
+        // Méthode de calcul de dépense individuelle
         public void CalculAmount() {
             int totalWeight = 0;
-            if (Vm.Operation.Repartitions != null) {
+            if (Vm.Repartitions != null) {
                 // Calcul du total des poids
                 foreach (var r in Vm.Repartitions) {
                     totalWeight += r.Weight;
