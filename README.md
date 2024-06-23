@@ -4,9 +4,9 @@
 
 ### Liste des bugs connus
 
-  * bug 1
-  * bug 2
-  * ...
+  * Dispose manquant -> fenêtre opération s'ouvre en plusieurs fois après un logout/login.
+  * Erreur Database pour la sauvegarde de certains poids après un Reset.
+  * Tri Tricounts de la vue principale ne se fait que sur leur date de création.
 
 ### Liste des fonctionnalités supplémentaires
 
