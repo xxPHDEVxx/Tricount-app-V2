@@ -53,8 +53,6 @@ public class TricountDetailViewModel : ViewModelCommon
 
         get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
     }
-    public DateTime DateLast => Tricount.GetLastDate();
-
     public string TitleHeader { get => Tricount?.Title ?? "<New Tricount>"; }
     public string DescriptionHeader { get => Tricount?.Description ?? "No description"; }
     public string Title {
@@ -79,7 +77,7 @@ public class TricountDetailViewModel : ViewModelCommon
 
     public DateTime Date {
         get => _date;
-        set => SetProperty(ref _date, value);
+        set => SetProperty(ref _date, value, () => Validate());
     }
 
     private Tricount _tricount;
@@ -281,10 +279,15 @@ public class TricountDetailViewModel : ViewModelCommon
         if (!string.IsNullOrWhiteSpace(Description) && Description.Length < 3) {
             AddError(nameof(Description), "length must be >= 3, ");
         }
-
+        IsValidDate();
         return !HasErrors;
     }
 
+    private void IsValidDate() {
+        if (Date > DateTime.Today) {
+            AddError(nameof(Date), "cannot be in the future.");
+        }
+    }
     private void AddMySelfAction() {
         if (!IsNew) {
             var currentUser = GetCurrentUser();
