@@ -50,14 +50,6 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             return Context.Users.Max(u => u.UserId); // Retourne le plus grand ID d'utilisateur dans le contexte
         }
 
-        // Méthode pour obtenir un utilisateur par son nom
-        public static User GetUserByName(string name) {
-            return
-                Context.Users.FirstOrDefault(u =>
-                    u.FullName ==
-                    name); // Retourne le premier utilisateur avec le nom spécifié, ou null s'il n'y en a aucun
-        }
-
         // Méthode pour obtenir un utilisateur par son id
         public static User GetUserById(int id) {
             return
@@ -79,6 +71,9 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     where t.CreatorId == UserId
                     orderby  t.CreatedAt descending
                     select t;
+           foreach (var tricount in tricounts) {
+               Console.WriteLine(tricount.Title);
+           }
             return tricounts; // Retourne la liste des Tricounts créés par cet utilisateur
         }
 

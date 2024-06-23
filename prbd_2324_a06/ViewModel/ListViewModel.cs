@@ -50,7 +50,7 @@ public class ListViewModel : ViewModelCommon
                 new TricountCardViewModel(t)));
         } else {
             IQueryable<Tricount> tricounts = string.IsNullOrEmpty(Filter)
-                ? CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts())
+                ? (CurrentUser.GetTricounts().Union(CurrentUser.GetParticipatedTricounts()))
                 : CurrentUser.GetFiltered(Filter);
 
             Tricounts = new ObservableCollection<TricountCardViewModel>(tricounts.Select(t =>

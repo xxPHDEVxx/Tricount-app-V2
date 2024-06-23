@@ -29,9 +29,6 @@ public partial class App
         MSG_PARTICIPANT_ADDED,
         MSG_OPERATION_TRICOUNT_CHANGED,
         MSG_DELETED,
-        MSG_EDIT_OPERATION,
-        MSG_DELETE_OPERATION,
-        MSG_CLOSE_WINDOW,
         MSG_TITLE_CHANGED,
         AMOUNT_CHANGED,
         MSG_REFRESH

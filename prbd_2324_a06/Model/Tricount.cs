@@ -143,27 +143,14 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             foreach (var template in Templates) {
                 template.delete();
             }
+
             Context.Tricounts.Remove(this);
             Context.SaveChanges();
         }
 
         public static Tricount GetTricountByTitle(string title) {
-            return  Context.Tricounts.FirstOrDefault(t =>
-                    t.Title == title);
-        }
-        public DateTime GetLastDate() {
-            if (GetOperations().IsNullOrEmpty()) {
-                return CreatedAt;
-            } else {
-                var date = Context.Operations.ToList()
-                        .Where(o => o.TricountId == Id)
-                        .OrderByDescending(o => o.OperationDate)
-                        .FirstOrDefault();
-            return date.OperationDate;
-
-            }
+            return Context.Tricounts.FirstOrDefault(t =>
+                t.Title == title);
         }
     }
-
-
 }
