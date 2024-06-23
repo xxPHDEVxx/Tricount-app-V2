@@ -238,18 +238,18 @@ public class PridContext : DbContextBase
                 new Repartition { OperationId = 1, UserId = 1, Weight = 1 },
                 new Repartition { OperationId = 1, UserId = 2, Weight = 1 },
                 new Repartition { OperationId = 2, UserId = 1, Weight = 1 },
-                new Repartition { OperationId = 2, UserId = 2, Weight = 2 },
+                new Repartition { OperationId = 2, UserId = 2, Weight = 1 },
                 new Repartition { OperationId = 3, UserId = 1, Weight = 2 },
-                new Repartition { OperationId = 3, UserId = 2, Weight = 2 },
-                new Repartition { OperationId = 3, UserId = 3, Weight = 3 },
+                new Repartition { OperationId = 3, UserId = 2, Weight = 1 },
+                new Repartition { OperationId = 3, UserId = 3, Weight = 1 },
                 new Repartition { OperationId = 4, UserId = 1, Weight = 1 },
                 new Repartition { OperationId = 4, UserId = 2, Weight = 2 },
                 new Repartition { OperationId = 4, UserId = 3, Weight = 3 },
-                new Repartition { OperationId = 5, UserId = 1, Weight = 1 },
-                new Repartition { OperationId = 5, UserId = 2, Weight = 2 },
-                new Repartition { OperationId = 5, UserId = 3, Weight = 3 },
+                new Repartition { OperationId = 5, UserId = 1, Weight = 2 },
+                new Repartition { OperationId = 5, UserId = 2, Weight = 1 },
+                new Repartition { OperationId = 5, UserId = 3, Weight = 1 },
                 new Repartition { OperationId = 6, UserId = 1, Weight = 1 },
-                new Repartition { OperationId = 6, UserId = 3, Weight = 3 },
+                new Repartition { OperationId = 6, UserId = 3, Weight = 1 },
                 new Repartition { OperationId = 7, UserId = 2, Weight = 1 },
                 new Repartition { OperationId = 7, UserId = 3, Weight = 2 },
                 new Repartition { OperationId = 7, UserId = 4, Weight = 2 },
@@ -263,7 +263,6 @@ public class PridContext : DbContextBase
                 new Repartition { OperationId = 11, UserId = 4, Weight = 2 }
             );
 
-
         modelBuilder.Entity<Template>()
             .HasData(
                 new Template { Id = 1, Title = "Boris paye double", TricountId = 4 },
@@ -273,7 +272,7 @@ public class PridContext : DbContextBase
         modelBuilder.Entity<TemplateItem>()
             .HasData(
                 new TemplateItem { TemplateId = 1, UserId = 1, Weight = 2 },
-                new TemplateItem { TemplateId = 2, UserId = 2, Weight = 1 },
+                new TemplateItem { TemplateId = 1, UserId = 2, Weight = 1 },
                 new TemplateItem { TemplateId = 1, UserId = 3, Weight = 1 },
                 new TemplateItem { TemplateId = 2, UserId = 1, Weight = 1 },
                 new TemplateItem { TemplateId = 2, UserId = 3, Weight = 1 }

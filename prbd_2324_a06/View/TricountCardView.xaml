@@ -55,8 +55,11 @@
                                Margin="0,0,0,0" />
                     <TextBlock FontSize="12" TextAlignment="Left" Text="{Binding MyExpenses}" TextWrapping="Wrap"
                                Margin="0,1,0,0" />
-                    <TextBlock FontSize="12" TextAlignment="Left" Text="{Binding MyBalance}" TextWrapping="Wrap"
-                               Margin="0,1,0,0" />
+                    <TextBlock FontSize="12" TextAlignment="Left"  TextWrapping="Wrap" FontWeight="Bold"
+                               Margin="0,1,0,0" >
+                        <Run Text="My Balance :" FontWeight="Bold"></Run>
+                        <Run Text="{Binding MyBalance, Mode=OneWay}"  Foreground="{Binding Color}"          ></Run>              
+                    </TextBlock>
                 </StackPanel>
             </Grid>
         </Grid>

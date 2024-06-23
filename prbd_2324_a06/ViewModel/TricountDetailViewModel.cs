@@ -2,6 +2,7 @@
 using prbd_2324_a06.Model;
 using PRBD_Framework;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace prbd_2324_a06.ViewModel;
@@ -20,42 +21,63 @@ public class TricountDetailViewModel : ViewModelCommon
     public ICommand SaveCommand { get; set; }
     public ICommand CancelCommand { get; set; }
 
-    // Attributes et propriétés
-    public ObservableCollectionFast<string> Users { get; } = new ObservableCollectionFast<string>();
 
-    private string _selectedUser;
+    // Attributs et propriétés
+    private ObservableCollectionFast<User> _users;
+    public ObservableCollectionFast<User> Users { 
+        get => _users;
+        set => SetProperty(ref _users, value);
+    }
 
-    public string SelectedUser {
+    private User _selectedUser;
+
+    public User SelectedUser {
         get => _selectedUser;
         set => SetProperty(ref _selectedUser, value);
     }
 
-    private ObservableCollection<string> _participants;
+    private ObservableCollectionFast<CardParticipantViewModel> _participants;
 
-    public ObservableCollection<string> Participants {
+    public ObservableCollectionFast<CardParticipantViewModel> Participants {
         get => _participants;
         set => SetProperty(ref _participants, value);
     }
-    public string CreatedBy => $"Created By {CurrentUser.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}";
-    private string _title;
+    
+    private ObservableCollectionFast<CardTemplateViewModel> _templates;
 
+    public ObservableCollectionFast<CardTemplateViewModel> Templates {
+        get => _templates;
+        set => SetProperty(ref _templates, value);
+    }
+    public string CreatedBy {
+
+        get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
+    }
+    public string TitleHeader { get => Tricount?.Title ?? "<New Tricount>"; }
+    public string DescriptionHeader { get => Tricount?.Description ?? "No description"; }
     public string Title {
-        get => _title;
-        set => SetProperty(ref _title, value, () => Validate());
+        get => Tricount?.Title;
+        set => SetProperty(Tricount.Title, value, Tricount, (t, v) => {
+            t.Title = v;
+            Validate();
+            NotifyColleagues(App.Messages.MSG_TITLE_CHANGED, Tricount);
+        });
     }
 
-    private string _description;
 
     public string Description {
-        get => _description;
-        set => SetProperty(ref _description, value, () => Validate());
+        get => Tricount?.Description ;
+        set => SetProperty(Tricount.Description, value, Tricount, (t, v) => {
+            t.Description = v;
+            Validate();
+        });
     }
 
     private DateTime _date;
 
     public DateTime Date {
         get => _date;
-        set => SetProperty(ref _date, value);
+        set => SetProperty(ref _date, value, () => Validate());
     }
 
     private Tricount _tricount;
@@ -79,39 +101,81 @@ public class TricountDetailViewModel : ViewModelCommon
         set => SetProperty(ref _isNew, value);
     }
 
+
     public TricountDetailViewModel(Tricount tricount, bool isNew) : base() {
         Tricount = tricount;
         IsNew = isNew;
-        Users.RefreshFromModel(Context.Users
-            .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
-            .Select(m => m.FullName)
-        );
+
+
 
         User = CurrentUser;
 
-        if (!IsNew) {
-            Tricount.Title = tricount.Title;
-            Tricount.Description = tricount.Description;
-            Tricount.CreatedAt = tricount.CreatedAt;
-        }
-
-        Participants = new ObservableCollection<string>();
         SaveCommand = new RelayCommand(SaveAction, CanSaveAction);
         CancelCommand = new RelayCommand(CancelAction, CanCancelAction);
         AddCommand = new RelayCommand(AddParticipantAction, CanAddParticipantAction);
         AddMySelf = new RelayCommand(AddMySelfAction,CanAddMySelfAction);
         AddEvery = new RelayCommand(AddAllAction, CanAddAllAction);
+        
+        AddTemplate = new RelayCommand(AddTemplateAction, CanAddTemplateAction);
+        
+        OnRefreshData();
+        RaisePropertyChanged();
+
+        Console.WriteLine(Participants.Any(c => c.User == GetCurrentUser()));
+
+
+
     }
 
+
+
+    protected override void OnRefreshData() {
+        if (IsNew) {
+            IQueryable<User> users = Context.Users
+                .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
+                .OrderBy(m => m.FullName);
+            Users = new ObservableCollectionFast<User>(users.Select(u => u));
+
+           
+            Participants = new ObservableCollectionFast<CardParticipantViewModel>();
+
+            Participants.Add(new CardParticipantViewModel(this, CurrentUser));
+            Date = DateTime.Now;
+        } else {
+            Tricount = Model.Tricount.GetTricountByTitle(Tricount.Title);
+            Date = Tricount.CreatedAt;
+            //on récupère les participants du tricont
+            IQueryable<User> allPart = Tricount.GetParticipants().ToList().AsQueryable();
+            Participants = new ObservableCollectionFast<CardParticipantViewModel>(
+               allPart
+                .Select(u => new CardParticipantViewModel(this, u))
+                );
+
+            //on récupere les users qui ne participent pas
+            IQueryable<User> part = Tricount.GetParticipants();
+
+            IQueryable<User> users = Context.Users
+                .Where(u => u.UserId != CurrentUser.UserId && u.Role == Role.User)
+                .OrderBy(m => m.FullName);
+            
+            Users = new ObservableCollectionFast<User>(users.Except(part));
+
+            // récupere les templates
+            IQueryable<Template> templates = Tricount.GetTemplates().ToList().AsQueryable();
+
+            Templates = new ObservableCollectionFast<CardTemplateViewModel>(templates
+                .Select(t => new CardTemplateViewModel(this, t))
+                );
+        }
+    }
     public override void SaveAction() {
         // Add propriétés au tricount 
         if (IsNew) {
-            Tricount = new Tricount(Title, Description, DateTime.Today, User);
-            Context.Add(Tricount);
-            AddSubscriptions();
+            Tricount = new Tricount(Title, Description, Date, User);
+            Context.Tricounts.Add(Tricount);
         }
 
-        // ajouter code pour edit
+        AddSubscriptions();
         Context.SaveChanges();
         RaisePropertyChanged();
         NotifyColleagues(App.Messages.MSG_TRICOUNT_CHANGED, Tricount);
@@ -121,14 +185,39 @@ public class TricountDetailViewModel : ViewModelCommon
     public void AddSubscriptions() {
         if (Tricount != null) {
             if (IsNew) {
-                Tricount.Subscriptions.Add(new Subscription(User.UserId, Tricount.Id));
-            }
+                foreach (var user in Participants) {
+                    Tricount.Subscriptions.Add(new Subscription {
+                        UserId = user.User.UserId,
+                        TricountId = Tricount.Id
+                    });
+                }
 
-            foreach (var user in Participants) {
-                Tricount.Subscriptions.Add(new Subscription(User.GetUserByName(user).UserId, Tricount.Id));
+            } else {
+
+                var currentSubscriptions = Tricount.Subscriptions.ToList();
+
+                //Si l'user n'est pas dans les subscrptions on l'ajoute
+                foreach (var user in Participants) {
+                    if (!currentSubscriptions.Any(s => s.UserId == user.User.UserId)) {
+                        Tricount.Subscriptions.Add(new Subscription {
+                            UserId = user.User.UserId,
+                            TricountId = Tricount.Id
+                        });
+                    }
+                }
+
+                // depuis les participants, si on ne retrouve pas l'user on le supprime
+                foreach (var subscription in currentSubscriptions) {
+                    if (!Participants.Any(p => p.User.UserId == subscription.UserId)) {
+                        Tricount.Subscriptions.Remove(subscription);
+                    }
+                }
+
             }
         }
     }
+        
+    
 
     // Validation before the save Action
     private bool CanSaveAction() {
@@ -139,17 +228,17 @@ public class TricountDetailViewModel : ViewModelCommon
 
     private void AddParticipantAction() {
         if (Participants != null && SelectedUser != null) {
-            Participants.Add(SelectedUser);
+            Participants.Add(new CardParticipantViewModel(this, SelectedUser));
             Users.Remove(SelectedUser);
             NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
             Console.WriteLine(Participants.Count);
         }
 
-        if (Participants == null || SelectedUser == null || Participants.Contains(SelectedUser)) {
+        if (Participants == null || SelectedUser == null || Participants.Contains(new CardParticipantViewModel(this, SelectedUser))) {
             return;
         }
 
-        Participants.Add(SelectedUser);
+        Participants.Add(new CardParticipantViewModel( this, SelectedUser));
         Users.Remove(SelectedUser);
         Console.WriteLine(Participants.Count);
         NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
@@ -172,7 +261,7 @@ public class TricountDetailViewModel : ViewModelCommon
             Tricount.Reload();
             RaisePropertyChanged();
         }
-    }
+    } 
 
     private bool CanCancelAction() {
         return Tricount != null && (IsNew || Tricount.IsModified);
@@ -190,35 +279,50 @@ public class TricountDetailViewModel : ViewModelCommon
         if (!string.IsNullOrWhiteSpace(Description) && Description.Length < 3) {
             AddError(nameof(Description), "length must be >= 3, ");
         }
-
+        IsValidDate();
         return !HasErrors;
     }
 
+    private void IsValidDate() {
+        if (Date > DateTime.Today) {
+            AddError(nameof(Date), "cannot be in the future.");
+        }
+    }
     private void AddMySelfAction() {
-        if (IsNew) {
-            var currentUser = GetCurrentUser().FullName;
-            if (!Participants.Contains(currentUser)) {
-                Participants.Add(currentUser);
+        if (!IsNew) {
+            var currentUser = GetCurrentUser();
+             if (!Participants.Any(c => c.User == currentUser)) {
+                Participants.Add(new CardParticipantViewModel(this, currentUser));
             }
         }
     }
 
     private bool CanAddMySelfAction() {
-        var currentUser = GetCurrentUser().FullName;
-        return (!Participants.Contains(currentUser) && !IsNew);
+        var currentUser = GetCurrentUser();
+        return !Participants.Any(c => c.User == GetCurrentUser());
     }
 
     private void AddAllAction() {
-        if (IsNew) {
-            foreach (var user in Users) {
-                if (!Participants.Contains(user)) {
-                    Participants.Add(user);
-                }
+        foreach (var user in Users.ToList()) {
+            if (!Participants.Any(c => c.User == user)) {
+                Participants.Add(new CardParticipantViewModel(this, user));
             }
+            Users.Clear();
         }
     }
+    
 
     private bool CanAddAllAction() {
         return !Users.IsNullOrEmpty();
+    }
+
+    //add template et canAdd
+    private void AddTemplateAction() {
+        //scoop de 3 - pas implémenté
+    }
+
+
+    private bool CanAddTemplateAction() {
+        return !IsNew;
     }
 }

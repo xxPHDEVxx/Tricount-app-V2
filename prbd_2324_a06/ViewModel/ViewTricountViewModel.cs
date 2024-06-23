@@ -19,7 +19,8 @@ namespace prbd_2324_a06.ViewModel
                 NotifyColleagues(App.Messages.MSG_DISPLAY_OPERATIONS, vm.Tricount);
             });
             EditTricount = new RelayCommand(() => {
-                NotifyColleagues(App.Messages.MSG_OPEN_TRICOUNT, Tricount);
+                NotifyColleagues(App.Messages.MSG_CLOSE_TAB, Tricount);
+                NotifyColleagues(App.Messages.MSG_EDIT_TRICOUNT, Tricount);
             });
             DeleteTricount = new RelayCommand(DeleteAction);
             OpenEditOperation = new RelayCommand<OperationCardViewModel>(vm => {
@@ -30,7 +31,7 @@ namespace prbd_2324_a06.ViewModel
             });
             Register<Operation>(App.Messages.MSG_OPERATION_CHANGED, operation => OnRefreshData());
             // Reset
-            Register(App.Messages.MSG_RESET, () => OnRefreshData());
+            Register(App.Messages.MSG_REFRESH, () => OnRefreshData());
         }
 
         private ObservableCollection<OperationCardViewModel> _operations;
@@ -63,7 +64,7 @@ namespace prbd_2324_a06.ViewModel
         }
 
         public string Description {
-            get => Tricount.Description;
+            get => Tricount.Description?? "No Description";
             set => SetProperty(Tricount.Description, value, Tricount, (tr, d) => {
             });
         }

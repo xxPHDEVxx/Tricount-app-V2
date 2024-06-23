@@ -1,12 +1,15 @@
 ﻿using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
-using System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
-using System.ComponentModel.DataAnnotations.Schema; // Importation de System.ComponentModel.DataAnnotations.Schema pour utiliser les attributs de base de données
+using
+    System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
+using
+    System.ComponentModel.DataAnnotations.Schema; // Importation de System.ComponentModel.DataAnnotations.Schema pour utiliser les attributs de base de données
 using System.Globalization; // Importation de System.Globalization pour manipuler la culture
 using System.Windows.Documents; // Importation de System.Windows.Documents pour manipuler les documents Windows
 
 namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.Model
 {
-    public class Operation : EntityBase<PridContext> // Définition de la classe Operation qui hérite de EntityBase<PridContext>
+    public class
+        Operation : EntityBase<PridContext> // Définition de la classe Operation qui hérite de EntityBase<PridContext>
     {
         // Constructeur prenant plusieurs paramètres pour initialiser une opération
         public Operation(string title, int tricountId, double amount, DateTime operationDate, int initiatorId) {
@@ -35,6 +38,7 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
 
         [ForeignKey(nameof(Tricount))] // Clé étrangère vers Tricount
         public int TricountId { get; set; } // Propriété représentant l'ID du Tricount associé
+
         public virtual Tricount Tricount { get; set; } // Propriété de navigation vers le Tricount associé
 
         [Required] // Annotation indiquant que la propriété est requise
@@ -45,6 +49,7 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
 
         [ForeignKey(nameof(Initiator))] // Clé étrangère vers l'initiateur de l'opération
         public int InitiatorId { get; set; } // Propriété représentant l'ID de l'initiateur de l'opération
+
         public virtual User Initiator { get; set; } // Propriété de navigation vers l'initiateur de l'opération
 
         // Collection de répartitions associées à cette opération
@@ -62,8 +67,8 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
         // Méthode pour obtenir les répartitions associées à cette opération
         public IQueryable<Repartition> GetRepartitionByOperation() {
             var q = from r in Context.Repartitions // Requête LINQ pour récupérer les répartitions
-                    where r.OperationId == Id // Filtre pour les répartitions associées à cette opération
-                    select r;
+                where r.OperationId == Id // Filtre pour les répartitions associées à cette opération
+                select r;
             return q; // Retourne la requête
         }
 
@@ -72,18 +77,6 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             Repartitions.Clear(); // Supprime toutes les répartitions associées à cette opération
             Context.Operations.Remove(this); // Supprime cette opération du contexte
             Context.SaveChanges(); // Enregistre les changements dans la base de données
-        }
-
-        // Méthode pour valider l'opération
-        public override bool Validate() {
-            ClearErrors(); // Efface les erreurs de validation précédentes
-
-            if (string.IsNullOrWhiteSpace(Title)) // Vérifie si le titre est vide ou null
-                AddError(nameof(Title), "required"); // Ajoute une erreur si le titre est requis
-            else if (Title.Length < 3) // Vérifie si le titre a une longueur inférieure à 3 caractères
-                AddError(nameof(Title), "length must be >= 3"); // Ajoute une erreur si le titre est trop court
-
-            return !HasErrors; // Retourne vrai si aucune erreur n'est présente, sinon retourne faux
         }
     }
 }

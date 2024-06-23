@@ -24,11 +24,12 @@ public class TricountCardViewModel : ViewModelCommon
     public string WithFriends => Tricount.NumberOfParticipants() == 0 ? "With no friend" : $"With {Tricount.NumberOfParticipants()} friends";
     public string LastOperation => Tricount.GetOperations().Count() == 0 ? "" : $"Last operation on {Tricount.GetLatestOperation().OperationDate.ToString("dd/MM/yyyy")}";
     public string NumberOfOperations => Tricount.GetOperations().Count() == 0 ? "No operation" : $" {Tricount.GetOperations().Count()} operations";
-    public string TotalExpenses => $"Total expense : {Tricount.GetTotal()}";
-    public string MyExpenses => $"My Expenses : {CurrentUser.GetMyExpenses(Tricount)}";
-    public string MyBalance => $"My Balance : {CurrentUser.GetMyBalance(Tricount)}";
+    public string TotalExpenses => $"Total expense : {Tricount.GetTotal()}€";
+    public string MyExpenses => $"My Expenses : {CurrentUser.GetMyExpenses(Tricount)}€";
+    public string MyBalance => $"{CurrentUser.GetMyBalance(Tricount)} €";
 
     public double Total => Tricount.GetTotal();
+    public string Color => CurrentUser.GetMyBalance(Tricount) > 0 ? "Green" : "Red";
     public  TricountCardViewModel(Tricount tricount) {
         Tricount = tricount;
         UpdateBackground();
