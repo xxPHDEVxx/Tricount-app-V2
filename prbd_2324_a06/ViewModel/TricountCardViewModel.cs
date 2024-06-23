@@ -29,7 +29,7 @@ public class TricountCardViewModel : ViewModelCommon
     public string MyBalance => $"{CurrentUser.GetMyBalance(Tricount)} €";
 
     public double Total => Tricount.GetTotal();
-    public string Color => CurrentUser.GetMyBalance(Tricount) > 0 ? "Green" : "Red";
+    public string Color => !IsAdmin && CurrentUser.GetMyBalance(Tricount) >= 0 ? "Green" : "Red";
     public  TricountCardViewModel(Tricount tricount) {
         Tricount = tricount;
         UpdateBackground();
