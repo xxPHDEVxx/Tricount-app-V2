@@ -71,9 +71,6 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
                     where t.CreatorId == UserId
                     orderby  t.CreatedAt descending
                     select t;
-           foreach (var tricount in tricounts) {
-               Console.WriteLine(tricount.Title);
-           }
             return tricounts; // Retourne la liste des Tricounts créés par cet utilisateur
         }
 
