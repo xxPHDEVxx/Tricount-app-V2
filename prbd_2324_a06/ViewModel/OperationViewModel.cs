@@ -8,12 +8,12 @@ namespace prbd_2324_a06.ViewModel
     public class OperationViewModel : DialogViewModelBase<Operation, PridContext>
     {
         public OperationViewModel(Operation operation) {
-            
             // initialisation des propriétés
             Tricount = Context.Tricounts.Find(operation.TricountId);
             Operation = operation;
             WindowTitle = operation.Title == null ? "Add Operation" : "Edit Operation";
-            Amount = $"{Operation.Amount:F2}";
+            Amount = Operation.Title != null ? $"{Operation.Amount:F2}" : "0,00";
+            Title = Operation.Title ?? "";
             OperationDate = Operation.Title == null ? DateTime.Today : Operation.OperationDate;
             Button = Operation.Title == null ? "Add" : "Save";
             Visible = Operation.Title == null ? Visibility.Hidden : Visibility.Visible;
@@ -24,14 +24,16 @@ namespace prbd_2324_a06.ViewModel
             CurrentUser = App.CurrentUser;
             Initiator = operation.Title == null ? CurrentUser : Context.Users.Find(Operation.InitiatorId);
             NoTemplates = Templates.Any();
-            Repartitions = new ObservableCollectionFast<RepartitionsViewModel>(); 
+            Repartitions = new ObservableCollectionFast<RepartitionsViewModel>();
             FillRepartitionsViewModels();
-            
+
             // initialisation des commandes 
             SaveCommand = new RelayCommand(SaveAction, () => !HasErrors && Error == "");
             ApplyTemplate = new RelayCommand(ApplyAction,
                 // vérification pour éviter Null Exception
-                () => SelectedTemplate == null ? SelectedTemplate != null : SelectedTemplate.Title != "-- Choose a template --");
+                () => SelectedTemplate == null
+                    ? SelectedTemplate != null
+                    : SelectedTemplate.Title != "-- Choose a template --");
             SaveTemplate = new RelayCommand(SaveTemplateAction, () => !HasErrors && Error == "");
             DeleteCommand = new RelayCommand(DeleteAction);
         }
@@ -58,6 +60,7 @@ namespace prbd_2324_a06.ViewModel
         private Visibility _visible;
         private List<User> _participants;
         private List<Template> _templates;
+        private string _title;
 
         // Properties
         public ObservableCollectionFast<RepartitionsViewModel> Repartitions {
@@ -130,9 +133,8 @@ namespace prbd_2324_a06.ViewModel
         }
 
         public string Title {
-            get => Operation?.Title;
-            set => SetProperty(Operation.Title, value, Operation, (o, t) => {
-                o.Title = t;
+            get => _title;
+            set => SetProperty(ref _title, value, () => {
                 Validate();
             });
         }
@@ -241,13 +243,23 @@ namespace prbd_2324_a06.ViewModel
         // Méthodes de validation
         public override bool Validate() {
             ClearErrors();
-            Operation.Validate();
+            ValidateTitle();
             IsValidAmount();
             IsValidDate();
             AddErrors(Operation.Errors);
             Error = !ValidateCheckBoxes() ? "You must check at least one participant !" : "";
 
             return !HasErrors;
+        }
+
+        private void ValidateTitle() {
+            ClearErrors(); // Efface les erreurs de validation précédentes
+
+            if (string.IsNullOrWhiteSpace(Title)) // Vérifie si le titre est vide ou null
+                AddError(nameof(Title), "required"); // Ajoute une erreur si le titre est requis
+            else if (Title.Length < 3) // Vérifie si le titre a une longueur inférieure à 3 caractères
+                AddError(nameof(Title), "length must be >= 3"); // Ajoute une erreur si le titre est trop court
+
         }
 
         // Check if at least one checkbox is checked
@@ -309,8 +321,11 @@ namespace prbd_2324_a06.ViewModel
                     Repartitions.Add(new RepartitionsViewModel(new Repartition(Operation.Id, user.UserId, 0), this));
                 }
             }
+
             // mise à jour montants de chaque répartition une fois la liste de répartitions complète
             NotifyColleagues(App.Messages.AMOUNT_CHANGED);
+            // Validation une fois liste de répartitions complète pour bien vérifier chaque checkbox
+            Validate();
         }
 
         protected internal void Close() {

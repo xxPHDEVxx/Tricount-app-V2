@@ -53,26 +53,29 @@ namespace prbd_2324_a06.ViewModel
             get => _isChecked;
             set => SetProperty(ref _isChecked, value, () => {
                 Vm.Validate();
-                Weight = IsChecked ? Weight > 1 ? Weight : 1 :  0;
+                Weight = IsChecked ? Weight > 1 ? Weight : 1 : 0;
             });
         }
 
         // Méthode de calcul de dépense individuelle
         public void CalculAmount() {
-            int totalWeight = 0;
-            if (Vm.Repartitions != null) {
-                // Calcul du total des poids
-                foreach (var r in Vm.Repartitions) {
-                    totalWeight += r.Weight;
+            if (Vm.Amount.Length > 0) {
+                int totalWeight = 0;
+                if (Vm.Repartitions != null) {
+                    // Calcul du total des poids
+                    foreach (var r in Vm.Repartitions) {
+                        totalWeight += r.Weight;
+                    }
+
+                    // Calcul du montant à afficher
+                    double part = totalWeight < 1
+                        ? double.Parse(Vm.Amount) * totalWeight
+                        : double.Parse(Vm.Amount) / totalWeight;
+
+                    MyAmount = $"{part * Weight:F2} €";
                 }
-
-                // Calcul du montant à afficher
-                double part = totalWeight < 1
-                    ? double.Parse(Vm.Amount) * totalWeight
-                    : double.Parse(Vm.Amount) / totalWeight;
-
-                MyAmount = $"{part * Weight:F2} €";
-            }
+            }else
+                MyAmount = "0,00 €";
         }
     }
 }

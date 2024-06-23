@@ -39,6 +39,7 @@
         <TextBox x:Name="AmountTextBox" Grid.Row="1" Grid.Column="1" Margin="10"
                  Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" />
 
+
         <!-- Initiator -->
         <TextBlock Text="Initiator:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="10" />
         <ComboBox x:Name="InitiatorComboBox" Grid.Row="2" Grid.Column="1" Margin="10"
@@ -67,7 +68,7 @@
         <!-- Participants -->
         <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
             <!-- Container for dynamic content -->
-            <ScrollViewer MaxHeight="160" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Height="150" VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="ParticipantsPanel" Orientation="Vertical" HorizontalAlignment="Center">
                     <ListBox ItemsSource="{Binding Repartitions}" BorderThickness="0">
                         <ListBox.ItemTemplate>
@@ -89,13 +90,14 @@
                                               Grid.Column="0" />
 
                                     <!-- NumericUpDown in the second column -->
-                                    <num:NumericUpDown Value="{Binding Weight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                       x:Name="NumericUpDown"
-                                                       MinValue="0"
-                                                       Margin="2"
-                                                       HorizontalAlignment="Center"
-                                                       Grid.Column="1"
-                                                       Width="40" />
+                                    <num:NumericUpDown
+                                        Value="{Binding Weight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        x:Name="NumericUpDown"
+                                        MinValue="0"
+                                        Margin="2"
+                                        HorizontalAlignment="Center"
+                                        Grid.Column="1"
+                                        Width="40" />
 
                                     <!-- TextBlock in the third column -->
                                     <TextBlock
