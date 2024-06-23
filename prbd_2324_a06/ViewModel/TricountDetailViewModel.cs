@@ -52,7 +52,8 @@ public class TricountDetailViewModel : ViewModelCommon
     public string CreatedBy {
 
         get => IsNew ? $"Created By {User.FullName} on {DateTime.Now.ToString("dd/MM/yyyy")}": $"Created By {Tricount.Creator.FullName} on {Tricount.CreatedAt.ToString("dd/MM/yyyy")}";
-    } 
+    }
+    public DateTime DateLast => Tricount.GetLastDate();
 
     public string TitleHeader { get => Tricount?.Title ?? "<New Tricount>"; }
     public string DescriptionHeader { get => Tricount?.Description ?? "No description"; }
@@ -122,7 +123,6 @@ public class TricountDetailViewModel : ViewModelCommon
         OnRefreshData();
         RaisePropertyChanged();
 
-        Console.WriteLine(IsNew);
 
 
     }
