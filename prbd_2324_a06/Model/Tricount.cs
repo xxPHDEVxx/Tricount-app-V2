@@ -150,6 +150,19 @@ namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.
             return  Context.Tricounts.FirstOrDefault(t =>
                     t.Title == title);
         }
+        public DateTime GetLastDate() {
+            if (GetOperations() == null) {
+                return CreatedAt;
+            } else {
+                var date = Context.Operations
+                        .Where(o => o.TricountId == Id)
+                        .OrderByDescending(o => o.OperationDate)
+                        .FirstOrDefault();
+            return date.OperationDate;
+
+            }
+        }
     }
+
 
 }
