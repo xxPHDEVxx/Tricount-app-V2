@@ -240,7 +240,7 @@ public class TricountDetailViewModel : ViewModelCommon
             return;
         }
 
-        Participants.Add(new CardParticipantViewModel(  this, SelectedUser));
+        Participants.Add(new CardParticipantViewModel( this, SelectedUser));
         Users.Remove(SelectedUser);
         Console.WriteLine(Participants.Count);
         NotifyColleagues(App.Messages.MSG_PARTICIPANT_ADDED, SelectedUser);
@@ -296,7 +296,7 @@ public class TricountDetailViewModel : ViewModelCommon
 
     private bool CanAddMySelfAction() {
         var currentUser = GetCurrentUser();
-        return IsNew || !Participants.Any(c => c.User == GetCurrentUser());
+        return !Participants.Any(c => c.User == GetCurrentUser());
     }
 
     private void AddAllAction() {
