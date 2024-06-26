@@ -4,6 +4,7 @@
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
               xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
               xmlns:vw="clr-namespace:prbd_2324_a06.View"
               mc:Ignorable="d"
@@ -17,6 +18,7 @@
             <MenuItem Header="Logout" Click="Logout_Click"/>
             <MenuItem Header="Reload"  />
             <MenuItem Header="Reset"  Click="Reset_Click"/>
+            <MenuItem Header="Session1" Command="{Binding Session1}" Visibility="{c:Binding IsAdmin}"></MenuItem>
         </Menu>
         <f:MyTabControl x:Name="tabControl" Margin="5 19 5 5" Grid.Row="1" HasCloseButton="True">
             <TabItem x:Name="tricountTabs" Header="My Tricounts" Tag="Tricount">

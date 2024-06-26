@@ -1,0 +1,81 @@
+﻿<f:UserControlBase x:Class="prbd_2324_a06.View.Session1View"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+                   xmlns:vm="clr-namespace:prbd_2324_a06.ViewModel"
+                   xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+                   mc:Ignorable="d"
+                   d:DataContext="{d:DesignInstance Type=vm:Session1ViewModel, IsDesignTimeCreatable=False}"
+                   d:DesignHeight="800" d:DesignWidth="800"
+                   x:Name="uc">
+    <UserControl.DataContext>
+        <vm:Session1ViewModel x:Name="vm" />
+    </UserControl.DataContext>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.RowSpan="3" Margin="5,0,5,10">
+            <Label Content="Select a User:" FontWeight="Bold" DockPanel.Dock="Top" />
+            <TextBlock FontSize="12" FontStyle="Italic" TextWrapping="Wrap" DockPanel.Dock="Bottom" Margin="5">
+                Cette listbox présente tous les utilisateurs du système, triés dans l'ordre inverse du nombre de
+                tricounts auxquels ils participent et, en second lieu, triés par ordre croissant de leur "FullName".
+            </TextBlock>
+            <ListBox VerticalAlignment="Stretch" Margin="5" DisplayMemberPath="FullName" ItemsSource="{Binding Users}"
+                     SelectedItem="{Binding SelectedUser}" />
+        </DockPanel>
+        <DockPanel Grid.Row="0" Grid.Column="1" Margin="10">
+            <Label Content="Select a Tricount:" DockPanel.Dock="Left" FontWeight="Bold" Height="24"
+                   VerticalAlignment="Top" />
+            <TextBlock FontSize="12" FontStyle="Italic" TextWrapping="Wrap" DockPanel.Dock="Bottom" Margin="5">
+                Cette combobox présente, dans l'ordre alphabétique, tous les tricounts auxquels l'utilisateur sélectionné
+                à gauche n'a pas accès pour l'instant, c'est-à-dire ceux dont il n'est pas un des participants.
+                Elle doit être vide et désactivé si aucun utilisateur n'est sélectionné.
+            </TextBlock>
+            <ComboBox DisplayMemberPath="Title" Height="26" IsEnabled="{c:Binding 'SelectedUser != null'}"
+                      ItemsSource="{Binding Tricounts}"
+                      SelectedItem="{Binding SelectedTricount}" />
+        </DockPanel>
+        <DockPanel Grid.Row="1" Grid.Column="1" Margin="10">
+            <Label Content="Operations for the selected Tricount:" DockPanel.Dock="Top" FontWeight="Bold" Height="24"
+                   Margin="0,0,0,5" />
+            <TextBlock FontSize="12" FontStyle="Italic" TextWrapping="Wrap" DockPanel.Dock="Bottom" Margin="5">
+                Cette listview présente toutes les opérations du tricount sélectionné dans la combobox ci-dessus,
+                dans l'ordre alphabétique de leur titre.
+            </TextBlock>
+            <ListView VerticalAlignment="Stretch" ItemsSource="{Binding Operations}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Operation.Title}"
+                        IsChecked="{Binding Ischecked}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="1">
+            <Button Content="Add Participation" Width="150" Height="20" 
+                    IsEnabled="{Binding AddEnable}"
+                    DockPanel.Dock="Top" Margin="0,30,0,0"
+                    Command="{Binding AddCommand}"/>
+            <TextBlock FontSize="12" FontStyle="Italic" TextWrapping="Wrap" DockPanel.Dock="Bottom" Margin="40,5">
+                <Run>Ce bouton permet :</Run>
+                <LineBreak />
+                <LineBreak />
+                <Run>1) d'ajouter une participation pour l'utilisateur sélectionné au tricount sélectionné ci-dessus.</Run>
+                <LineBreak />
+                <Run>2) d'ajouter une répartition pour cet utilisateur pour les opérations sélectionnées ci-dessus (avec un poids de 1).</Run>
+                <LineBreak />
+                <LineBreak />
+                <Run>Il ne doit être actif que lorsqu'un utilisateur et un tricount ont été sélectionnés.</Run>
+            </TextBlock>
+        </DockPanel>
+    </Grid>
+</f:UserControlBase>

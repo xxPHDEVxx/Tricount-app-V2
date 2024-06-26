@@ -31,7 +31,9 @@ public partial class App
         MSG_DELETED,
         MSG_TITLE_CHANGED,
         AMOUNT_CHANGED,
-        MSG_REFRESH
+        MSG_REFRESH,
+        SESSION1,
+        SESSION1_DATA_CHANGED
     }
 
     public App() {

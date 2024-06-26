@@ -21,7 +21,7 @@ namespace prbd_2324_a06.View
             Register<Tricount>(App.Messages.MSG_CLOSE_TAB, tricount => DoCloseTab(tricount));
             Register<Tricount>(App.Messages.MSG_TRICOUNT_CHANGED, tricount => DoCloseTab(tricount));
             Register(App.Messages.MSG_DELETED, DeleteAction);
-
+            Register(App.Messages.SESSION1, DoDisplaySession1);
             Register<Tricount>(App.Messages.MSG_TITLE_CHANGED,
             tricount => DoRenameTab(string.IsNullOrEmpty(tricount.Title) ? "<New Tricount>" : tricount.Title));
         }
@@ -52,6 +52,10 @@ namespace prbd_2324_a06.View
         private void DoDisplayViewTricount(Tricount tricount) {
             if (tricount != null)
                 OpenTab(tricount.Title, tricount.Title, () => new ViewTricountView(tricount));
+        }
+
+        private void DoDisplaySession1() {
+            OpenTab("Session1", "Session1", ()=> new Session1View());
         }
 
         // Ouverture d'un nouvel onglet avec une vue spécifique
