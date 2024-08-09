@@ -4,6 +4,13 @@
 
 Le projet **Tricount .NET** est une application de gestion des dépenses entre utilisateurs, développée en C# avec le framework .NET. Conçu pour offrir une expérience plus esthétique et intuitive que sa version Java, Tricount .NET simplifie la répartition des coûts lors d'événements collectifs comme des voyages, des sorties entre amis ou des projets communs. Grâce à une interface moderne et élégante, cette application permet de créer, gérer et partager des comptes de dépenses (appelés "Tricounts") entre plusieurs participants.
 
+<br>
+
+<div>
+    <img src="https://github.com/xxPHDEVxx/Tricount-app-V2/blob/master/presentation1.png" width="500" height="400">
+    <img src="https://github.com/xxPHDEVxx/Tricount-app-V2/blob/master/presentation2.png" width="500" height="400">
+</div>
+
 ## Fonctionnalités
 
 - **Création et gestion des Tricounts** : Créez des Tricounts pour différents événements, ajoutez des participants et enregistrez les dépenses.
