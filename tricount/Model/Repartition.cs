@@ -1,7 +1,7 @@
 ﻿using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
 using System.ComponentModel.DataAnnotations.Schema; // Importation de System.ComponentModel.DataAnnotations.Schema pour utiliser les attributs de base de données
 
-namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.Model
+namespace prbd_2324_a06.Model // Déclaration de l'espace de noms tricount.Model
 {
     public class Repartition : EntityBase<PridContext> // Définition de la classe Repartition qui hérite de EntityBase<PridContext>
     {

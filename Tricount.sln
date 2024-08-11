@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prbd_2324_a06", "prbd_2324_a06\prbd_2324_a06.csproj", "{F1DA1DFE-ECBF-4E1E-AF92-28D2FEB3E9C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tricount", "tricount\tricount.csproj", "{F1DA1DFE-ECBF-4E1E-AF92-28D2FEB3E9C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7557}") = "PRBD_Framework", "PRBD_Framework\PRBD_Framework.csproj", "{A786370A-ECE7-4F52-8C81-D6CE2378376A}"
 EndProject

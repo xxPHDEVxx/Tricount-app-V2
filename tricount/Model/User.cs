@@ -3,7 +3,7 @@ using PRBD_Framework; // Importation de la bibliothèque PRBD_Framework
 using
     System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
 
-namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.Model
+namespace prbd_2324_a06.Model // Déclaration de l'espace de noms tricount.Model
 {
     // Définition de l'énumération Role représentant les rôles d'utilisateur
     public enum Role

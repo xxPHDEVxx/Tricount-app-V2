@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations; // Importation de System.ComponentModel.DataAnnotations pour utiliser les annotations de validation
 using System.ComponentModel.DataAnnotations.Schema; // Importation de System.ComponentModel.DataAnnotations.Schema pour utiliser les attributs de base de données
 
-namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.Model
+namespace prbd_2324_a06.Model // Déclaration de l'espace de noms tricount.Model
 {
     public class Template : EntityBase<PridContext> // Définition de la classe Template qui hérite de EntityBase<PridContext>
     {

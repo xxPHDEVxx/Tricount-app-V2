@@ -6,7 +6,7 @@ using
 using System.Globalization; // Importation de System.Globalization pour manipuler la culture
 using System.Windows.Documents; // Importation de System.Windows.Documents pour manipuler les documents Windows
 
-namespace prbd_2324_a06.Model // Déclaration de l'espace de noms prbd_2324_a06.Model
+namespace prbd_2324_a06.Model // Déclaration de l'espace de noms tricount.Model
 {
     public class
         Operation : EntityBase<PridContext> // Définition de la classe Operation qui hérite de EntityBase<PridContext>
