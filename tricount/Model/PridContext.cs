@@ -129,7 +129,7 @@ public class PridContext : DbContextBase
     private static void seedData(ModelBuilder modelBuilder) {
 
         var boris = new User(1, "boverhaegen@gmail.eu", "Password1,", "Boris");
-        var benoit = new User(2, "benoî@gmail.eu", "Password1,", "Benoit");
+        var benoit = new User(2, "benoît@gmail.eu", "Password1,", "Benoit");
         var xavier = new User(3, "xavier@gmail.eu", "Password1,", "Xavier");
         var marc = new User(4, "mamichel@gmail.eu", "Password1,", "Marc");
         var admin = new User(5, "admin@gmail.eu", "Password1,", "Admin");
