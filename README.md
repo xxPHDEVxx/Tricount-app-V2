@@ -30,7 +30,7 @@ Le projet **Tricount .NET** est une application de gestion des dépenses entre u
 1. Clonez le dépôt GitHub du projet :
 
     ```bash
-    git clone https://github.com/votre-utilisateur/votre-projet-tricount-dotnet.git
+    git clone https://github.com/xxPHDEVxx/votre-projet-tricount-dotnet.git
     cd votre-projet-tricount-dotnet
     ```
 
